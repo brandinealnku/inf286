@@ -275,25 +275,6 @@
       box-shadow:0 0 0 3px rgba(124,58,237,.18);
     }
 
-    .inline-input{
-      max-width:160px;
-      display:inline-block;
-      margin:0 8px;
-      vertical-align:middle;
-    }
-
-    .code-input{
-      width:100%;
-      max-width:240px;
-      padding:10px 12px;
-      border-radius:12px;
-      border:1px solid #334155;
-      background:#020617;
-      color:#fff;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size:1rem;
-    }
-
     .btn-row,.choice-grid{
       display:flex;
       flex-wrap:wrap;
@@ -445,6 +426,37 @@
       font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
       color:#cbd5e1;
       overflow:auto;
+      white-space:pre-wrap;
+    }
+
+    .code-editor{
+      width:100%;
+      min-height:110px;
+      padding:14px;
+      border-radius:16px;
+      border:1px solid #334155;
+      background:#020617;
+      color:#e5e7eb;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size:.96rem;
+      line-height:1.5;
+      resize:vertical;
+    }
+
+    .sandbox-label{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      margin-top:12px;
+      margin-bottom:8px;
+      color:#cbd5e1;
+      font-size:.92rem;
+    }
+
+    .sandbox-help{
+      color:#94a3b8;
+      font-size:.88rem;
     }
 
     .fun-output{
@@ -475,14 +487,13 @@
       font-weight:700;
     }
 
-    .hidden-object{
-      width:90px;
-      height:90px;
-      border-radius:18px;
-      background:linear-gradient(135deg, var(--brand), var(--pink));
-      display:none;
-      margin-top:14px;
-      box-shadow:0 0 24px rgba(168,85,247,.28);
+    .demo-stage.light{
+      background:#f8fafc;
+      color:#111827;
+    }
+
+    .demo-stage.light .live-text{
+      color:#111827;
     }
 
     .choice-grid button{
@@ -758,13 +769,13 @@
 
   <div class="container">
     <section class="hero">
-      <div class="eyebrow">🎮 Interactive JavaScript Game Mode</div>
+      <div class="eyebrow">🎮 Interactive JavaScript Sandbox Mode</div>
       <h1>JavaScript Quest Arena</h1>
       <p>
-        Work with a team or go solo. Predict what code will do, click things, type tiny bits of JavaScript, fix bugs, and beat the boss battle.
+        Work with a team or go solo. Predict what code will do, edit tiny JavaScript snippets, press Run Code, and watch the page react in real time.
       </p>
       <div class="hero-pills">
-        <span class="pill">Try it live</span>
+        <span class="pill">Run code live</span>
         <span class="pill">Predict code</span>
         <span class="pill">Fix bugs</span>
         <span class="pill">Unlock rounds</span>
@@ -876,7 +887,7 @@
         <section class="card">
           <h2>🚀 Start the Game</h2>
           <p class="soft">
-            Choose team or solo mode, pick a name, and enter the arena. This activity works great in pairs or trios.
+            Choose team or solo mode, pick a name, and enter the arena. This works especially well in pairs or trios.
           </p>
 
           <div class="setup-grid">
@@ -909,27 +920,39 @@
             <div class="round-header">
               <div class="round-tag">Round 1 • Click Events</div>
               <h2>Wake the Webpage</h2>
-              <p class="soft">Your first mission: make the page react to a click and notice what changed.</p>
+              <p class="soft">Mission: use JavaScript to change text when a button is clicked.</p>
             </div>
             <div class="round-body">
               <div class="demo-box">
-                <strong>Live interaction</strong>
-                <p class="soft">Click the button and watch what JavaScript changes.</p>
-                <div class="btn-row">
-                  <button class="btn-pink" id="wakeBtn">Wake the Page</button>
+                <strong>Live stage</strong>
+                <p class="soft">Edit the code, then press Run Code.</p>
+                <div class="demo-stage" id="r1Stage">
+                  <div class="live-text" id="r1Text">😴 The webpage is asleep...</div>
+                  <button class="btn-pink" id="r1ActionBtn" style="margin-top:12px;">Wake Button</button>
                 </div>
-                <div class="demo-stage">
-                  <div class="live-text" id="wakeText">😴 The webpage is asleep...</div>
+
+                <div class="sandbox-label">
+                  <span>Round 1 sandbox</span>
+                  <span class="sandbox-help">Available names: btn, text</span>
                 </div>
+                <textarea class="code-editor" id="r1Editor">btn.addEventListener("click", () => {
+  text.textContent = "⚡ The webpage is awake!";
+  text.style.color = "#22d3ee";
+});</textarea>
+                <div class="btn-row" style="margin-top:12px;">
+                  <button class="btn-soft" id="r1RunBtn">Run Code</button>
+                  <button class="btn-dark" id="r1ResetBtn">Reset Demo</button>
+                </div>
+                <div id="r1SandboxMsg" class="message hidden"></div>
               </div>
 
               <div class="challenge">
                 <strong>Quick check</strong>
-                <p class="soft">What changed after the click? Choose the best answer.</p>
+                <p class="soft">What just happened here?</p>
                 <div class="choice-grid">
-                  <button class="btn-soft r1-choice" data-correct="true">The text on the page changed because JavaScript updated it</button>
-                  <button class="btn-soft r1-choice" data-correct="false">Nothing changed because HTML can’t be edited</button>
-                  <button class="btn-soft r1-choice" data-correct="false">The browser became a database</button>
+                  <button class="btn-soft r1-choice" data-correct="true">JavaScript listened for a click and changed the page</button>
+                  <button class="btn-soft r1-choice" data-correct="false">CSS ran a database query</button>
+                  <button class="btn-soft r1-choice" data-correct="false">HTML randomly changed itself</button>
                 </div>
                 <div id="r1CheckMsg" class="message hidden"></div>
               </div>
@@ -945,28 +968,49 @@
             <div class="round-header">
               <div class="round-tag">Round 2 • Toggling</div>
               <h2>Toggle Chaos</h2>
-              <p class="soft">Web apps constantly switch between states like open/closed, hidden/shown, light/dark.</p>
+              <p class="soft">Mission: make a mini panel switch between light and dark states.</p>
             </div>
             <div class="round-body">
               <div class="demo-box">
-                <strong>Live interaction</strong>
-                <p class="soft">Click the button to toggle dark mode in the mini stage below.</p>
-                <div class="btn-row">
-                  <button class="btn-cyan" id="toggleBtn">Toggle Mini Theme</button>
+                <strong>Live stage</strong>
+                <div class="demo-stage light" id="r2Stage">
+                  <div class="live-text" id="r2Text">Theme: Light Mode</div>
+                  <button class="btn-cyan" id="r2ActionBtn" style="margin-top:12px;">Toggle Theme</button>
                 </div>
-                <div class="demo-stage" id="toggleStage">
-                  <div class="live-text" id="toggleStageText">Theme: Light-ish Arena Mode</div>
+
+                <div class="sandbox-label">
+                  <span>Round 2 sandbox</span>
+                  <span class="sandbox-help">Available names: btn, stage, text</span>
                 </div>
+                <textarea class="code-editor" id="r2Editor">let dark = false;
+
+btn.addEventListener("click", () => {
+  dark = !dark;
+
+  if (dark) {
+    stage.classList.remove("light");
+    text.textContent = "Theme: Dark Mode";
+    text.style.color = "#f8fafc";
+  } else {
+    stage.classList.add("light");
+    text.textContent = "Theme: Light Mode";
+    text.style.color = "#111827";
+  }
+});</textarea>
+                <div class="btn-row" style="margin-top:12px;">
+                  <button class="btn-soft" id="r2RunBtn">Run Code</button>
+                  <button class="btn-dark" id="r2ResetBtn">Reset Demo</button>
+                </div>
+                <div id="r2SandboxMsg" class="message hidden"></div>
               </div>
 
               <div class="challenge">
-                <strong>Fill in the blank</strong>
-                <p class="soft">What word completes this common JavaScript idea?</p>
-                <div class="mini-console">
-element.classList.<input class="code-input inline-input" id="r2CodeInput" placeholder="type here" />("dark-mode");
-                </div>
-                <div class="btn-row" style="margin-top:12px;">
-                  <button class="btn-soft" id="r2CheckBtn">Check Code</button>
+                <strong>Quick check</strong>
+                <p class="soft">Which JavaScript idea is most important here?</p>
+                <div class="choice-grid">
+                  <button class="btn-soft r2-choice" data-correct="true">State changing between two options</button>
+                  <button class="btn-soft r2-choice" data-correct="false">Building a spreadsheet</button>
+                  <button class="btn-soft r2-choice" data-correct="false">Creating an SQL table</button>
                 </div>
                 <div id="r2CheckMsg" class="message hidden"></div>
               </div>
@@ -982,30 +1026,40 @@ element.classList.<input class="code-input inline-input" id="r2CodeInput" placeh
             <div class="round-header">
               <div class="round-tag">Round 3 • Variables</div>
               <h2>Score Rush</h2>
-              <p class="soft">Variables store information that changes, like a score, likes, cart total, or notifications.</p>
+              <p class="soft">Mission: store a changing value and display it on the page.</p>
             </div>
             <div class="round-body">
               <div class="demo-box">
-                <strong>Live interaction</strong>
-                <p class="soft">Click to increase the score. Watch the number update.</p>
-                <div class="btn-row">
-                  <button class="btn-yellow" id="scoreBtn">Add Point</button>
-                  <button class="btn-soft" id="resetScoreBtn" type="button">Reset Score</button>
+                <strong>Live stage</strong>
+                <div class="demo-stage" id="r3Stage">
+                  <div class="live-text">Team score: <span id="r3ScoreText">0</span></div>
+                  <button class="btn-yellow" id="r3ActionBtn" style="margin-top:12px;">Add Point</button>
                 </div>
-                <div class="demo-stage">
-                  <div class="live-text">Team score: <span id="scoreValue">0</span></div>
-                  <div class="fun-output" id="scoreOutput"></div>
+
+                <div class="sandbox-label">
+                  <span>Round 3 sandbox</span>
+                  <span class="sandbox-help">Available names: btn, scoreText</span>
                 </div>
+                <textarea class="code-editor" id="r3Editor">let score = 0;
+
+btn.addEventListener("click", () => {
+  score++;
+  scoreText.textContent = score;
+});</textarea>
+                <div class="btn-row" style="margin-top:12px;">
+                  <button class="btn-soft" id="r3RunBtn">Run Code</button>
+                  <button class="btn-dark" id="r3ResetBtn">Reset Demo</button>
+                </div>
+                <div id="r3SandboxMsg" class="message hidden"></div>
               </div>
 
               <div class="challenge">
-                <strong>Fill in the blank</strong>
-                <p class="soft">Which code makes the score go up by 1?</p>
-                <div class="mini-console">
-score<input class="code-input inline-input" id="r3CodeInput" placeholder="type here" />;
-                </div>
-                <div class="btn-row" style="margin-top:12px;">
-                  <button class="btn-soft" id="r3CheckBtn">Check Code</button>
+                <strong>Quick check</strong>
+                <p class="soft">Why does the score keep changing?</p>
+                <div class="choice-grid">
+                  <button class="btn-soft r3-choice" data-correct="true">A variable stores the value and updates it</button>
+                  <button class="btn-soft r3-choice" data-correct="false">The browser guesses a number</button>
+                  <button class="btn-soft r3-choice" data-correct="false">HTML counts automatically</button>
                 </div>
                 <div id="r3CheckMsg" class="message hidden"></div>
               </div>
@@ -1021,31 +1075,37 @@ score<input class="code-input inline-input" id="r3CodeInput" placeholder="type h
             <div class="round-header">
               <div class="round-tag">Round 4 • Debugging</div>
               <h2>Bug Fix Arena</h2>
-              <p class="soft">Real programmers debug constantly. Let’s fix a broken if statement.</p>
+              <p class="soft">Mission: fix a broken if statement so the button works properly.</p>
             </div>
             <div class="round-body">
-              <div class="challenge">
-                <strong>Debug this code</strong>
-                <p class="soft">Something is wrong here. What is the bug?</p>
-                <div class="mini-console">
-if score &gt; 5 {<br>
-&nbsp;&nbsp;message.textContent = "You win!";<br>
-}
+              <div class="demo-box">
+                <strong>Live stage</strong>
+                <div class="demo-stage" id="r4Stage">
+                  <div class="live-text" id="r4Text">Current score: 6</div>
+                  <button class="btn-pink" id="r4ActionBtn" style="margin-top:12px;">Check Score</button>
                 </div>
-                <div class="choice-grid" style="margin-top:12px;">
-                  <button class="btn-soft r4-choice" data-correct="true">It needs parentheses around the condition: if (score &gt; 5)</button>
-                  <button class="btn-soft r4-choice" data-correct="false">The word if must be uppercase</button>
-                  <button class="btn-soft r4-choice" data-correct="false">JavaScript cannot compare numbers</button>
+
+                <div class="sandbox-label">
+                  <span>Round 4 sandbox</span>
+                  <span class="sandbox-help">Available names: btn, text</span>
                 </div>
-                <div id="r4CheckMsg" class="message hidden"></div>
+                <textarea class="code-editor" id="r4Editor">let score = 6;
+
+btn.addEventListener("click", () => {
+  if score > 5 {
+    text.textContent = "🏆 You win!";
+  }
+});</textarea>
+                <div class="btn-row" style="margin-top:12px;">
+                  <button class="btn-soft" id="r4RunBtn">Run Code</button>
+                  <button class="btn-dark" id="r4ResetBtn">Reset Demo</button>
+                </div>
+                <div id="r4SandboxMsg" class="message hidden"></div>
               </div>
 
-              <div class="demo-box">
-                <strong>Why this matters</strong>
-                <p class="soft">Conditionals help pages decide when something should happen.</p>
-                <div class="demo-stage">
-                  <div class="live-text">Example: “If the score is high enough, unlock the next level.”</div>
-                </div>
+              <div class="challenge">
+                <strong>Debug tip</strong>
+                <p class="soft">Fix the <code>if</code> statement in the editor, then click <strong>Run Code</strong>.</p>
               </div>
 
               <div class="btn-row" style="margin-top:14px;">
@@ -1059,28 +1119,45 @@ if score &gt; 5 {<br>
             <div class="round-header">
               <div class="round-tag">Round 5 • Arrays + Random</div>
               <h2>Loot Generator</h2>
-              <p class="soft">Arrays store collections. JavaScript can randomly pick from them.</p>
+              <p class="soft">Mission: use a list and randomly pick one item from it.</p>
             </div>
             <div class="round-body">
               <div class="demo-box">
-                <strong>Live interaction</strong>
-                <p class="soft">Generate loot titles and watch JavaScript pick one at random.</p>
-                <div class="btn-row">
-                  <button class="btn-pink" id="prizeBtn">Generate Loot</button>
+                <strong>Live stage</strong>
+                <div class="demo-stage" id="r5Stage">
+                  <div class="live-text" id="r5Text">No loot yet...</div>
+                  <button class="btn-pink" id="r5ActionBtn" style="margin-top:12px;">Generate Loot</button>
                 </div>
-                <div class="demo-stage">
-                  <div class="live-text" id="prizeOutput">No loot yet...</div>
-                  <div class="fun-output">Loot generated: <span id="prizeCount">0</span></div>
+
+                <div class="sandbox-label">
+                  <span>Round 5 sandbox</span>
+                  <span class="sandbox-help">Available names: btn, text</span>
                 </div>
+                <textarea class="code-editor" id="r5Editor">const loot = [
+  "🏆 DOM Ninja",
+  "⚡ Event Listener Legend",
+  "🎯 Variable Mastermind",
+  "🐞 Bug Hunter Supreme"
+];
+
+btn.addEventListener("click", () => {
+  const index = Math.floor(Math.random() * loot.length);
+  text.textContent = loot[index];
+});</textarea>
+                <div class="btn-row" style="margin-top:12px;">
+                  <button class="btn-soft" id="r5RunBtn">Run Code</button>
+                  <button class="btn-dark" id="r5ResetBtn">Reset Demo</button>
+                </div>
+                <div id="r5SandboxMsg" class="message hidden"></div>
               </div>
 
               <div class="challenge">
-                <strong>Pick the code</strong>
-                <p class="soft">Which line looks most like it would choose a random item from an array named <code>loot</code>?</p>
+                <strong>Quick check</strong>
+                <p class="soft">What helps the app choose a random item?</p>
                 <div class="choice-grid">
-                  <button class="btn-soft r5-choice" data-correct="true">Math.floor(Math.random() * loot.length)</button>
-                  <button class="btn-soft r5-choice" data-correct="false">loot = "random"</button>
-                  <button class="btn-soft r5-choice" data-correct="false">document.loot[1000]</button>
+                  <button class="btn-soft r5-choice" data-correct="true">Math.random() plus the array length</button>
+                  <button class="btn-soft r5-choice" data-correct="false">The HTML title tag</button>
+                  <button class="btn-soft r5-choice" data-correct="false">A CSS border radius</button>
                 </div>
                 <div id="r5CheckMsg" class="message hidden"></div>
               </div>
@@ -1096,7 +1173,7 @@ if score &gt; 5 {<br>
             <div class="round-header">
               <div class="round-tag">Boss Battle • Mini App Builder</div>
               <h2>Build the Boss Idea</h2>
-              <p class="soft">Now create a mini app concept by combining interaction, data, logic, and a visible result.</p>
+              <p class="soft">Now combine interaction, data, logic, and visible feedback into one mini app concept.</p>
             </div>
             <div class="round-body">
               <div class="setup-grid">
@@ -1236,17 +1313,17 @@ if score &gt; 5 {<br>
         <section class="side-card">
           <h3>💡 Instructor Mode</h3>
           <p class="soft small">
-            This version is better for learning because students now click, predict, fill in code, and debug instead of only discussing ideas.
+            Students now write and run tiny bits of JavaScript in each round. That usually creates much better engagement and confidence.
           </p>
           <p class="soft small">
-            Good line to repeat: <strong>JavaScript is what makes the webpage react.</strong>
+            Great reminder to say out loud: <strong>JavaScript is what makes the webpage react.</strong>
           </p>
         </section>
       </aside>
     </div>
 
     <p class="footer-note">
-      Single-file HTML for GitHub Pages • Interactive JavaScript game for intro web dev students
+      Single-file HTML for GitHub Pages • Interactive JavaScript sandbox game for intro web dev students
     </p>
   </div>
 
@@ -1290,18 +1367,6 @@ if score &gt; 5 {<br>
       "The Click Kings"
     ];
 
-    const lootTitles = [
-      "🏆 DOM Ninja",
-      "⚡ Event Listener Legend",
-      "🎯 Variable Mastermind",
-      "🎨 UI Chaos Coordinator",
-      "🐞 Bug Hunter Supreme",
-      "🚀 Button Launch Champion",
-      "🧠 Logic Wizard",
-      "💥 Interactive Hero",
-      "🎮 Browser Battle Boss"
-    ];
-
     let completed = 0;
     let points = 0;
     let badges = 0;
@@ -1310,9 +1375,6 @@ if score &gt; 5 {<br>
     let totalSeconds = 25 * 60;
     let highestUnlocked = 0;
     let currentRound = 0;
-    let toggleState = false;
-    let score = 0;
-    let prizeCount = 0;
 
     const progressText = document.getElementById("progressText");
     const progressFill = document.getElementById("progressFill");
@@ -1561,202 +1623,240 @@ if score &gt; 5 {<br>
       playTone("success");
     });
 
-    // Round 1
-    const wakeBtn = document.getElementById("wakeBtn");
-    const wakeText = document.getElementById("wakeText");
-    const r1Next = document.getElementById("r1Next");
-    const r1Msg = document.getElementById("r1Msg");
-    const r1CheckMsg = document.getElementById("r1CheckMsg");
+    function bindSandbox({ editorId, runBtnId, resetBtnId, msgId, setupFn, successCheck }) {
+      const editor = document.getElementById(editorId);
+      const runBtn = document.getElementById(runBtnId);
+      const resetBtn = document.getElementById(resetBtnId);
+      const msg = document.getElementById(msgId);
 
-    wakeBtn.addEventListener("click", () => {
-      wakeText.textContent = "⚡ The webpage is awake! JavaScript changed this text.";
-      wakeText.style.color = "#22d3ee";
-      updatePoints(15);
-      playTone("click");
+      let state = setupFn();
+
+      function reset() {
+        state = setupFn();
+      }
+
+      runBtn.addEventListener("click", () => {
+        reset();
+        const code = editor.value;
+        try {
+          const runner = new Function(...Object.keys(state), code);
+          runner(...Object.values(state));
+          setMessage(msg, "Code ran. Try the button in the demo stage.", "success");
+          updatePoints(8);
+          playTone("click");
+          if (typeof successCheck === "function") successCheck();
+        } catch (err) {
+          setMessage(msg, `Error: ${err.message}`, "danger");
+          playTone("danger");
+        }
+      });
+
+      resetBtn.addEventListener("click", () => {
+        reset();
+        setMessage(msg, "Demo reset.", "success");
+        playTone("click");
+      });
+    }
+
+    // Round 1 sandbox
+    bindSandbox({
+      editorId: "r1Editor",
+      runBtnId: "r1RunBtn",
+      resetBtnId: "r1ResetBtn",
+      msgId: "r1SandboxMsg",
+      setupFn: () => {
+        const btn = document.getElementById("r1ActionBtn");
+        const text = document.getElementById("r1Text");
+        const newBtn = btn.cloneNode(true);
+        btn.replaceWith(newBtn);
+        text.textContent = "😴 The webpage is asleep...";
+        text.style.color = "";
+        return { btn: newBtn, text };
+      }
     });
 
     document.querySelectorAll(".r1-choice").forEach(btn => {
       btn.addEventListener("click", () => {
         const correct = btn.dataset.correct === "true";
+        const msg = document.getElementById("r1CheckMsg");
         if (correct) {
-          setMessage(r1CheckMsg, "Correct. JavaScript changed the content after the button click.", "success");
-          r1Next.disabled = false;
+          setMessage(msg, "Correct. JavaScript listened for a click and changed the page.", "success");
+          document.getElementById("r1Next").disabled = false;
           updatePoints(20);
           playTone("success");
         } else {
-          setMessage(r1CheckMsg, "Not quite. Focus on what JavaScript changed after the click.", "danger");
+          setMessage(msg, "Not quite. Focus on what happened after the click.", "danger");
           playTone("danger");
         }
       });
     });
 
-    r1Next.addEventListener("click", () => {
+    document.getElementById("r1Next").addEventListener("click", () => {
       completeRound(1);
-      setMessage(r1Msg, "Nice. You just saw a click event change the page.", "success");
+      setMessage(document.getElementById("r1Msg"), "Nice. You used a click event to change page content.", "success");
       highestUnlocked = Math.max(highestUnlocked, 2);
       activateRound(2);
     });
 
-    // Round 2
-    const toggleBtn = document.getElementById("toggleBtn");
-    const toggleStage = document.getElementById("toggleStage");
-    const toggleStageText = document.getElementById("toggleStageText");
-    const r2CodeInput = document.getElementById("r2CodeInput");
-    const r2CheckBtn = document.getElementById("r2CheckBtn");
-    const r2CheckMsg = document.getElementById("r2CheckMsg");
-    const r2Next = document.getElementById("r2Next");
-    const r2Msg = document.getElementById("r2Msg");
-
-    toggleBtn.addEventListener("click", () => {
-      toggleState = !toggleState;
-      if (toggleState) {
-        toggleStage.style.background = "#1e293b";
-        toggleStage.style.borderColor = "#7c3aed";
-        toggleStageText.textContent = "Theme: Dark Arena Mode";
-        toggleStageText.style.color = "#f8fafc";
-      } else {
-        toggleStage.style.background = "#f8fafc";
-        toggleStage.style.borderColor = "#22d3ee";
-        toggleStageText.textContent = "Theme: Light-ish Arena Mode";
-        toggleStageText.style.color = "#111827";
-      }
-      updatePoints(10);
-      playTone("click");
-    });
-
-    r2CheckBtn.addEventListener("click", () => {
-      const answer = r2CodeInput.value.trim().toLowerCase();
-      if (answer === "toggle") {
-        setMessage(r2CheckMsg, "Correct. classList.toggle() is a very common way to switch a class on and off.", "success");
-        r2Next.disabled = false;
-        updatePoints(20);
-        playTone("success");
-      } else {
-        setMessage(r2CheckMsg, "Not quite. The answer is the method often used to switch a class on and off.", "warn");
-        playTone("warn");
+    // Round 2 sandbox
+    bindSandbox({
+      editorId: "r2Editor",
+      runBtnId: "r2RunBtn",
+      resetBtnId: "r2ResetBtn",
+      msgId: "r2SandboxMsg",
+      setupFn: () => {
+        const oldBtn = document.getElementById("r2ActionBtn");
+        const btn = oldBtn.cloneNode(true);
+        oldBtn.replaceWith(btn);
+        const stage = document.getElementById("r2Stage");
+        const text = document.getElementById("r2Text");
+        stage.classList.add("light");
+        text.textContent = "Theme: Light Mode";
+        text.style.color = "#111827";
+        return { btn, stage, text };
       }
     });
 
-    r2Next.addEventListener("click", () => {
-      completeRound(2);
-      setMessage(r2Msg, "Great. You interacted with a toggle and identified the method behind it.", "success");
-      highestUnlocked = Math.max(highestUnlocked, 3);
-      activateRound(3);
-    });
-
-    // Round 3
-    const scoreBtn = document.getElementById("scoreBtn");
-    const resetScoreBtn = document.getElementById("resetScoreBtn");
-    const scoreValue = document.getElementById("scoreValue");
-    const scoreOutput = document.getElementById("scoreOutput");
-    const r3CodeInput = document.getElementById("r3CodeInput");
-    const r3CheckBtn = document.getElementById("r3CheckBtn");
-    const r3CheckMsg = document.getElementById("r3CheckMsg");
-    const r3Next = document.getElementById("r3Next");
-    const r3Msg = document.getElementById("r3Msg");
-
-    scoreBtn.addEventListener("click", () => {
-      score++;
-      scoreValue.textContent = score;
-      scoreOutput.textContent = score >= 5 ? "🔥 Nice. The score keeps changing because JavaScript is tracking it." : "Keep clicking to change the value.";
-      updatePoints(8);
-      playTone("click");
-    });
-
-    resetScoreBtn.addEventListener("click", () => {
-      score = 0;
-      scoreValue.textContent = "0";
-      scoreOutput.textContent = "";
-      playTone("click");
-    });
-
-    r3CheckBtn.addEventListener("click", () => {
-      const raw = r3CodeInput.value.trim().replace(/\s/g, "");
-      if (raw === "++" || raw === "=score+1") {
-        setMessage(r3CheckMsg, "Correct. Both score++ and score = score + 1 increase the value.", "success");
-        r3Next.disabled = false;
-        updatePoints(22);
-        playTone("success");
-      } else {
-        setMessage(r3CheckMsg, "Not quite. Think about how to increase score by 1.", "warn");
-        playTone("warn");
-      }
-    });
-
-    r3Next.addEventListener("click", () => {
-      completeRound(3);
-      setMessage(r3Msg, "Nice. You used a changing value and identified code that updates it.", "success");
-      highestUnlocked = Math.max(highestUnlocked, 4);
-      activateRound(4);
-    });
-
-    // Round 4
-    const r4CheckMsg = document.getElementById("r4CheckMsg");
-    const r4Next = document.getElementById("r4Next");
-    const r4Msg = document.getElementById("r4Msg");
-
-    document.querySelectorAll(".r4-choice").forEach(btn => {
+    document.querySelectorAll(".r2-choice").forEach(btn => {
       btn.addEventListener("click", () => {
         const correct = btn.dataset.correct === "true";
+        const msg = document.getElementById("r2CheckMsg");
         if (correct) {
-          setMessage(r4CheckMsg, "Correct. The condition needs parentheses: if (score > 5)", "success");
-          r4Next.disabled = false;
-          updatePoints(25);
+          setMessage(msg, "Correct. This round is all about switching state.", "success");
+          document.getElementById("r2Next").disabled = false;
+          updatePoints(20);
           playTone("success");
         } else {
-          setMessage(r4CheckMsg, "Not quite. Look carefully at the syntax of an if statement.", "danger");
+          setMessage(msg, "Not quite. Think about what changes back and forth.", "danger");
           playTone("danger");
         }
       });
     });
 
-    r4Next.addEventListener("click", () => {
+    document.getElementById("r2Next").addEventListener("click", () => {
+      completeRound(2);
+      setMessage(document.getElementById("r2Msg"), "Great. You made a live toggle with JavaScript.", "success");
+      highestUnlocked = Math.max(highestUnlocked, 3);
+      activateRound(3);
+    });
+
+    // Round 3 sandbox
+    bindSandbox({
+      editorId: "r3Editor",
+      runBtnId: "r3RunBtn",
+      resetBtnId: "r3ResetBtn",
+      msgId: "r3SandboxMsg",
+      setupFn: () => {
+        const oldBtn = document.getElementById("r3ActionBtn");
+        const btn = oldBtn.cloneNode(true);
+        oldBtn.replaceWith(btn);
+        const scoreText = document.getElementById("r3ScoreText");
+        scoreText.textContent = "0";
+        return { btn, scoreText };
+      }
+    });
+
+    document.querySelectorAll(".r3-choice").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const correct = btn.dataset.correct === "true";
+        const msg = document.getElementById("r3CheckMsg");
+        if (correct) {
+          setMessage(msg, "Correct. A variable stores the changing number.", "success");
+          document.getElementById("r3Next").disabled = false;
+          updatePoints(20);
+          playTone("success");
+        } else {
+          setMessage(msg, "Not quite. Something in JavaScript has to remember the number.", "danger");
+          playTone("danger");
+        }
+      });
+    });
+
+    document.getElementById("r3Next").addEventListener("click", () => {
+      completeRound(3);
+      setMessage(document.getElementById("r3Msg"), "Nice. You used a variable to store and display changing data.", "success");
+      highestUnlocked = Math.max(highestUnlocked, 4);
+      activateRound(4);
+    });
+
+    // Round 4 sandbox
+    bindSandbox({
+      editorId: "r4Editor",
+      runBtnId: "r4RunBtn",
+      resetBtnId: "r4ResetBtn",
+      msgId: "r4SandboxMsg",
+      setupFn: () => {
+        const oldBtn = document.getElementById("r4ActionBtn");
+        const btn = oldBtn.cloneNode(true);
+        oldBtn.replaceWith(btn);
+        const text = document.getElementById("r4Text");
+        text.textContent = "Current score: 6";
+        text.style.color = "";
+        return { btn, text };
+      },
+      successCheck: () => {
+        const code = document.getElementById("r4Editor").value;
+        if (code.includes("if (score > 5)") || code.includes("if(score > 5)")) {
+          document.getElementById("r4Next").disabled = false;
+        }
+      }
+    });
+
+    document.getElementById("r4RunBtn").addEventListener("click", () => {
+      const code = document.getElementById("r4Editor").value;
+      if ((code.includes("if (score > 5)") || code.includes("if(score > 5)")) && !document.getElementById("r4Next").disabled) {
+        updatePoints(20);
+        playTone("success");
+      }
+    });
+
+    document.getElementById("r4Next").addEventListener("click", () => {
       completeRound(4);
-      setMessage(r4Msg, "Nice debugging. This is a real JavaScript skill developers use constantly.", "success");
+      setMessage(document.getElementById("r4Msg"), "Nice debugging. Fixing syntax is real JavaScript work.", "success");
       highestUnlocked = Math.max(highestUnlocked, 5);
       activateRound(5);
     });
 
-    // Round 5
-    const prizeBtn = document.getElementById("prizeBtn");
-    const prizeOutput = document.getElementById("prizeOutput");
-    const prizeCountEl = document.getElementById("prizeCount");
-    const r5CheckMsg = document.getElementById("r5CheckMsg");
-    const r5Next = document.getElementById("r5Next");
-    const r5Msg = document.getElementById("r5Msg");
-
-    prizeBtn.addEventListener("click", () => {
-      const i = Math.floor(Math.random() * lootTitles.length);
-      prizeOutput.textContent = `${getPlayerName()} earned: ${lootTitles[i]}`;
-      prizeCount++;
-      prizeCountEl.textContent = prizeCount;
-      updatePoints(10);
-      playTone("click");
+    // Round 5 sandbox
+    bindSandbox({
+      editorId: "r5Editor",
+      runBtnId: "r5RunBtn",
+      resetBtnId: "r5ResetBtn",
+      msgId: "r5SandboxMsg",
+      setupFn: () => {
+        const oldBtn = document.getElementById("r5ActionBtn");
+        const btn = oldBtn.cloneNode(true);
+        oldBtn.replaceWith(btn);
+        const text = document.getElementById("r5Text");
+        text.textContent = "No loot yet...";
+        return { btn, text };
+      }
     });
 
     document.querySelectorAll(".r5-choice").forEach(btn => {
       btn.addEventListener("click", () => {
         const correct = btn.dataset.correct === "true";
+        const msg = document.getElementById("r5CheckMsg");
         if (correct) {
-          setMessage(r5CheckMsg, "Correct. That expression creates a random index for an array.", "success");
-          r5Next.disabled = false;
-          updatePoints(25);
+          setMessage(msg, "Correct. Math.random() plus array length helps pick a random item.", "success");
+          document.getElementById("r5Next").disabled = false;
+          updatePoints(20);
           playTone("success");
         } else {
-          setMessage(r5CheckMsg, "Not quite. Look for the one using Math.random() and the array length.", "danger");
+          setMessage(msg, "Not quite. Look for the code that calculates a random index.", "danger");
           playTone("danger");
         }
       });
     });
 
-    r5Next.addEventListener("click", () => {
+    document.getElementById("r5Next").addEventListener("click", () => {
       completeRound(5);
-      setMessage(r5Msg, "Nice. You saw an array-powered random generator and identified the random index logic.", "success");
+      setMessage(document.getElementById("r5Msg"), "Nice. You used an array and random logic to generate loot.", "success");
       highestUnlocked = Math.max(highestUnlocked, 6);
       activateRound(6);
     });
 
-    // Round 6
+    // Boss battle
     const bossType = document.getElementById("bossType");
     const bossInteraction = document.getElementById("bossInteraction");
     const bossLogic = document.getElementById("bossLogic");
@@ -1785,7 +1885,7 @@ if score &gt; 5 {<br>
         <strong>App idea:</strong> ${bossType.value}<br>
         <strong>Main interaction:</strong> ${bossInteraction.value}<br>
         <strong>Logic:</strong> ${bossLogic.value}<br><br>
-        This means your app would listen for user interaction, store or update something, and react on the page with JavaScript.`,
+        Your app would listen for user input, update something with JavaScript, and visibly react on the page.`,
         "success"
       );
 
