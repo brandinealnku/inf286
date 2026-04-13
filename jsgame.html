@@ -106,7 +106,7 @@
     }
 
     .hero p{
-      max-width:900px;
+      max-width:920px;
       margin:0;
       color:var(--muted-2);
       font-size:1.05rem;
@@ -632,6 +632,17 @@
 
     .quest-node.done .quest-icon{
       background:linear-gradient(135deg, #16a34a, #22c55e);
+    }
+
+    .showcase-tag {
+      display:inline-block;
+      margin-top:8px;
+      padding:6px 10px;
+      border-radius:999px;
+      background:rgba(124,58,237,.12);
+      border:1px solid rgba(124,58,237,.25);
+      color:#ddd6fe;
+      font-size:.82rem;
     }
 
     .hidden{display:none !important}
@@ -1171,52 +1182,57 @@ btn.addEventListener("click", () => {
 
           <article class="round locked" id="round6">
             <div class="round-header">
-              <div class="round-tag">Boss Battle • Mini App Builder</div>
-              <h2>Build the Boss Idea</h2>
-              <p class="soft">Now combine interaction, data, logic, and visible feedback into one mini app concept.</p>
+              <div class="round-tag">Boss Battle • Build a Mini App</div>
+              <h2>Boss Battle Builder</h2>
+              <p class="soft">Now build a tiny interactive app and test it live.</p>
             </div>
             <div class="round-body">
               <div class="setup-grid">
                 <div>
-                  <label for="bossType">Choose your app idea</label>
+                  <label for="bossType">Choose your mini app</label>
                   <select id="bossType">
                     <option value="">Choose one...</option>
-                    <option>Campus stress meter</option>
-                    <option>Roommate mood tracker</option>
-                    <option>Random lunch picker</option>
-                    <option>Study break button</option>
-                    <option>Motivation message generator</option>
+                    <option value="stress">Campus stress meter</option>
+                    <option value="roommate">Roommate mood tracker</option>
+                    <option value="lunch">Random lunch picker</option>
+                    <option value="motivation">Motivation generator</option>
+                    <option value="study">Study break button</option>
                   </select>
                 </div>
+
                 <div>
-                  <label for="bossInteraction">Choose an interaction</label>
-                  <select id="bossInteraction">
-                    <option value="">Choose one...</option>
-                    <option>Button click</option>
-                    <option>Toggle button</option>
-                    <option>Score counter</option>
-                    <option>Random generator</option>
-                  </select>
+                  <label for="bossTitle">Give your app a name</label>
+                  <input type="text" id="bossTitle" placeholder="Example: Finals Survival Meter" />
                 </div>
+
                 <div>
-                  <label for="bossLogic">Choose logic</label>
-                  <select id="bossLogic">
+                  <label for="bossTheme">Choose a vibe</label>
+                  <select id="bossTheme">
                     <option value="">Choose one...</option>
-                    <option>If score is high, show a message</option>
-                    <option>If user clicks, change color</option>
-                    <option>Pick a random item from a list</option>
-                    <option>Show or hide something</option>
+                    <option value="purple">Neon Purple</option>
+                    <option value="cyan">Cyber Cyan</option>
+                    <option value="pink">Hot Pink</option>
+                    <option value="green">Level Up Green</option>
                   </select>
                 </div>
               </div>
 
               <div class="challenge">
-                <strong>Create your build plan</strong>
-                <p class="soft">Pick one option in each menu, then generate your mini app plan.</p>
+                <strong>Build your app</strong>
+                <p class="soft">Choose an app, name it, choose a vibe, then generate the mini app below.</p>
                 <div class="btn-row">
-                  <button class="btn-pink" id="bossBtn">Generate Boss Build Plan</button>
+                  <button class="btn-pink" id="bossBuildBtn">Build My Mini App</button>
                 </div>
                 <div id="bossPlan" class="message hidden"></div>
+              </div>
+
+              <div class="demo-box">
+                <strong>Mini app preview</strong>
+                <p class="soft">This will become your live JavaScript mini app.</p>
+                <div class="demo-stage" id="bossPreviewStage">
+                  <div class="live-text" id="bossPreviewText">Your mini app will appear here.</div>
+                  <div id="bossPreviewApp" style="margin-top:14px;"></div>
+                </div>
               </div>
 
               <div class="btn-row" style="margin-top:14px;">
@@ -1242,6 +1258,35 @@ btn.addEventListener("click", () => {
           <div class="btn-row" style="margin-top:16px;">
             <button class="btn-primary" id="openCertificateBtn">Open Certificate</button>
             <button class="btn-dark" id="restartBtn">Play Again</button>
+          </div>
+        </section>
+
+        <section class="card hidden" id="showcaseCard" style="margin-top:20px;">
+          <h2>🏆 Class Showcase Board</h2>
+          <p class="soft">
+            Submit your mini app to the board and see what everyone built.
+          </p>
+
+          <div class="btn-row" style="margin-top:12px;">
+            <button class="btn-primary" id="submitShowcaseBtn">Submit My App to the Board</button>
+            <button class="btn-soft" id="resetVotesBtn" type="button">Reset Votes</button>
+          </div>
+
+          <div id="showcaseMsg" class="message hidden"></div>
+
+          <div id="showcaseBoard" class="leaderboard" style="margin-top:16px;">
+            <div class="leader-row">
+              <div class="rank">★</div>
+              <div>
+                <strong>Example App</strong><br>
+                <span class="soft small">Campus stress meter • by Demo Team</span><br>
+                <span class="showcase-tag">Neon Purple</span>
+              </div>
+              <div style="display:grid; gap:8px; justify-items:end;">
+                <strong><span class="vote-count">0</span> votes</strong>
+                <button class="btn-soft vote-btn" type="button">Vote</button>
+              </div>
+            </div>
           </div>
         </section>
       </main>
@@ -1313,7 +1358,7 @@ btn.addEventListener("click", () => {
         <section class="side-card">
           <h3>💡 Instructor Mode</h3>
           <p class="soft small">
-            Students now write and run tiny bits of JavaScript in each round. That usually creates much better engagement and confidence.
+            Students now write and run tiny bits of JavaScript in each round, then finish by building and submitting a mini app.
           </p>
           <p class="soft small">
             Great reminder to say out loud: <strong>JavaScript is what makes the webpage react.</strong>
@@ -1394,6 +1439,12 @@ btn.addEventListener("click", () => {
     const soundToggleBtn = document.getElementById("soundToggleBtn");
     const timerToggleBtn = document.getElementById("timerToggleBtn");
     const startMsg = document.getElementById("startMsg");
+
+    const showcaseCard = document.getElementById("showcaseCard");
+    const submitShowcaseBtn = document.getElementById("submitShowcaseBtn");
+    const resetVotesBtn = document.getElementById("resetVotesBtn");
+    const showcaseMsg = document.getElementById("showcaseMsg");
+    const showcaseBoard = document.getElementById("showcaseBoard");
 
     const rounds = [1,2,3,4,5,6].map(n => document.getElementById(`round${n}`));
     const questNodes = [...document.querySelectorAll(".quest-node")];
@@ -1577,6 +1628,55 @@ btn.addEventListener("click", () => {
       return true;
     }
 
+    function bindExistingVoteButtons() {
+      const rows = Array.from(showcaseBoard.querySelectorAll(".leader-row"));
+      rows.forEach((row) => {
+        if (row.dataset.voteBound === "true") return;
+        const voteBtn = row.querySelector(".vote-btn");
+        const voteCountEl = row.querySelector(".vote-count");
+        if (!voteBtn || !voteCountEl) return;
+
+        let votes = parseInt(voteCountEl.textContent || "0", 10);
+        voteBtn.addEventListener("click", () => {
+          votes++;
+          voteCountEl.textContent = votes;
+          playTone("success");
+
+          const sortableRows = Array.from(showcaseBoard.querySelectorAll(".leader-row"));
+          sortableRows.sort((a, b) => {
+            const aVotes = parseInt(a.querySelector(".vote-count")?.textContent || "0", 10);
+            const bVotes = parseInt(b.querySelector(".vote-count")?.textContent || "0", 10);
+            return bVotes - aVotes;
+          });
+          sortableRows.forEach(r => showcaseBoard.appendChild(r));
+        });
+
+        row.dataset.voteBound = "true";
+      });
+    }
+
+    function addShowcaseEntry(teamName, appTitle, appType, themeLabel) {
+      const row = document.createElement("div");
+      row.className = "leader-row pop";
+      row.style.alignItems = "start";
+
+      row.innerHTML = `
+        <div class="rank">✓</div>
+        <div>
+          <strong>${appTitle}</strong><br>
+          <span class="soft small">${appType} • by ${teamName}</span><br>
+          <span class="showcase-tag">${themeLabel}</span>
+        </div>
+        <div style="display:grid; gap:8px; justify-items:end;">
+          <strong><span class="vote-count">0</span> votes</strong>
+          <button class="btn-soft vote-btn" type="button">Vote</button>
+        </div>
+      `;
+
+      showcaseBoard.prepend(row);
+      bindExistingVoteButtons();
+    }
+
     questNodes.forEach(node => {
       node.addEventListener("click", () => {
         const roundNum = Number(node.dataset.round);
@@ -1658,20 +1758,20 @@ btn.addEventListener("click", () => {
       });
     }
 
-    // Round 1 sandbox
+    // Round 1
     bindSandbox({
       editorId: "r1Editor",
       runBtnId: "r1RunBtn",
       resetBtnId: "r1ResetBtn",
       msgId: "r1SandboxMsg",
       setupFn: () => {
-        const btn = document.getElementById("r1ActionBtn");
+        const btnOld = document.getElementById("r1ActionBtn");
+        const btn = btnOld.cloneNode(true);
+        btnOld.replaceWith(btn);
         const text = document.getElementById("r1Text");
-        const newBtn = btn.cloneNode(true);
-        btn.replaceWith(newBtn);
         text.textContent = "😴 The webpage is asleep...";
         text.style.color = "";
-        return { btn: newBtn, text };
+        return { btn, text };
       }
     });
 
@@ -1698,7 +1798,7 @@ btn.addEventListener("click", () => {
       activateRound(2);
     });
 
-    // Round 2 sandbox
+    // Round 2
     bindSandbox({
       editorId: "r2Editor",
       runBtnId: "r2RunBtn",
@@ -1740,7 +1840,7 @@ btn.addEventListener("click", () => {
       activateRound(3);
     });
 
-    // Round 3 sandbox
+    // Round 3
     bindSandbox({
       editorId: "r3Editor",
       runBtnId: "r3RunBtn",
@@ -1779,7 +1879,7 @@ btn.addEventListener("click", () => {
       activateRound(4);
     });
 
-    // Round 4 sandbox
+    // Round 4
     bindSandbox({
       editorId: "r4Editor",
       runBtnId: "r4RunBtn",
@@ -1817,7 +1917,7 @@ btn.addEventListener("click", () => {
       activateRound(5);
     });
 
-    // Round 5 sandbox
+    // Round 5
     bindSandbox({
       editorId: "r5Editor",
       runBtnId: "r5RunBtn",
@@ -1858,12 +1958,16 @@ btn.addEventListener("click", () => {
 
     // Boss battle
     const bossType = document.getElementById("bossType");
-    const bossInteraction = document.getElementById("bossInteraction");
-    const bossLogic = document.getElementById("bossLogic");
-    const bossBtn = document.getElementById("bossBtn");
+    const bossTitle = document.getElementById("bossTitle");
+    const bossTheme = document.getElementById("bossTheme");
+    const bossBuildBtn = document.getElementById("bossBuildBtn");
     const bossPlan = document.getElementById("bossPlan");
-    const finishBtn = document.getElementById("finishBtn");
     const bossMsg = document.getElementById("bossMsg");
+    const finishBtn = document.getElementById("finishBtn");
+    const bossPreviewStage = document.getElementById("bossPreviewStage");
+    const bossPreviewText = document.getElementById("bossPreviewText");
+    const bossPreviewApp = document.getElementById("bossPreviewApp");
+
     const finalCard = document.getElementById("finalCard");
     const finalText = document.getElementById("finalText");
     const restartBtn = document.getElementById("restartBtn");
@@ -1872,43 +1976,257 @@ btn.addEventListener("click", () => {
     const closeCertificateBtn = document.getElementById("closeCertificateBtn");
     const printCertificateBtn = document.getElementById("printCertificateBtn");
 
-    bossBtn.addEventListener("click", () => {
-      if (!bossType.value || !bossInteraction.value || !bossLogic.value) {
-        setMessage(bossPlan, "Pick one option in each dropdown to generate your build plan.", "warn");
+    function applyBossTheme(theme) {
+      bossPreviewStage.style.borderColor = "#334155";
+      bossPreviewStage.style.boxShadow = "none";
+
+      if (theme === "purple") {
+        bossPreviewStage.style.borderColor = "#7c3aed";
+        bossPreviewStage.style.boxShadow = "0 0 20px rgba(124, 58, 237, 0.25)";
+      } else if (theme === "cyan") {
+        bossPreviewStage.style.borderColor = "#22d3ee";
+        bossPreviewStage.style.boxShadow = "0 0 20px rgba(34, 211, 238, 0.25)";
+      } else if (theme === "pink") {
+        bossPreviewStage.style.borderColor = "#ec4899";
+        bossPreviewStage.style.boxShadow = "0 0 20px rgba(236, 72, 153, 0.25)";
+      } else if (theme === "green") {
+        bossPreviewStage.style.borderColor = "#22c55e";
+        bossPreviewStage.style.boxShadow = "0 0 20px rgba(34, 197, 94, 0.25)";
+      }
+    }
+
+    function renderStressApp(title) {
+      bossPreviewApp.innerHTML = `
+        <div style="display:grid; gap:12px;">
+          <div style="font-size:1.1rem; font-weight:700;">${title}</div>
+          <div>Stress level: <span id="stressValue">0</span></div>
+          <div class="btn-row">
+            <button class="btn-yellow" id="stressBtn">Add Stress</button>
+            <button class="btn-soft" id="stressResetBtn">Reset</button>
+          </div>
+          <div id="stressMsg" class="message">Current vibe: calm... for now.</div>
+        </div>
+      `;
+
+      let stress = 0;
+      const stressValue = document.getElementById("stressValue");
+      const stressMsg = document.getElementById("stressMsg");
+
+      document.getElementById("stressBtn").addEventListener("click", () => {
+        stress++;
+        stressValue.textContent = stress;
+        if (stress < 3) {
+          stressMsg.textContent = "Still manageable.";
+        } else if (stress < 6) {
+          stressMsg.textContent = "Okay... maybe take a breath.";
+        } else {
+          stressMsg.textContent = "🚨 Immediate snack or nap recommended.";
+        }
+        playTone("click");
+      });
+
+      document.getElementById("stressResetBtn").addEventListener("click", () => {
+        stress = 0;
+        stressValue.textContent = stress;
+        stressMsg.textContent = "Current vibe: calm... for now.";
+        playTone("click");
+      });
+    }
+
+    function renderRoommateApp(title) {
+      bossPreviewApp.innerHTML = `
+        <div style="display:grid; gap:12px;">
+          <div style="font-size:1.1rem; font-weight:700;">${title}</div>
+          <div>Mood level: <span id="roommateValue">0</span></div>
+          <div class="btn-row">
+            <button class="btn-cyan" id="roommateBtn">Check Mood</button>
+          </div>
+          <div id="roommateMsg" class="message">Click to reveal the roommate vibe.</div>
+        </div>
+      `;
+
+      document.getElementById("roommateBtn").addEventListener("click", () => {
+        const moods = [
+          "😎 Unbothered and vibing.",
+          "🫠 Barely surviving group projects.",
+          "🍕 In a good mood because food arrived.",
+          "🎧 Emotionally unavailable but listening to playlists.",
+          "🚨 Needs everyone to stop touching their stuff."
+        ];
+        const index = Math.floor(Math.random() * moods.length);
+        document.getElementById("roommateValue").textContent = index + 1;
+        document.getElementById("roommateMsg").textContent = moods[index];
+        playTone("click");
+      });
+    }
+
+    function renderLunchApp(title) {
+      bossPreviewApp.innerHTML = `
+        <div style="display:grid; gap:12px;">
+          <div style="font-size:1.1rem; font-weight:700;">${title}</div>
+          <div class="btn-row">
+            <button class="btn-pink" id="lunchBtn">Pick My Lunch</button>
+          </div>
+          <div id="lunchMsg" class="message">No decision yet.</div>
+        </div>
+      `;
+
+      document.getElementById("lunchBtn").addEventListener("click", () => {
+        const lunches = [
+          "🍔 Burger",
+          "🌯 Burrito",
+          "🍜 Ramen",
+          "🥗 Salad pretending to be enough",
+          "🍕 Pizza",
+          "🐔 Chicken tenders, obviously"
+        ];
+        const pick = lunches[Math.floor(Math.random() * lunches.length)];
+        document.getElementById("lunchMsg").textContent = `Today's winner: ${pick}`;
+        playTone("click");
+      });
+    }
+
+    function renderMotivationApp(title) {
+      bossPreviewApp.innerHTML = `
+        <div style="display:grid; gap:12px;">
+          <div style="font-size:1.1rem; font-weight:700;">${title}</div>
+          <div class="btn-row">
+            <button class="btn-green" id="motivationBtn">Generate Motivation</button>
+          </div>
+          <div id="motivationMsg" class="message">You got this. Probably.</div>
+        </div>
+      `;
+
+      document.getElementById("motivationBtn").addEventListener("click", () => {
+        const quotes = [
+          "💪 Your code does not have to be perfect to be progress.",
+          "🚀 Every good developer has broken things first.",
+          "🔥 You are one semicolon away from greatness.",
+          "🧠 Debugging is learning in disguise.",
+          "✨ Tiny wins build real skill."
+        ];
+        const pick = quotes[Math.floor(Math.random() * quotes.length)];
+        document.getElementById("motivationMsg").textContent = pick;
+        playTone("click");
+      });
+    }
+
+    function renderStudyApp(title) {
+      bossPreviewApp.innerHTML = `
+        <div style="display:grid; gap:12px;">
+          <div style="font-size:1.1rem; font-weight:700;">${title}</div>
+          <div class="btn-row">
+            <button class="btn-primary" id="studyBtn">Need a Study Break?</button>
+          </div>
+          <div id="studyMsg" class="message">Press the button when your brain starts buffering.</div>
+        </div>
+      `;
+
+      document.getElementById("studyBtn").addEventListener("click", () => {
+        const breaks = [
+          "Stand up and stretch for 30 seconds.",
+          "Drink water.",
+          "Look away from your screen for 20 seconds.",
+          "Text nobody. Stay focused. 😅",
+          "Take three deep breaths."
+        ];
+        const pick = breaks[Math.floor(Math.random() * breaks.length)];
+        document.getElementById("studyMsg").textContent = `🧘 ${pick}`;
+        playTone("click");
+      });
+    }
+
+    bossBuildBtn.addEventListener("click", () => {
+      const type = bossType.value;
+      const title = bossTitle.value.trim();
+      const theme = bossTheme.value;
+
+      if (!type || !title || !theme) {
+        setMessage(bossPlan, "Choose an app type, enter a title, and choose a vibe before building.", "warn");
         playTone("warn");
         return;
       }
 
+      bossPreviewText.textContent = "Mini app built successfully. Try it below.";
+      applyBossTheme(theme);
+
+      if (type === "stress") {
+        renderStressApp(title);
+      } else if (type === "roommate") {
+        renderRoommateApp(title);
+      } else if (type === "lunch") {
+        renderLunchApp(title);
+      } else if (type === "motivation") {
+        renderMotivationApp(title);
+      } else if (type === "study") {
+        renderStudyApp(title);
+      }
+
       setMessage(
         bossPlan,
-        `<strong>Mini App Plan:</strong><br><br>
-        <strong>App idea:</strong> ${bossType.value}<br>
-        <strong>Main interaction:</strong> ${bossInteraction.value}<br>
-        <strong>Logic:</strong> ${bossLogic.value}<br><br>
-        Your app would listen for user input, update something with JavaScript, and visibly react on the page.`,
+        `<strong>Mini App Built:</strong><br><br>
+        <strong>App type:</strong> ${bossType.options[bossType.selectedIndex].text}<br>
+        <strong>App title:</strong> ${title}<br>
+        <strong>Theme:</strong> ${bossTheme.options[bossTheme.selectedIndex].text}<br><br>
+        Your app now includes interaction, visible output, and JavaScript behavior.`,
         "success"
       );
 
       finishBtn.disabled = false;
-      updatePoints(30);
+      submitShowcaseBtn.disabled = false;
+      updatePoints(35);
       playTone("success");
     });
 
     finishBtn.addEventListener("click", () => {
       completeRound(6);
-      setMessage(bossMsg, `🏆 Boss defeated. ${getPlayerName()} completed the arena.`, "success");
+      setMessage(bossMsg, `🏆 Boss defeated. ${getPlayerName()} completed the arena by building a live mini app.`, "success");
 
       finalCard.classList.remove("hidden");
       finalCard.classList.add("pulse");
+      showcaseCard.classList.remove("hidden");
+
       finalText.innerHTML = `
-        <strong>${getPlayerName()}</strong> completed all six rounds and practiced the core idea of JavaScript:
-        webpages can listen, react, update, decide, and feel alive.
+        <strong>${getPlayerName()}</strong> completed all six rounds and built a working mini app using JavaScript ideas like events, variables, conditionals, and dynamic output.
       `;
 
       launchConfetti();
       playTone("success");
       updateQuestMap();
       finalCard.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    submitShowcaseBtn.addEventListener("click", () => {
+      const teamName = getPlayerName();
+      const appTitle = bossTitle.value.trim();
+      const appTypeText = bossType.options[bossType.selectedIndex]?.text || "";
+      const themeText = bossTheme.options[bossTheme.selectedIndex]?.text || "";
+
+      if (!appTitle || !appTypeText || !themeText) {
+        setMessage(showcaseMsg, "Build your mini app first so it has something to submit to the board.", "warn");
+        playTone("warn");
+        return;
+      }
+
+      addShowcaseEntry(teamName, appTitle, appTypeText, themeText);
+      setMessage(showcaseMsg, `🎉 ${teamName} submitted <strong>${appTitle}</strong> to the showcase board.`, "success");
+      updatePoints(15);
+      playTone("success");
+
+      submitShowcaseBtn.disabled = true;
+    });
+
+    resetVotesBtn.addEventListener("click", () => {
+      const voteCounts = document.querySelectorAll(".vote-count");
+      voteCounts.forEach(count => {
+        count.textContent = "0";
+      });
+
+      const rows = Array.from(showcaseBoard.querySelectorAll(".leader-row"));
+      rows.forEach(r => showcaseBoard.appendChild(r));
+
+      setMessage(showcaseMsg, "🗳️ All showcase votes have been reset.", "success");
+      playTone("click");
     });
 
     openCertificateBtn.addEventListener("click", () => {
@@ -1929,6 +2247,7 @@ btn.addEventListener("click", () => {
       window.location.reload();
     });
 
+    bindExistingVoteButtons();
     updateProgress();
     updateBadges();
     updateTimerUI();
