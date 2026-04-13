@@ -1,0 +1,1543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JavaScript Quest Arena</title>
+  <style>
+    :root{
+      --bg:#0a0f1f;
+      --bg2:#11182e;
+      --panel:rgba(16,24,45,0.88);
+      --panel-2:rgba(11,18,35,0.92);
+      --line:rgba(148,163,184,0.18);
+      --text:#f8fafc;
+      --muted:#a5b4fc;
+      --soft:#94a3b8;
+      --cyan:#22d3ee;
+      --blue:#3b82f6;
+      --purple:#8b5cf6;
+      --pink:#ec4899;
+      --green:#22c55e;
+      --yellow:#facc15;
+      --orange:#fb923c;
+      --red:#ef4444;
+      --shadow:0 18px 50px rgba(0,0,0,0.45);
+      --radius:24px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+
+    body{
+      margin:0;
+      font-family: Inter, Arial, Helvetica, sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 10% 10%, rgba(34,211,238,0.16), transparent 18%),
+        radial-gradient(circle at 88% 12%, rgba(236,72,153,0.16), transparent 18%),
+        radial-gradient(circle at 50% 88%, rgba(139,92,246,0.14), transparent 22%),
+        linear-gradient(180deg, #060a16, #0b1120 28%, #0d1326 100%);
+      min-height:100vh;
+      overflow-x:hidden;
+    }
+
+    .grid-bg{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background-image:
+        linear-gradient(rgba(59,130,246,0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59,130,246,0.06) 1px, transparent 1px);
+      background-size: 38px 38px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,0.45), rgba(0,0,0,0.1));
+      z-index:0;
+    }
+
+    .glow-orb{
+      position:fixed;
+      border-radius:50%;
+      filter: blur(50px);
+      opacity:.18;
+      pointer-events:none;
+      z-index:0;
+    }
+
+    .orb1{width:240px;height:240px;left:-40px;top:60px;background:var(--cyan)}
+    .orb2{width:300px;height:300px;right:-60px;top:100px;background:var(--pink)}
+    .orb3{width:260px;height:260px;left:35%;bottom:60px;background:var(--purple)}
+
+    .container{
+      width:min(1220px, 94%);
+      margin:0 auto;
+      padding:18px 0 70px;
+      position:relative;
+      z-index:2;
+    }
+
+    .hero{
+      position:relative;
+      overflow:hidden;
+      border-radius:32px;
+      padding:28px;
+      background:
+        linear-gradient(135deg, rgba(34,211,238,0.12), rgba(59,130,246,0.12), rgba(236,72,153,0.12)),
+        rgba(10,15,31,0.9);
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(14px);
+    }
+
+    .hero::after{
+      content:"";
+      position:absolute;
+      right:-60px;
+      top:-60px;
+      width:220px;
+      height:220px;
+      border-radius:50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.14), transparent 60%);
+      pointer-events:none;
+    }
+
+    .eyebrow{
+      display:inline-block;
+      padding:8px 14px;
+      border-radius:999px;
+      font-size:.9rem;
+      font-weight:700;
+      background:rgba(255,255,255,0.07);
+      border:1px solid rgba(255,255,255,0.08);
+      color:#dbeafe;
+      margin-bottom:12px;
+    }
+
+    .hero h1{
+      margin:0 0 10px;
+      font-size:clamp(2.1rem, 4.7vw, 4rem);
+      line-height:1.02;
+      letter-spacing:-0.03em;
+    }
+
+    .hero p{
+      margin:0;
+      max-width:860px;
+      color:#dbeafe;
+      font-size:1.05rem;
+    }
+
+    .hero-meta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:18px;
+    }
+
+    .meta-pill{
+      padding:9px 14px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.09);
+      background:rgba(255,255,255,0.05);
+      color:#fff;
+      font-size:.94rem;
+    }
+
+    .sticky-top{
+      position:sticky;
+      top:0;
+      z-index:50;
+      padding-top:12px;
+      margin:14px 0 18px;
+    }
+
+    .hud{
+      display:grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap:14px;
+      background:rgba(8,12,24,0.82);
+      border:1px solid var(--line);
+      border-radius:22px;
+      padding:14px;
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(14px);
+    }
+
+    .hud-left,.hud-right{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      justify-content:center;
+    }
+
+    .hud-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+    }
+
+    .progress-wrap{
+      width:100%;
+    }
+
+    .progress-label{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:6px;
+      font-size:.95rem;
+      color:#dbeafe;
+    }
+
+    .progress-bar{
+      height:16px;
+      border-radius:999px;
+      overflow:hidden;
+      background:#0c1428;
+      border:1px solid #1d2942;
+    }
+
+    .progress-fill{
+      height:100%;
+      width:0%;
+      background:linear-gradient(90deg, var(--cyan), var(--blue), var(--purple), var(--pink));
+      box-shadow:0 0 20px rgba(59,130,246,0.35);
+      transition:width .35s ease;
+    }
+
+    .hud-stat{
+      flex:1 1 120px;
+      min-width:110px;
+      background:#0d162c;
+      border:1px solid #1d2942;
+      border-radius:16px;
+      padding:12px 14px;
+      text-align:center;
+    }
+
+    .hud-stat strong{
+      display:block;
+      font-size:1.18rem;
+      margin-bottom:4px;
+    }
+
+    .btn-row,.choice-grid,.inline-grid{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+    }
+
+    button{
+      border:none;
+      border-radius:16px;
+      padding:12px 18px;
+      color:white;
+      font-size:1rem;
+      font-weight:700;
+      cursor:pointer;
+      transition:transform .16s ease, box-shadow .16s ease, opacity .16s ease, filter .16s ease;
+      box-shadow:0 12px 24px rgba(0,0,0,0.28);
+    }
+
+    button:hover{
+      transform:translateY(-2px);
+      filter:brightness(1.05);
+    }
+
+    button:disabled{
+      opacity:.45;
+      cursor:not-allowed;
+      transform:none;
+      filter:none;
+    }
+
+    .btn-primary{background:linear-gradient(90deg, var(--blue), var(--purple))}
+    .btn-pink{background:linear-gradient(90deg, var(--purple), var(--pink))}
+    .btn-cyan{background:linear-gradient(90deg, #0891b2, var(--cyan)); color:#06131a}
+    .btn-green{background:linear-gradient(90deg, #16a34a, var(--green))}
+    .btn-yellow{background:linear-gradient(90deg, #eab308, var(--orange)); color:#111827}
+    .btn-dark{background:linear-gradient(90deg, #111827, #1f2937)}
+    .btn-soft{
+      background:#121d36;
+      border:1px solid #243250;
+      color:#dbeafe;
+    }
+
+    .layout{
+      display:grid;
+      grid-template-columns: 1fr 330px;
+      gap:18px;
+    }
+
+    .card,.round,.side-card,.modal-card{
+      background:var(--panel);
+      border:1px solid var(--line);
+      border-radius:24px;
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(16px);
+    }
+
+    .card,.side-card{
+      padding:22px;
+    }
+
+    .side{
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+    }
+
+    .card h2,.side-card h3,.round-header h2{
+      margin-top:0;
+    }
+
+    .muted{color:var(--muted)}
+    .soft{color:var(--soft)}
+    .small{font-size:.94rem}
+
+    label{
+      display:block;
+      font-weight:700;
+      margin-bottom:6px;
+    }
+
+    input[type="text"], textarea, select{
+      width:100%;
+      padding:13px 14px;
+      border-radius:16px;
+      border:1px solid #25344f;
+      background:#0b1326;
+      color:white;
+      font-size:1rem;
+      outline:none;
+    }
+
+    textarea{
+      min-height:104px;
+      resize:vertical;
+    }
+
+    input:focus, textarea:focus, select:focus{
+      border-color:#60a5fa;
+      box-shadow:0 0 0 3px rgba(96,165,250,0.14);
+    }
+
+    .setup-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+      gap:14px;
+      margin-top:12px;
+    }
+
+    .message{
+      margin-top:14px;
+      border-radius:16px;
+      padding:14px 16px;
+      background:#0b1326;
+      border:1px solid #243250;
+    }
+
+    .message.success{
+      background:rgba(34,197,94,0.12);
+      border-color:rgba(34,197,94,0.35);
+    }
+
+    .message.warn{
+      background:rgba(250,204,21,0.12);
+      border-color:rgba(250,204,21,0.35);
+    }
+
+    .message.danger{
+      background:rgba(239,68,68,0.12);
+      border-color:rgba(239,68,68,0.35);
+    }
+
+    .pill-wrap{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+
+    .pill{
+      padding:7px 11px;
+      border-radius:999px;
+      background:#0b1326;
+      border:1px solid #243250;
+      color:#dbeafe;
+      font-size:.9rem;
+    }
+
+    .rounds{
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+      margin-top:18px;
+    }
+
+    .round{
+      overflow:hidden;
+      opacity:.45;
+      transform:scale(.992);
+      filter:saturate(.8);
+      transition:all .28s ease;
+    }
+
+    .round.locked .round-header::after{
+      content:"🔒 Locked";
+      position:absolute;
+      right:18px;
+      top:16px;
+      font-size:.94rem;
+      color:#cbd5e1;
+      background:rgba(255,255,255,0.07);
+      border:1px solid rgba(255,255,255,0.08);
+      padding:7px 10px;
+      border-radius:999px;
+    }
+
+    .round.active{
+      opacity:1;
+      transform:scale(1);
+      filter:saturate(1);
+      border-color:rgba(96,165,250,0.4);
+      box-shadow:0 0 0 1px rgba(96,165,250,0.12), 0 18px 50px rgba(0,0,0,0.45);
+    }
+
+    .round.complete{
+      opacity:1;
+      transform:scale(1);
+      filter:saturate(1);
+      border-color:rgba(34,197,94,0.38);
+      box-shadow:0 0 0 1px rgba(34,197,94,0.12), 0 18px 50px rgba(0,0,0,0.45);
+    }
+
+    .round-header{
+      position:relative;
+      padding:20px 22px;
+      background:
+        linear-gradient(90deg, rgba(59,130,246,0.16), rgba(139,92,246,0.14), rgba(236,72,153,0.14)),
+        rgba(255,255,255,0.02);
+      border-bottom:1px solid var(--line);
+    }
+
+    .round-tag{
+      display:inline-block;
+      padding:7px 11px;
+      border-radius:999px;
+      background:rgba(255,255,255,0.06);
+      border:1px solid rgba(255,255,255,0.08);
+      font-size:.9rem;
+      margin-bottom:8px;
+    }
+
+    .round-body{
+      padding:22px;
+    }
+
+    .challenge{
+      margin-top:14px;
+      padding:16px;
+      border-radius:18px;
+      background:var(--panel-2);
+      border:1px solid #243250;
+    }
+
+    .fun-output{
+      margin-top:10px;
+      font-size:1.08rem;
+      font-weight:700;
+      color:#fff;
+    }
+
+    .choice-grid button{
+      flex:1 1 220px;
+      text-align:left;
+    }
+
+    .leaderboard{
+      display:grid;
+      gap:10px;
+      margin-top:10px;
+    }
+
+    .leader-row{
+      display:grid;
+      grid-template-columns:40px 1fr auto;
+      gap:10px;
+      align-items:center;
+      padding:12px;
+      border-radius:16px;
+      background:#0b1326;
+      border:1px solid #243250;
+    }
+
+    .rank{
+      width:34px;
+      height:34px;
+      display:grid;
+      place-items:center;
+      border-radius:50%;
+      background:linear-gradient(135deg, var(--blue), var(--purple));
+      font-weight:700;
+    }
+
+    .badge-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:10px;
+      margin-top:10px;
+    }
+
+    .badge-card{
+      padding:12px;
+      border-radius:16px;
+      background:#0b1326;
+      border:1px solid #243250;
+      min-height:84px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      gap:4px;
+      opacity:.45;
+      transition:all .2s ease;
+    }
+
+    .badge-card.unlocked{
+      opacity:1;
+      border-color:rgba(34,197,94,0.35);
+      background:rgba(34,197,94,0.10);
+    }
+
+    .badge-card span{
+      font-size:1.35rem;
+    }
+
+    .hidden{display:none !important}
+
+    .celebration{
+      margin-top:20px;
+      padding:24px;
+      border-radius:26px;
+      background:
+        linear-gradient(135deg, rgba(34,197,94,0.12), rgba(34,211,238,0.12), rgba(236,72,153,0.12)),
+        rgba(10,15,31,0.92);
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+    }
+
+    .pulse{
+      animation:pulse .8s ease;
+    }
+
+    .pop{
+      animation:pop .4s ease;
+    }
+
+    @keyframes pulse{
+      0%{transform:scale(1)}
+      38%{transform:scale(1.018)}
+      100%{transform:scale(1)}
+    }
+
+    @keyframes pop{
+      0%{transform:scale(.95);opacity:.6}
+      100%{transform:scale(1);opacity:1}
+    }
+
+    .confetti-piece{
+      position:fixed;
+      width:11px;
+      height:18px;
+      top:-24px;
+      opacity:.96;
+      z-index:999;
+      animation:fall linear forwards;
+      border-radius:2px;
+    }
+
+    @keyframes fall{
+      to{
+        transform:translateY(110vh) rotate(800deg);
+      }
+    }
+
+    .modal{
+      position:fixed;
+      inset:0;
+      background:rgba(2,6,23,0.72);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      z-index:9999;
+    }
+
+    .modal-card{
+      width:min(820px, 100%);
+      padding:26px;
+      background:rgba(12,18,34,0.96);
+    }
+
+    .certificate{
+      margin-top:14px;
+      padding:24px;
+      border-radius:22px;
+      border:1px solid #2d3d5c;
+      background:
+        linear-gradient(135deg, rgba(34,211,238,0.08), rgba(139,92,246,0.08), rgba(236,72,153,0.08)),
+        #0b1326;
+      text-align:center;
+    }
+
+    .certificate h2{
+      font-size:2rem;
+      margin-bottom:8px;
+    }
+
+    .certificate .big-name{
+      font-size:2rem;
+      font-weight:800;
+      margin:10px 0;
+      color:#fff;
+      letter-spacing:-0.02em;
+    }
+
+    .certificate .line{
+      width:160px;
+      height:2px;
+      background:linear-gradient(90deg, var(--cyan), var(--pink));
+      margin:18px auto;
+      border-radius:999px;
+    }
+
+    .timer-warning{
+      color:#fde68a;
+    }
+
+    .timer-danger{
+      color:#fca5a5;
+    }
+
+    .footer-note{
+      text-align:center;
+      color:#8ea0c9;
+      margin-top:22px;
+      font-size:.94rem;
+    }
+
+    @media (max-width: 980px){
+      .layout{grid-template-columns:1fr}
+      .hud{grid-template-columns:1fr}
+      .hud-right{gap:8px}
+    }
+
+    @media (max-width: 640px){
+      .container{width:min(96%, 96%)}
+      .hero,.card,.side-card,.round-header,.round-body,.celebration,.modal-card{padding:16px}
+      .btn-row,.choice-grid,.inline-grid{flex-direction:column}
+      button{width:100%}
+      .badge-grid{grid-template-columns:1fr}
+      .certificate h2,.certificate .big-name{font-size:1.6rem}
+    }
+
+    @media print{
+      body *{
+        visibility:hidden;
+      }
+      #certificateArea, #certificateArea *{
+        visibility:visible;
+      }
+      #certificateArea{
+        position:absolute;
+        left:0;
+        top:0;
+        width:100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="grid-bg"></div>
+  <div class="glow-orb orb1"></div>
+  <div class="glow-orb orb2"></div>
+  <div class="glow-orb orb3"></div>
+
+  <div class="container">
+    <section class="hero">
+      <div class="eyebrow">🎮 Classroom Game Mode Activated</div>
+      <h1>JavaScript Quest Arena</h1>
+      <p>
+        Work with a team or go solo. Complete rounds, unlock badges, earn points, beat the boss battle, and leave class actually understanding how JavaScript makes webpages react.
+      </p>
+      <div class="hero-meta">
+        <span class="meta-pill">⚡ Clicks</span>
+        <span class="meta-pill">🔢 Variables</span>
+        <span class="meta-pill">🚦 Logic</span>
+        <span class="meta-pill">🎁 Arrays</span>
+        <span class="meta-pill">🏆 Achievements</span>
+        <span class="meta-pill">🖨️ Certificate</span>
+      </div>
+    </section>
+
+    <div class="sticky-top">
+      <section class="hud">
+        <div class="hud-left">
+          <div class="progress-wrap">
+            <div class="progress-label">
+              <span>Quest Progress</span>
+              <span id="progressText">0 / 6 rounds complete</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" id="progressFill"></div>
+            </div>
+          </div>
+          <div class="hud-row soft small">
+            <span>Level up by completing rounds, answering questions, and finishing the boss battle.</span>
+          </div>
+        </div>
+
+        <div class="hud-right">
+          <div class="hud-row">
+            <div class="hud-stat">
+              <strong id="teamDisplay">---</strong>
+              Team
+            </div>
+            <div class="hud-stat">
+              <strong id="modeDisplay">---</strong>
+              Mode
+            </div>
+            <div class="hud-stat">
+              <strong id="pointsDisplay">0</strong>
+              Points
+            </div>
+          </div>
+          <div class="hud-row">
+            <div class="hud-stat">
+              <strong id="timerDisplay">25:00</strong>
+              Timer
+            </div>
+            <div class="hud-stat">
+              <strong id="soundDisplay">On</strong>
+              Sound
+            </div>
+            <div class="hud-stat">
+              <strong id="badgeCount">0</strong>
+              Badges
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="layout">
+      <main>
+        <section class="card">
+          <h2>🚀 Start the Game</h2>
+          <p class="soft">
+            Students can work together, but the game also works for anyone working alone. Choose a mode, name your group, and enter the arena.
+          </p>
+
+          <div class="setup-grid">
+            <div>
+              <label for="mode">How are you playing today?</label>
+              <select id="mode">
+                <option value="">Choose one...</option>
+                <option value="team">We are working in a team</option>
+                <option value="solo">I am working solo</option>
+              </select>
+            </div>
+            <div>
+              <label for="teamName">Team or player name</label>
+              <input type="text" id="teamName" placeholder="Example: The DOMinators" />
+            </div>
+          </div>
+
+          <div class="btn-row" style="margin-top:14px;">
+            <button class="btn-primary" id="startBtn">Enter the Arena</button>
+            <button class="btn-soft" id="randomNameBtn" type="button">Random Team Name</button>
+            <button class="btn-dark" id="soundToggleBtn" type="button">Toggle Sound</button>
+            <button class="btn-soft" id="timerToggleBtn" type="button">Pause / Resume Timer</button>
+          </div>
+
+          <div id="startMsg" class="message hidden"></div>
+        </section>
+
+        <section class="rounds">
+          <article class="round locked" id="round1">
+            <div class="round-header">
+              <div class="round-tag">Round 1 • Click Events</div>
+              <h2>Wake the Webpage 🔘</h2>
+              <p class="soft">JavaScript is what makes webpages react. Start with the core idea: action → response.</p>
+            </div>
+            <div class="round-body">
+              <label for="r1Answer">With your team, what does JavaScript add to a webpage that HTML and CSS alone do not?</label>
+              <textarea id="r1Answer" placeholder="Example: JavaScript makes the page interactive and able to respond to users."></textarea>
+
+              <div class="challenge">
+                <strong>Fun task:</strong>
+                <p class="soft">Click the button to wake the page once your answer is ready.</p>
+                <div class="btn-row">
+                  <button class="btn-pink" id="wakeBtn">Wake the Page</button>
+                </div>
+                <div class="fun-output" id="wakeOutput"></div>
+              </div>
+
+              <div class="btn-row" style="margin-top:14px;">
+                <button class="btn-green" id="r1Next" disabled>Unlock Round 2</button>
+              </div>
+              <div id="r1Msg" class="message hidden"></div>
+            </div>
+          </article>
+
+          <article class="round locked" id="round2">
+            <div class="round-header">
+              <div class="round-tag">Round 2 • Toggles</div>
+              <h2>Toggle Chaos 🌗</h2>
+              <p class="soft">Now think about states. Websites constantly switch things on and off.</p>
+            </div>
+            <div class="round-body">
+              <label for="r2Answer">Name 3 things on websites or apps that can toggle on and off.</label>
+              <textarea id="r2Answer" placeholder="Example: dark mode, menu, mute, password visibility, notifications."></textarea>
+
+              <div class="challenge">
+                <strong>Fun task:</strong>
+                <p class="soft">Hit the toggle 3 times to prove your team understands state changes.</p>
+                <div class="btn-row">
+                  <button class="btn-cyan" id="toggleBtn">Toggle Arena Mode</button>
+                </div>
+                <div class="fun-output">Toggle count: <span id="toggleCount">0</span></div>
+              </div>
+
+              <div class="btn-row" style="margin-top:14px;">
+                <button class="btn-green" id="r2Next" disabled>Unlock Round 3</button>
+              </div>
+              <div id="r2Msg" class="message hidden"></div>
+            </div>
+          </article>
+
+          <article class="round locked" id="round3">
+            <div class="round-header">
+              <div class="round-tag">Round 3 • Variables</div>
+              <h2>Score Rush 🔢</h2>
+              <p class="soft">Variables help code remember changing values over time.</p>
+            </div>
+            <div class="round-body">
+              <label for="r3Answer">What kinds of changing information might a website track?</label>
+              <textarea id="r3Answer" placeholder="Example: likes, cart total, clicks, score, notifications, comments."></textarea>
+
+              <div class="challenge">
+                <strong>Fun task:</strong>
+                <p class="soft">Get your score to 5 to unlock the next round.</p>
+                <div class="btn-row">
+                  <button class="btn-yellow" id="scoreBtn">Add Point</button>
+                  <button class="btn-soft" id="resetScoreBtn" type="button">Reset Score</button>
+                </div>
+                <div class="fun-output">Team score: <span id="scoreValue">0</span></div>
+                <div class="fun-output" id="scoreOutput"></div>
+              </div>
+
+              <div class="btn-row" style="margin-top:14px;">
+                <button class="btn-green" id="r3Next" disabled>Unlock Round 4</button>
+              </div>
+              <div id="r3Msg" class="message hidden"></div>
+            </div>
+          </article>
+
+          <article class="round locked" id="round4">
+            <div class="round-header">
+              <div class="round-tag">Round 4 • Conditionals</div>
+              <h2>Logic Gate 🚦</h2>
+              <p class="soft">If statements help JavaScript make decisions.</p>
+            </div>
+            <div class="round-body">
+              <label for="r4Answer">In your own words, what does an if statement help a webpage decide?</label>
+              <textarea id="r4Answer" placeholder="Example: It checks if something is true and decides what happens next."></textarea>
+
+              <div class="challenge">
+                <strong>Fun task:</strong>
+                <p class="soft">Choose the correct statement to open the gate.</p>
+                <div class="choice-grid">
+                  <button class="btn-soft logicChoice" data-correct="false">An if statement changes HTML into CSS</button>
+                  <button class="btn-soft logicChoice" data-correct="true">An if statement checks a condition and decides what code runs next</button>
+                  <button class="btn-soft logicChoice" data-correct="false">An if statement only works for colors</button>
+                </div>
+                <div id="logicOutput" class="message hidden"></div>
+              </div>
+
+              <div class="btn-row" style="margin-top:14px;">
+                <button class="btn-green" id="r4Next" disabled>Unlock Round 5</button>
+              </div>
+              <div id="r4Msg" class="message hidden"></div>
+            </div>
+          </article>
+
+          <article class="round locked" id="round5">
+            <div class="round-header">
+              <div class="round-tag">Round 5 • Arrays</div>
+              <h2>Loot Generator 🎁</h2>
+              <p class="soft">Arrays store collections. JavaScript can pull items from those collections dynamically.</p>
+            </div>
+            <div class="round-body">
+              <label for="r5Answer">What are some lists or collections a webpage might store?</label>
+              <textarea id="r5Answer" placeholder="Example: products, songs, users, posts, comments, menu items."></textarea>
+
+              <div class="challenge">
+                <strong>Fun task:</strong>
+                <p class="soft">Generate 2 random titles to unlock the boss battle.</p>
+                <div class="btn-row">
+                  <button class="btn-pink" id="prizeBtn">Generate Loot</button>
+                </div>
+                <div class="fun-output" id="prizeOutput">No loot yet...</div>
+                <div class="fun-output">Loot generated: <span id="prizeCount">0</span></div>
+              </div>
+
+              <div class="btn-row" style="margin-top:14px;">
+                <button class="btn-green" id="r5Next" disabled>Unlock Boss Battle</button>
+              </div>
+              <div id="r5Msg" class="message hidden"></div>
+            </div>
+          </article>
+
+          <article class="round locked" id="round6">
+            <div class="round-header">
+              <div class="round-tag">Boss Battle • Mini App Pitch</div>
+              <h2>Build the Boss Idea 👑</h2>
+              <p class="soft">Now combine clicks, variables, logic, and a visual change into one mini concept.</p>
+            </div>
+            <div class="round-body">
+              <label for="bossIdea">What mini interactive webpage would your team build?</label>
+              <textarea id="bossIdea" placeholder="Example: A roommate mood tracker that updates the page and changes color when the vibe score gets too high."></textarea>
+
+              <label for="bossFeatures" style="margin-top:12px;">Which JavaScript features would it use?</label>
+              <textarea id="bossFeatures" placeholder="Example: click event, score variable, if statement, random array response, class toggle."></textarea>
+
+              <div class="btn-row" style="margin-top:14px;">
+                <button class="btn-pink" id="bossBtn">Defeat the Boss</button>
+              </div>
+              <div id="bossMsg" class="message hidden"></div>
+            </div>
+          </article>
+        </section>
+
+        <section class="celebration hidden" id="finalCard">
+          <h2>🎉 Arena Complete</h2>
+          <p id="finalText"></p>
+          <div class="pill-wrap">
+            <span class="pill">Click events</span>
+            <span class="pill">Variables</span>
+            <span class="pill">Conditionals</span>
+            <span class="pill">Arrays</span>
+            <span class="pill">DOM updates</span>
+            <span class="pill">Interactive thinking</span>
+          </div>
+
+          <div class="btn-row" style="margin-top:16px;">
+            <button class="btn-primary" id="openCertificateBtn">Open Certificate</button>
+            <button class="btn-dark" id="restartBtn">Play Again</button>
+          </div>
+        </section>
+      </main>
+
+      <aside class="side">
+        <section class="side-card">
+          <h3>🏆 Leaderboard Vibes</h3>
+          <p class="soft small">For fun only. Everyone wins by reaching the boss battle.</p>
+          <div class="leaderboard">
+            <div class="leader-row">
+              <div class="rank">1</div>
+              <div>Console Crushers</div>
+              <strong>640</strong>
+            </div>
+            <div class="leader-row">
+              <div class="rank">2</div>
+              <div>Pixel Pirates</div>
+              <strong>610</strong>
+            </div>
+            <div class="leader-row">
+              <div class="rank">3</div>
+              <div>Bug Bouncers</div>
+              <strong>580</strong>
+            </div>
+            <div class="leader-row">
+              <div class="rank">?</div>
+              <div id="boardName">Your team joins here...</div>
+              <strong id="boardScore">0</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="side-card">
+          <h3>🎖️ Achievements</h3>
+          <div class="badge-grid">
+            <div class="badge-card" id="badge1">
+              <span>🔘</span>
+              <strong>Page Waker</strong>
+              <small class="soft">Complete Round 1</small>
+            </div>
+            <div class="badge-card" id="badge2">
+              <span>🌗</span>
+              <strong>Toggle Tactician</strong>
+              <small class="soft">Complete Round 2</small>
+            </div>
+            <div class="badge-card" id="badge3">
+              <span>🔢</span>
+              <strong>Variable Velocity</strong>
+              <small class="soft">Complete Round 3</small>
+            </div>
+            <div class="badge-card" id="badge4">
+              <span>🚦</span>
+              <strong>Logic Opener</strong>
+              <small class="soft">Complete Round 4</small>
+            </div>
+            <div class="badge-card" id="badge5">
+              <span>🎁</span>
+              <strong>Loot Caster</strong>
+              <small class="soft">Complete Round 5</small>
+            </div>
+            <div class="badge-card" id="badge6">
+              <span>👑</span>
+              <strong>Boss Defeated</strong>
+              <small class="soft">Complete Round 6</small>
+            </div>
+          </div>
+        </section>
+
+        <section class="side-card">
+          <h3>💡 Instructor Mode</h3>
+          <p class="small soft">
+            Let students work in pairs or trios. Pause after each round and ask one team to share their answer.
+          </p>
+          <p class="small soft">
+            Good line to repeat: <strong>JavaScript is what makes the webpage react.</strong>
+          </p>
+        </section>
+      </aside>
+    </div>
+
+    <p class="footer-note">
+      Single-file HTML for GitHub Pages • Built for Intro to Web Dev • Game-style classroom experience
+    </p>
+  </div>
+
+  <div class="modal hidden" id="certificateModal">
+    <div class="modal-card">
+      <div class="btn-row" style="justify-content:space-between; align-items:center;">
+        <h3 style="margin:0;">🏆 Quest Certificate</h3>
+        <button class="btn-soft" id="closeCertificateBtn">Close</button>
+      </div>
+
+      <div class="certificate" id="certificateArea">
+        <div class="eyebrow">Certificate of Completion</div>
+        <h2>JavaScript Quest Arena</h2>
+        <p class="soft">This certifies that</p>
+        <div class="big-name" id="certificateName">Team Name</div>
+        <p class="soft">
+          successfully completed the JavaScript game challenge and demonstrated understanding of
+          clicks, variables, conditionals, arrays, and interactive web thinking.
+        </p>
+        <div class="line"></div>
+        <p class="soft">Awarded in Intro to Web Development</p>
+      </div>
+
+      <div class="btn-row" style="margin-top:16px;">
+        <button class="btn-primary" id="printCertificateBtn">Print Certificate</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const teamNames = [
+      "The DOMinators",
+      "Console Crushers",
+      "Pixel Pirates",
+      "Bug Bouncers",
+      "Array Avengers",
+      "Function Junction",
+      "The Click Kings",
+      "Loop Legends",
+      "Syntax Squad",
+      "Code Chaos Crew"
+    ];
+
+    const lootTitles = [
+      "🏆 DOM Ninja",
+      "⚡ Event Listener Legend",
+      "🎯 Variable Mastermind",
+      "🎨 UI Chaos Coordinator",
+      "🐞 Bug Hunter Supreme",
+      "🚀 Button Launch Champion",
+      "🧠 Logic Wizard",
+      "💥 Interactive Hero",
+      "🎮 Browser Battle Boss"
+    ];
+
+    let completed = 0;
+    let points = 0;
+    let toggleCount = 0;
+    let score = 0;
+    let prizeCount = 0;
+    let logicSolved = false;
+    let badges = 0;
+    let soundOn = true;
+    let timerRunning = true;
+    let totalSeconds = 25 * 60;
+
+    const progressText = document.getElementById("progressText");
+    const progressFill = document.getElementById("progressFill");
+    const teamDisplay = document.getElementById("teamDisplay");
+    const modeDisplay = document.getElementById("modeDisplay");
+    const pointsDisplay = document.getElementById("pointsDisplay");
+    const boardName = document.getElementById("boardName");
+    const boardScore = document.getElementById("boardScore");
+    const badgeCount = document.getElementById("badgeCount");
+    const soundDisplay = document.getElementById("soundDisplay");
+    const timerDisplay = document.getElementById("timerDisplay");
+
+    const modeEl = document.getElementById("mode");
+    const teamNameEl = document.getElementById("teamName");
+    const startBtn = document.getElementById("startBtn");
+    const randomNameBtn = document.getElementById("randomNameBtn");
+    const soundToggleBtn = document.getElementById("soundToggleBtn");
+    const timerToggleBtn = document.getElementById("timerToggleBtn");
+    const startMsg = document.getElementById("startMsg");
+
+    const rounds = [1,2,3,4,5,6].map(n => document.getElementById(`round${n}`));
+
+    function getPlayerName() {
+      const value = teamNameEl.value.trim();
+      if (value) return value;
+      return modeEl.value === "solo" ? "Solo Coder" : "Team";
+    }
+
+    function setMessage(el, text, type = "") {
+      el.className = "message";
+      if (type) el.classList.add(type);
+      el.innerHTML = text;
+      el.classList.remove("hidden");
+    }
+
+    function updateProgress() {
+      progressText.textContent = `${completed} / 6 rounds complete`;
+      progressFill.style.width = `${(completed / 6) * 100}%`;
+    }
+
+    function updatePoints(num = 0) {
+      points += num;
+      pointsDisplay.textContent = points;
+      boardScore.textContent = points;
+    }
+
+    function updateBadges() {
+      badgeCount.textContent = badges;
+    }
+
+    function unlockBadge(n) {
+      const badge = document.getElementById(`badge${n}`);
+      if (badge && !badge.classList.contains("unlocked")) {
+        badge.classList.add("unlocked", "pop");
+        badges++;
+        updateBadges();
+        playTone("badge");
+      }
+    }
+
+    function activateRound(n) {
+      rounds.forEach((round, index) => {
+        round.classList.remove("active");
+        if (index === n - 1) {
+          round.classList.add("active");
+          round.classList.remove("locked");
+          round.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      });
+    }
+
+    function completeRound(n) {
+      const round = document.getElementById(`round${n}`);
+      if (!round.classList.contains("complete")) {
+        round.classList.add("complete", "pulse");
+        round.classList.remove("locked");
+        completed++;
+        updateProgress();
+        updatePoints(100);
+        unlockBadge(n);
+        playTone("success");
+        setTimeout(() => round.classList.remove("pulse"), 800);
+      }
+    }
+
+    function randomName() {
+      const i = Math.floor(Math.random() * teamNames.length);
+      teamNameEl.value = teamNames[i];
+    }
+
+    function formatTime(seconds) {
+      const m = Math.floor(seconds / 60);
+      const s = seconds % 60;
+      return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+    }
+
+    function updateTimerUI() {
+      timerDisplay.textContent = formatTime(totalSeconds);
+      timerDisplay.classList.remove("timer-warning", "timer-danger");
+
+      if (totalSeconds <= 300) {
+        timerDisplay.classList.add("timer-warning");
+      }
+      if (totalSeconds <= 60) {
+        timerDisplay.classList.remove("timer-warning");
+        timerDisplay.classList.add("timer-danger");
+      }
+    }
+
+    setInterval(() => {
+      if (!timerRunning) return;
+      if (totalSeconds > 0) {
+        totalSeconds--;
+        updateTimerUI();
+        if (totalSeconds === 300) playTone("warn");
+        if (totalSeconds === 60) playTone("danger");
+      }
+    }, 1000);
+
+    function playTone(type = "click") {
+      if (!soundOn) return;
+
+      try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+
+        oscillator.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+
+        if (type === "click") {
+          oscillator.frequency.value = 520;
+          gainNode.gain.value = 0.03;
+        } else if (type === "success") {
+          oscillator.frequency.value = 760;
+          gainNode.gain.value = 0.05;
+        } else if (type === "badge") {
+          oscillator.frequency.value = 910;
+          gainNode.gain.value = 0.05;
+        } else if (type === "warn") {
+          oscillator.frequency.value = 380;
+          gainNode.gain.value = 0.04;
+        } else if (type === "danger") {
+          oscillator.frequency.value = 220;
+          gainNode.gain.value = 0.05;
+        }
+
+        oscillator.type = "sine";
+        oscillator.start();
+
+        gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.18);
+        oscillator.stop(audioCtx.currentTime + 0.18);
+      } catch (e) {
+        // ignore sound errors
+      }
+    }
+
+    function launchConfetti() {
+      const colors = ["#22d3ee", "#3b82f6", "#8b5cf6", "#ec4899", "#facc15", "#22c55e"];
+      for (let i = 0; i < 110; i++) {
+        const piece = document.createElement("div");
+        piece.className = "confetti-piece";
+        piece.style.left = Math.random() * 100 + "vw";
+        piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+        piece.style.animationDuration = (3 + Math.random() * 3) + "s";
+        piece.style.transform = `rotate(${Math.random() * 360}deg)`;
+        document.body.appendChild(piece);
+        setTimeout(() => piece.remove(), 7000);
+      }
+    }
+
+    function validateStart() {
+      if (!modeEl.value) {
+        setMessage(startMsg, "Choose whether you're working in a team or solo before entering the arena.", "warn");
+        return false;
+      }
+      if (!teamNameEl.value.trim()) {
+        setMessage(startMsg, "Add a team name or solo coder name before starting.", "warn");
+        return false;
+      }
+      return true;
+    }
+
+    randomNameBtn.addEventListener("click", () => {
+      randomName();
+      playTone("click");
+    });
+
+    soundToggleBtn.addEventListener("click", () => {
+      soundOn = !soundOn;
+      soundDisplay.textContent = soundOn ? "On" : "Off";
+      playTone("click");
+    });
+
+    timerToggleBtn.addEventListener("click", () => {
+      timerRunning = !timerRunning;
+      playTone("click");
+    });
+
+    startBtn.addEventListener("click", () => {
+      if (!validateStart()) return;
+
+      const player = getPlayerName();
+      teamDisplay.textContent = player;
+      modeDisplay.textContent = modeEl.value === "team" ? "Team" : "Solo";
+      boardName.textContent = player;
+      document.getElementById("certificateName").textContent = player;
+
+      setMessage(startMsg, `🚀 Welcome, <strong>${player}</strong>. Round 1 is now unlocked. Time to make the browser do things.`, "success");
+      activateRound(1);
+      updatePoints(20);
+      playTone("success");
+    });
+
+    // Round 1
+    const wakeBtn = document.getElementById("wakeBtn");
+    const wakeOutput = document.getElementById("wakeOutput");
+    const r1Next = document.getElementById("r1Next");
+    const r1Msg = document.getElementById("r1Msg");
+
+    wakeBtn.addEventListener("click", () => {
+      const answer = document.getElementById("r1Answer").value.trim();
+      if (!answer) {
+        wakeOutput.textContent = "Your team needs to answer the question first.";
+        playTone("warn");
+        return;
+      }
+
+      wakeOutput.textContent = `✨ ${getPlayerName()} woke the page. JavaScript gives the webpage actions and reactions.`;
+      document.querySelector(".hero").classList.add("pulse");
+      updatePoints(25);
+      r1Next.disabled = false;
+      playTone("click");
+      setTimeout(() => document.querySelector(".hero").classList.remove("pulse"), 600);
+    });
+
+    r1Next.addEventListener("click", () => {
+      completeRound(1);
+      setMessage(r1Msg, "Nice. You connected JavaScript to interaction and user response.", "success");
+      activateRound(2);
+    });
+
+    // Round 2
+    const toggleBtn = document.getElementById("toggleBtn");
+    const toggleCountEl = document.getElementById("toggleCount");
+    const r2Next = document.getElementById("r2Next");
+    const r2Msg = document.getElementById("r2Msg");
+
+    toggleBtn.addEventListener("click", () => {
+      const answer = document.getElementById("r2Answer").value.trim();
+      if (!answer) {
+        setMessage(r2Msg, "Answer the toggle question first.", "warn");
+        playTone("warn");
+        return;
+      }
+
+      toggleCount++;
+      toggleCountEl.textContent = toggleCount;
+      document.body.style.filter = toggleCount % 2 === 0 ? "saturate(1)" : "saturate(1.15)";
+      document.body.style.background =
+        toggleCount % 2 === 0
+          ? `radial-gradient(circle at 10% 10%, rgba(34,211,238,0.16), transparent 18%),
+             radial-gradient(circle at 88% 12%, rgba(236,72,153,0.16), transparent 18%),
+             radial-gradient(circle at 50% 88%, rgba(139,92,246,0.14), transparent 22%),
+             linear-gradient(180deg, #060a16, #0b1120 28%, #0d1326 100%)`
+          : `radial-gradient(circle at 14% 18%, rgba(250,204,21,0.16), transparent 18%),
+             radial-gradient(circle at 86% 10%, rgba(34,197,94,0.16), transparent 18%),
+             radial-gradient(circle at 56% 85%, rgba(59,130,246,0.14), transparent 22%),
+             linear-gradient(180deg, #08111e, #0b1425 28%, #101a2d 100%)`;
+
+      updatePoints(15);
+      playTone("click");
+
+      if (toggleCount >= 3) {
+        r2Next.disabled = false;
+      }
+    });
+
+    r2Next.addEventListener("click", () => {
+      completeRound(2);
+      setMessage(r2Msg, "Great. You explored state changes, which are everywhere in web interfaces.", "success");
+      activateRound(3);
+    });
+
+    // Round 3
+    const scoreBtn = document.getElementById("scoreBtn");
+    const resetScoreBtn = document.getElementById("resetScoreBtn");
+    const scoreValue = document.getElementById("scoreValue");
+    const scoreOutput = document.getElementById("scoreOutput");
+    const r3Next = document.getElementById("r3Next");
+    const r3Msg = document.getElementById("r3Msg");
+
+    scoreBtn.addEventListener("click", () => {
+      const answer = document.getElementById("r3Answer").value.trim();
+      if (!answer) {
+        setMessage(r3Msg, "Answer the variable question first.", "warn");
+        playTone("warn");
+        return;
+      }
+
+      score++;
+      scoreValue.textContent = score;
+      updatePoints(10);
+      playTone("click");
+
+      if (score < 5) {
+        scoreOutput.textContent = `${getPlayerName()} is building momentum...`;
+      } else {
+        scoreOutput.textContent = `🔥 Score target reached. Variable power unlocked.`;
+        r3Next.disabled = false;
+        updatePoints(25);
+        playTone("success");
+      }
+    });
+
+    resetScoreBtn.addEventListener("click", () => {
+      score = 0;
+      scoreValue.textContent = "0";
+      scoreOutput.textContent = "";
+      r3Next.disabled = true;
+      playTone("click");
+    });
+
+    r3Next.addEventListener("click", () => {
+      completeRound(3);
+      setMessage(r3Msg, "Exactly. Variables help JavaScript remember and update changing information.", "success");
+      activateRound(4);
+    });
+
+    // Round 4
+    const logicChoices = document.querySelectorAll(".logicChoice");
+    const logicOutput = document.getElementById("logicOutput");
+    const r4Next = document.getElementById("r4Next");
+    const r4Msg = document.getElementById("r4Msg");
+
+    logicChoices.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const answer = document.getElementById("r4Answer").value.trim();
+        if (!answer) {
+          setMessage(logicOutput, "Write your explanation first, then choose an answer.", "warn");
+          playTone("warn");
+          return;
+        }
+
+        const correct = btn.dataset.correct === "true";
+        if (correct) {
+          logicSolved = true;
+          setMessage(logicOutput, "✅ Correct. An if statement checks a condition and decides what happens next.", "success");
+          r4Next.disabled = false;
+          updatePoints(35);
+          playTone("success");
+        } else {
+          setMessage(logicOutput, "Not quite. Think about decision-making in code and try again.", "danger");
+          playTone("danger");
+        }
+      });
+    });
+
+    r4Next.addEventListener("click", () => {
+      if (!logicSolved) return;
+      completeRound(4);
+      setMessage(r4Msg, "You opened the logic gate. Conditionals are a huge JavaScript skill.", "success");
+      activateRound(5);
+    });
+
+    // Round 5
+    const prizeBtn = document.getElementById("prizeBtn");
+    const prizeOutput = document.getElementById("prizeOutput");
+    const prizeCountEl = document.getElementById("prizeCount");
+    const r5Next = document.getElementById("r5Next");
+    const r5Msg = document.getElementById("r5Msg");
+
+    prizeBtn.addEventListener("click", () => {
+      const answer = document.getElementById("r5Answer").value.trim();
+      if (!answer) {
+        setMessage(r5Msg, "Answer the array question first.", "warn");
+        playTone("warn");
+        return;
+      }
+
+      const i = Math.floor(Math.random() * lootTitles.length);
+      prizeOutput.textContent = `${getPlayerName()} earned: ${lootTitles[i]}`;
+      prizeCount++;
+      prizeCountEl.textContent = prizeCount;
+      updatePoints(20);
+      playTone("click");
+
+      if (prizeCount >= 2) {
+        r5Next.disabled = false;
+      }
+    });
+
+    r5Next.addEventListener("click", () => {
+      completeRound(5);
+      setMessage(r5Msg, "Nice. Arrays let JavaScript work with collections of data instead of just one value.", "success");
+      activateRound(6);
+    });
+
+    // Round 6
+    const bossBtn = document.getElementById("bossBtn");
+    const bossMsg = document.getElementById("bossMsg");
+    const finalCard = document.getElementById("finalCard");
+    const finalText = document.getElementById("finalText");
+    const restartBtn = document.getElementById("restartBtn");
+    const openCertificateBtn = document.getElementById("openCertificateBtn");
+    const certificateModal = document.getElementById("certificateModal");
+    const closeCertificateBtn = document.getElementById("closeCertificateBtn");
+    const printCertificateBtn = document.getElementById("printCertificateBtn");
+
+    bossBtn.addEventListener("click", () => {
+      const idea = document.getElementById("bossIdea").value.trim();
+      const features = document.getElementById("bossFeatures").value.trim();
+
+      if (!idea || !features) {
+        setMessage(bossMsg, "Write both your mini project idea and the JavaScript features it would use.", "warn");
+        playTone("warn");
+        return;
+      }
+
+      completeRound(6);
+      updatePoints(60);
+      setMessage(bossMsg, `🏆 Boss defeated. ${getPlayerName()} completed the arena.`, "success");
+
+      finalCard.classList.remove("hidden");
+      finalCard.classList.add("pulse");
+      finalText.innerHTML = `
+        <strong>${getPlayerName()}</strong> completed all six rounds and practiced the core idea of JavaScript:
+        webpages can listen, react, update, decide, and feel alive.
+      `;
+
+      launchConfetti();
+      playTone("success");
+      finalCard.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    openCertificateBtn.addEventListener("click", () => {
+      certificateModal.classList.remove("hidden");
+      playTone("click");
+    });
+
+    closeCertificateBtn.addEventListener("click", () => {
+      certificateModal.classList.add("hidden");
+      playTone("click");
+    });
+
+    printCertificateBtn.addEventListener("click", () => {
+      window.print();
+    });
+
+    restartBtn.addEventListener("click", () => {
+      window.location.reload();
+    });
+
+    updateProgress();
+    updateBadges();
+    updateTimerUI();
+    soundDisplay.textContent = soundOn ? "On" : "Off";
+  </script>
+</body>
+</html>
