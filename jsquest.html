@@ -6,86 +6,70 @@
   <title>JavaScript Quest Arena</title>
   <style>
     :root{
-      --bg:#0a0f1f;
-      --bg2:#11182e;
-      --panel:rgba(16,24,45,0.88);
-      --panel-2:rgba(11,18,35,0.92);
-      --line:rgba(148,163,184,0.18);
+      --bg:#0b0f17;
+      --panel:#111827e8;
+      --panel-2:#0f172ae8;
+      --line:#243042;
       --text:#f8fafc;
-      --muted:#a5b4fc;
-      --soft:#94a3b8;
+      --muted:#94a3b8;
+      --muted-2:#cbd5e1;
+      --brand:#7c3aed;
+      --brand-2:#a855f7;
       --cyan:#22d3ee;
-      --blue:#3b82f6;
-      --purple:#8b5cf6;
-      --pink:#ec4899;
       --green:#22c55e;
-      --yellow:#facc15;
-      --orange:#fb923c;
+      --yellow:#f59e0b;
       --red:#ef4444;
-      --shadow:0 18px 50px rgba(0,0,0,0.45);
-      --radius:24px;
+      --pink:#ec4899;
+      --shadow:0 20px 50px rgba(0,0,0,.45);
     }
 
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
 
     body{
       margin:0;
       font-family: Inter, Arial, Helvetica, sans-serif;
       color:var(--text);
       background:
-        radial-gradient(circle at 10% 10%, rgba(34,211,238,0.16), transparent 18%),
-        radial-gradient(circle at 88% 12%, rgba(236,72,153,0.16), transparent 18%),
-        radial-gradient(circle at 50% 88%, rgba(139,92,246,0.14), transparent 22%),
-        linear-gradient(180deg, #060a16, #0b1120 28%, #0d1326 100%);
+        radial-gradient(circle at top left, rgba(124,58,237,.18), transparent 20%),
+        radial-gradient(circle at top right, rgba(34,211,238,.10), transparent 16%),
+        linear-gradient(180deg, #070b12 0%, #0b0f17 35%, #0f172a 100%);
       min-height:100vh;
       overflow-x:hidden;
     }
 
-    .grid-bg{
+    .noise{
+      pointer-events:none;
       position:fixed;
       inset:0;
-      pointer-events:none;
+      opacity:.06;
       background-image:
-        linear-gradient(rgba(59,130,246,0.06) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(59,130,246,0.06) 1px, transparent 1px);
-      background-size: 38px 38px;
-      mask-image: linear-gradient(to bottom, rgba(0,0,0,0.45), rgba(0,0,0,0.1));
+        radial-gradient(circle at 20% 20%, white 0.7px, transparent 0.8px),
+        radial-gradient(circle at 80% 30%, white 0.7px, transparent 0.8px),
+        radial-gradient(circle at 40% 70%, white 0.7px, transparent 0.8px);
+      background-size:140px 140px;
       z-index:0;
     }
-
-    .glow-orb{
-      position:fixed;
-      border-radius:50%;
-      filter: blur(50px);
-      opacity:.18;
-      pointer-events:none;
-      z-index:0;
-    }
-
-    .orb1{width:240px;height:240px;left:-40px;top:60px;background:var(--cyan)}
-    .orb2{width:300px;height:300px;right:-60px;top:100px;background:var(--pink)}
-    .orb3{width:260px;height:260px;left:35%;bottom:60px;background:var(--purple)}
 
     .container{
-      width:min(1220px, 94%);
+      width:min(1380px, 95%);
       margin:0 auto;
       padding:18px 0 70px;
       position:relative;
-      z-index:2;
+      z-index:1;
     }
 
     .hero{
       position:relative;
       overflow:hidden;
-      border-radius:32px;
+      border-radius:30px;
       padding:28px;
       background:
-        linear-gradient(135deg, rgba(34,211,238,0.12), rgba(59,130,246,0.12), rgba(236,72,153,0.12)),
-        rgba(10,15,31,0.9);
-      border:1px solid var(--line);
+        linear-gradient(135deg, rgba(124,58,237,.16), rgba(34,211,238,.08)),
+        rgba(17,24,39,.82);
+      border:1px solid rgba(148,163,184,.12);
       box-shadow:var(--shadow);
-      backdrop-filter:blur(14px);
+      backdrop-filter: blur(14px);
     }
 
     .hero::after{
@@ -95,71 +79,73 @@
       top:-60px;
       width:220px;
       height:220px;
+      background: radial-gradient(circle, rgba(168,85,247,.28), transparent 65%);
       border-radius:50%;
-      background: radial-gradient(circle, rgba(255,255,255,0.14), transparent 60%);
-      pointer-events:none;
+      filter: blur(10px);
     }
 
     .eyebrow{
-      display:inline-block;
-      padding:8px 14px;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
       border-radius:999px;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.07);
+      color:#ddd6fe;
       font-size:.9rem;
       font-weight:700;
-      background:rgba(255,255,255,0.07);
-      border:1px solid rgba(255,255,255,0.08);
-      color:#dbeafe;
       margin-bottom:12px;
     }
 
     .hero h1{
       margin:0 0 10px;
-      font-size:clamp(2.1rem, 4.7vw, 4rem);
+      font-size:clamp(2.2rem, 5vw, 4rem);
       line-height:1.02;
-      letter-spacing:-0.03em;
+      letter-spacing:-.03em;
     }
 
     .hero p{
+      max-width:920px;
       margin:0;
-      max-width:860px;
-      color:#dbeafe;
+      color:var(--muted-2);
       font-size:1.05rem;
     }
 
-    .hero-meta{
+    .hero-pills{
       display:flex;
       flex-wrap:wrap;
       gap:10px;
       margin-top:18px;
     }
 
-    .meta-pill{
-      padding:9px 14px;
+    .pill{
+      padding:9px 13px;
       border-radius:999px;
-      border:1px solid rgba(255,255,255,0.09);
-      background:rgba(255,255,255,0.05);
-      color:#fff;
-      font-size:.94rem;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.07);
+      color:#e5e7eb;
+      font-size:.92rem;
     }
 
     .sticky-top{
       position:sticky;
       top:0;
-      z-index:50;
+      z-index:40;
       padding-top:12px;
       margin:14px 0 18px;
     }
 
     .hud{
       display:grid;
-      grid-template-columns: 1.5fr 1fr;
+      grid-template-columns:1.35fr .95fr;
       gap:14px;
-      background:rgba(8,12,24,0.82);
-      border:1px solid var(--line);
-      border-radius:22px;
+      background:rgba(11,15,23,.82);
+      border:1px solid rgba(148,163,184,.12);
+      border-radius:20px;
       padding:14px;
       box-shadow:var(--shadow);
-      backdrop-filter:blur(14px);
+      backdrop-filter: blur(14px);
     }
 
     .hud-left,.hud-right{
@@ -169,59 +155,127 @@
       justify-content:center;
     }
 
-    .hud-row{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      align-items:center;
-    }
-
-    .progress-wrap{
-      width:100%;
-    }
-
-    .progress-label{
+    .progress-top{
       display:flex;
       justify-content:space-between;
       gap:12px;
-      margin-bottom:6px;
-      font-size:.95rem;
       color:#dbeafe;
+      font-size:.95rem;
+      margin-bottom:6px;
     }
 
     .progress-bar{
+      width:100%;
       height:16px;
+      background:#0a1120;
+      border:1px solid #1f2a3d;
       border-radius:999px;
       overflow:hidden;
-      background:#0c1428;
-      border:1px solid #1d2942;
     }
 
     .progress-fill{
       height:100%;
       width:0%;
-      background:linear-gradient(90deg, var(--cyan), var(--blue), var(--purple), var(--pink));
-      box-shadow:0 0 20px rgba(59,130,246,0.35);
-      transition:width .35s ease;
+      background:linear-gradient(90deg, var(--cyan), var(--brand), var(--pink));
+      transition:width .3s ease;
+      box-shadow:0 0 24px rgba(124,58,237,.4);
     }
 
-    .hud-stat{
-      flex:1 1 120px;
-      min-width:110px;
-      background:#0d162c;
-      border:1px solid #1d2942;
+    .hud-sub{
+      color:var(--muted);
+      font-size:.92rem;
+    }
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(3, 1fr);
+      gap:10px;
+    }
+
+    .stat{
+      background:#0d1422;
+      border:1px solid #1f2a3d;
       border-radius:16px;
-      padding:12px 14px;
+      padding:12px;
       text-align:center;
     }
 
-    .hud-stat strong{
+    .stat strong{
       display:block;
-      font-size:1.18rem;
+      font-size:1.15rem;
+      color:#fff;
       margin-bottom:4px;
     }
 
-    .btn-row,.choice-grid,.inline-grid{
+    .layout{
+      display:grid;
+      grid-template-columns:280px 1fr 320px;
+      gap:18px;
+      align-items:start;
+    }
+
+    .card,.side-card,.round,.modal-card,.quest-rail{
+      background:var(--panel);
+      border:1px solid rgba(148,163,184,.12);
+      border-radius:24px;
+      box-shadow:var(--shadow);
+      backdrop-filter: blur(14px);
+    }
+
+    .card,.side-card,.quest-rail{
+      padding:22px;
+    }
+
+    .left-column,.right-column{
+      position:sticky;
+      top:108px;
+    }
+
+    .right-column{
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+    }
+
+    .soft{color:var(--muted)}
+    .small{font-size:.94rem}
+
+    .setup-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+      gap:14px;
+      margin-top:12px;
+    }
+
+    label{
+      display:block;
+      margin-bottom:6px;
+      font-weight:700;
+      color:#f3f4f6;
+    }
+
+    input[type="text"], textarea, select{
+      width:100%;
+      padding:13px 14px;
+      border-radius:16px;
+      border:1px solid #263347;
+      background:#0b1220;
+      color:#fff;
+      font-size:1rem;
+      outline:none;
+    }
+
+    textarea{
+      min-height:100px;
+      resize:vertical;
+    }
+
+    input:focus, textarea:focus, select:focus{
+      border-color:#7c3aed;
+      box-shadow:0 0 0 3px rgba(124,58,237,.18);
+    }
+
+    .btn-row,.choice-grid{
       display:flex;
       flex-wrap:wrap;
       gap:12px;
@@ -231,17 +285,17 @@
       border:none;
       border-radius:16px;
       padding:12px 18px;
-      color:white;
       font-size:1rem;
       font-weight:700;
       cursor:pointer;
-      transition:transform .16s ease, box-shadow .16s ease, opacity .16s ease, filter .16s ease;
-      box-shadow:0 12px 24px rgba(0,0,0,0.28);
+      transition:transform .14s ease, filter .14s ease, opacity .14s ease;
+      color:white;
+      box-shadow:0 12px 24px rgba(0,0,0,.25);
     }
 
     button:hover{
-      transform:translateY(-2px);
-      filter:brightness(1.05);
+      transform:translateY(-1px);
+      filter:brightness(1.04);
     }
 
     button:disabled{
@@ -251,120 +305,39 @@
       filter:none;
     }
 
-    .btn-primary{background:linear-gradient(90deg, var(--blue), var(--purple))}
-    .btn-pink{background:linear-gradient(90deg, var(--purple), var(--pink))}
-    .btn-cyan{background:linear-gradient(90deg, #0891b2, var(--cyan)); color:#06131a}
+    .btn-primary{background:linear-gradient(90deg, #6366f1, var(--brand-2))}
+    .btn-cyan{background:linear-gradient(90deg, #0891b2, var(--cyan)); color:#05131a}
     .btn-green{background:linear-gradient(90deg, #16a34a, var(--green))}
-    .btn-yellow{background:linear-gradient(90deg, #eab308, var(--orange)); color:#111827}
+    .btn-yellow{background:linear-gradient(90deg, #d97706, var(--yellow)); color:#111827}
+    .btn-pink{background:linear-gradient(90deg, #db2777, var(--pink))}
     .btn-dark{background:linear-gradient(90deg, #111827, #1f2937)}
     .btn-soft{
-      background:#121d36;
-      border:1px solid #243250;
-      color:#dbeafe;
-    }
-
-    .layout{
-      display:grid;
-      grid-template-columns: 1fr 330px;
-      gap:18px;
-    }
-
-    .card,.round,.side-card,.modal-card{
-      background:var(--panel);
-      border:1px solid var(--line);
-      border-radius:24px;
-      box-shadow:var(--shadow);
-      backdrop-filter:blur(16px);
-    }
-
-    .card,.side-card{
-      padding:22px;
-    }
-
-    .side{
-      display:flex;
-      flex-direction:column;
-      gap:18px;
-    }
-
-    .card h2,.side-card h3,.round-header h2{
-      margin-top:0;
-    }
-
-    .muted{color:var(--muted)}
-    .soft{color:var(--soft)}
-    .small{font-size:.94rem}
-
-    label{
-      display:block;
-      font-weight:700;
-      margin-bottom:6px;
-    }
-
-    input[type="text"], textarea, select{
-      width:100%;
-      padding:13px 14px;
-      border-radius:16px;
-      border:1px solid #25344f;
-      background:#0b1326;
-      color:white;
-      font-size:1rem;
-      outline:none;
-    }
-
-    textarea{
-      min-height:104px;
-      resize:vertical;
-    }
-
-    input:focus, textarea:focus, select:focus{
-      border-color:#60a5fa;
-      box-shadow:0 0 0 3px rgba(96,165,250,0.14);
-    }
-
-    .setup-grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-      gap:14px;
-      margin-top:12px;
+      background:#111827;
+      border:1px solid #2b3a51;
+      color:#e5e7eb;
     }
 
     .message{
       margin-top:14px;
       border-radius:16px;
       padding:14px 16px;
-      background:#0b1326;
-      border:1px solid #243250;
+      background:#0b1220;
+      border:1px solid #243248;
     }
 
     .message.success{
-      background:rgba(34,197,94,0.12);
-      border-color:rgba(34,197,94,0.35);
+      background:rgba(34,197,94,.10);
+      border-color:rgba(34,197,94,.35);
     }
 
     .message.warn{
-      background:rgba(250,204,21,0.12);
-      border-color:rgba(250,204,21,0.35);
+      background:rgba(245,158,11,.10);
+      border-color:rgba(245,158,11,.35);
     }
 
     .message.danger{
-      background:rgba(239,68,68,0.12);
-      border-color:rgba(239,68,68,0.35);
-    }
-
-    .pill-wrap{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-    }
-
-    .pill{
-      padding:7px 11px;
-      border-radius:999px;
-      background:#0b1326;
-      border:1px solid #243250;
-      color:#dbeafe;
-      font-size:.9rem;
+      background:rgba(239,68,68,.10);
+      border-color:rgba(239,68,68,.35);
     }
 
     .rounds{
@@ -376,58 +349,60 @@
 
     .round{
       overflow:hidden;
-      opacity:.45;
-      transform:scale(.992);
-      filter:saturate(.8);
-      transition:all .28s ease;
+      opacity:.46;
+      transform:scale(.994);
+      transition:all .25s ease;
+      filter:saturate(.84);
     }
 
     .round.locked .round-header::after{
-      content:"🔒 Locked";
+      content:"Locked";
       position:absolute;
       right:18px;
-      top:16px;
-      font-size:.94rem;
+      top:18px;
+      font-size:.86rem;
+      font-weight:700;
       color:#cbd5e1;
-      background:rgba(255,255,255,0.07);
-      border:1px solid rgba(255,255,255,0.08);
       padding:7px 10px;
       border-radius:999px;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.06);
     }
 
     .round.active{
       opacity:1;
       transform:scale(1);
       filter:saturate(1);
-      border-color:rgba(96,165,250,0.4);
-      box-shadow:0 0 0 1px rgba(96,165,250,0.12), 0 18px 50px rgba(0,0,0,0.45);
+      border-color:rgba(124,58,237,.36);
+      box-shadow:0 0 0 1px rgba(124,58,237,.14), var(--shadow);
     }
 
     .round.complete{
       opacity:1;
       transform:scale(1);
       filter:saturate(1);
-      border-color:rgba(34,197,94,0.38);
-      box-shadow:0 0 0 1px rgba(34,197,94,0.12), 0 18px 50px rgba(0,0,0,0.45);
+      border-color:rgba(34,197,94,.34);
+      box-shadow:0 0 0 1px rgba(34,197,94,.12), var(--shadow);
     }
 
     .round-header{
       position:relative;
       padding:20px 22px;
       background:
-        linear-gradient(90deg, rgba(59,130,246,0.16), rgba(139,92,246,0.14), rgba(236,72,153,0.14)),
-        rgba(255,255,255,0.02);
-      border-bottom:1px solid var(--line);
+        linear-gradient(90deg, rgba(124,58,237,.14), rgba(34,211,238,.08)),
+        rgba(255,255,255,.02);
+      border-bottom:1px solid rgba(148,163,184,.12);
     }
 
     .round-tag{
       display:inline-block;
-      padding:7px 11px;
+      padding:7px 10px;
       border-radius:999px;
-      background:rgba(255,255,255,0.06);
-      border:1px solid rgba(255,255,255,0.08);
-      font-size:.9rem;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.06);
+      font-size:.88rem;
       margin-bottom:8px;
+      color:#ddd6fe;
     }
 
     .round-body{
@@ -439,14 +414,86 @@
       padding:16px;
       border-radius:18px;
       background:var(--panel-2);
-      border:1px solid #243250;
+      border:1px solid #263347;
+    }
+
+    .mini-console{
+      margin-top:12px;
+      padding:14px;
+      border-radius:16px;
+      background:#020617;
+      border:1px solid #1e293b;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      color:#cbd5e1;
+      overflow:auto;
+      white-space:pre-wrap;
+    }
+
+    .code-editor{
+      width:100%;
+      min-height:110px;
+      padding:14px;
+      border-radius:16px;
+      border:1px solid #334155;
+      background:#020617;
+      color:#e5e7eb;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size:.96rem;
+      line-height:1.5;
+      resize:vertical;
+    }
+
+    .sandbox-label{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      margin-top:12px;
+      margin-bottom:8px;
+      color:#cbd5e1;
+      font-size:.92rem;
+    }
+
+    .sandbox-help{
+      color:#94a3b8;
+      font-size:.88rem;
     }
 
     .fun-output{
       margin-top:10px;
-      font-size:1.08rem;
+      font-size:1.05rem;
       font-weight:700;
       color:#fff;
+    }
+
+    .demo-box{
+      margin-top:12px;
+      padding:18px;
+      border-radius:18px;
+      background:#0b1220;
+      border:1px solid #243248;
+    }
+
+    .demo-stage{
+      margin-top:12px;
+      padding:18px;
+      border-radius:16px;
+      border:1px dashed #334155;
+      background:#111827;
+    }
+
+    .live-text{
+      font-size:1.05rem;
+      font-weight:700;
+    }
+
+    .demo-stage.light{
+      background:#f8fafc;
+      color:#111827;
+    }
+
+    .demo-stage.light .live-text{
+      color:#111827;
     }
 
     .choice-grid button{
@@ -457,59 +504,193 @@
     .leaderboard{
       display:grid;
       gap:10px;
-      margin-top:10px;
+      margin-top:12px;
     }
 
     .leader-row{
       display:grid;
-      grid-template-columns:40px 1fr auto;
+      grid-template-columns:38px 1fr auto;
       gap:10px;
       align-items:center;
       padding:12px;
       border-radius:16px;
-      background:#0b1326;
-      border:1px solid #243250;
+      background:#0b1220;
+      border:1px solid #243248;
     }
 
     .rank{
       width:34px;
       height:34px;
+      border-radius:50%;
       display:grid;
       place-items:center;
-      border-radius:50%;
-      background:linear-gradient(135deg, var(--blue), var(--purple));
-      font-weight:700;
+      background:linear-gradient(135deg, var(--brand), var(--cyan));
+      font-weight:800;
+      font-size:.95rem;
     }
 
     .badge-grid{
       display:grid;
       grid-template-columns:repeat(2,minmax(0,1fr));
       gap:10px;
-      margin-top:10px;
+      margin-top:12px;
     }
 
     .badge-card{
+      min-height:84px;
       padding:12px;
       border-radius:16px;
-      background:#0b1326;
-      border:1px solid #243250;
-      min-height:84px;
+      background:#0b1220;
+      border:1px solid #243248;
+      opacity:.46;
+      transition:all .2s ease;
       display:flex;
       flex-direction:column;
       justify-content:center;
       gap:4px;
-      opacity:.45;
-      transition:all .2s ease;
     }
 
     .badge-card.unlocked{
       opacity:1;
-      border-color:rgba(34,197,94,0.35);
-      background:rgba(34,197,94,0.10);
+      border-color:rgba(34,197,94,.34);
+      background:rgba(34,197,94,.08);
     }
 
     .badge-card span{
-      font-size:1.35rem;
+      font-size:1.3rem;
+    }
+
+    .quest-rail{ overflow:hidden; }
+    .quest-map{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      position:relative;
+    }
+
+    .quest-map::before{
+      content:"";
+      position:absolute;
+      left:22px;
+      top:10px;
+      bottom:10px;
+      width:2px;
+      background:linear-gradient(180deg, rgba(124,58,237,.45), rgba(34,211,238,.25));
+      z-index:0;
+    }
+
+    .quest-node{
+      position:relative;
+      z-index:1;
+      display:grid;
+      grid-template-columns:34px 1fr;
+      gap:12px;
+      align-items:center;
+      padding:12px;
+      border-radius:16px;
+      border:1px solid #243248;
+      background:#0b1220;
+      cursor:pointer;
+      transition:all .18s ease;
+    }
+
+    .quest-node:hover{
+      transform:translateX(2px);
+      border-color:#334766;
+    }
+
+    .quest-node.locked{
+      opacity:.48;
+      cursor:not-allowed;
+    }
+
+    .quest-node.current{
+      border-color:rgba(124,58,237,.55);
+      box-shadow:0 0 0 1px rgba(124,58,237,.16);
+      background:rgba(124,58,237,.10);
+    }
+
+    .quest-node.done{
+      border-color:rgba(34,197,94,.42);
+      background:rgba(34,197,94,.08);
+    }
+
+    .quest-icon{
+      width:30px;
+      height:30px;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(135deg, #1f2937, #111827);
+      border:1px solid #32445f;
+      font-size:.95rem;
+    }
+
+    .quest-node.current .quest-icon{
+      background:linear-gradient(135deg, var(--brand), var(--brand-2));
+    }
+
+    .quest-node.done .quest-icon{
+      background:linear-gradient(135deg, #16a34a, #22c55e);
+    }
+
+    .showcase-tag {
+      display:inline-block;
+      margin-top:8px;
+      padding:6px 10px;
+      border-radius:999px;
+      background:rgba(124,58,237,.12);
+      border:1px solid rgba(124,58,237,.25);
+      color:#ddd6fe;
+      font-size:.82rem;
+    }
+
+    .award-chip {
+      display: inline-block;
+      margin-top: 8px;
+      margin-right: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      color: #fff;
+    }
+
+    .award-chip.funniest {
+      background: rgba(236,72,153,0.14);
+      border-color: rgba(236,72,153,0.32);
+      color: #fbcfe8;
+    }
+
+    .award-chip.useful {
+      background: rgba(34,197,94,0.14);
+      border-color: rgba(34,197,94,0.32);
+      color: #bbf7d0;
+    }
+
+    .award-chip.bestname {
+      background: rgba(34,211,238,0.14);
+      border-color: rgba(34,211,238,0.32);
+      color: #cffafe;
+    }
+
+    .award-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .award-btn {
+      padding: 6px 10px;
+      font-size: 0.78rem;
+      border-radius: 999px;
+    }
+
+    .award-btn.active {
+      outline: 2px solid rgba(255,255,255,0.18);
     }
 
     .hidden{display:none !important}
@@ -519,52 +700,45 @@
       padding:24px;
       border-radius:26px;
       background:
-        linear-gradient(135deg, rgba(34,197,94,0.12), rgba(34,211,238,0.12), rgba(236,72,153,0.12)),
-        rgba(10,15,31,0.92);
-      border:1px solid var(--line);
+        linear-gradient(135deg, rgba(34,197,94,.10), rgba(124,58,237,.10), rgba(34,211,238,.08)),
+        rgba(15,23,42,.92);
+      border:1px solid rgba(148,163,184,.12);
       box-shadow:var(--shadow);
     }
 
-    .pulse{
-      animation:pulse .8s ease;
-    }
-
-    .pop{
-      animation:pop .4s ease;
-    }
+    .pulse{animation:pulse .8s ease}
+    .pop{animation:pop .35s ease}
 
     @keyframes pulse{
       0%{transform:scale(1)}
-      38%{transform:scale(1.018)}
+      35%{transform:scale(1.018)}
       100%{transform:scale(1)}
     }
 
     @keyframes pop{
-      0%{transform:scale(.95);opacity:.6}
+      0%{transform:scale(.96);opacity:.6}
       100%{transform:scale(1);opacity:1}
     }
 
     .confetti-piece{
       position:fixed;
-      width:11px;
-      height:18px;
-      top:-24px;
-      opacity:.96;
+      width:10px;
+      height:16px;
+      top:-20px;
+      opacity:.95;
       z-index:999;
       animation:fall linear forwards;
       border-radius:2px;
     }
 
     @keyframes fall{
-      to{
-        transform:translateY(110vh) rotate(800deg);
-      }
+      to{transform:translateY(110vh) rotate(760deg)}
     }
 
     .modal{
       position:fixed;
       inset:0;
-      background:rgba(2,6,23,0.72);
+      background:rgba(2,6,23,.74);
       display:flex;
       align-items:center;
       justify-content:center;
@@ -573,19 +747,19 @@
     }
 
     .modal-card{
-      width:min(820px, 100%);
+      width:min(820px,100%);
       padding:26px;
-      background:rgba(12,18,34,0.96);
+      background:rgba(11,15,23,.98);
     }
 
     .certificate{
       margin-top:14px;
       padding:24px;
       border-radius:22px;
-      border:1px solid #2d3d5c;
+      border:1px solid #29374c;
       background:
-        linear-gradient(135deg, rgba(34,211,238,0.08), rgba(139,92,246,0.08), rgba(236,72,153,0.08)),
-        #0b1326;
+        linear-gradient(135deg, rgba(124,58,237,.10), rgba(34,211,238,.08)),
+        #0b1220;
       text-align:center;
     }
 
@@ -597,56 +771,49 @@
     .certificate .big-name{
       font-size:2rem;
       font-weight:800;
+      letter-spacing:-.02em;
       margin:10px 0;
-      color:#fff;
-      letter-spacing:-0.02em;
     }
 
     .certificate .line{
       width:160px;
       height:2px;
-      background:linear-gradient(90deg, var(--cyan), var(--pink));
-      margin:18px auto;
       border-radius:999px;
+      margin:18px auto;
+      background:linear-gradient(90deg, var(--cyan), var(--brand-2));
     }
 
-    .timer-warning{
-      color:#fde68a;
-    }
-
-    .timer-danger{
-      color:#fca5a5;
-    }
+    .timer-warning{color:#fcd34d}
+    .timer-danger{color:#fca5a5}
 
     .footer-note{
       text-align:center;
-      color:#8ea0c9;
+      color:#94a3b8;
       margin-top:22px;
       font-size:.94rem;
     }
 
-    @media (max-width: 980px){
-      .layout{grid-template-columns:1fr}
-      .hud{grid-template-columns:1fr}
-      .hud-right{gap:8px}
+    @media (max-width:1180px){
+      .layout{ grid-template-columns:1fr; }
+      .left-column,.right-column{ position:static; }
     }
 
-    @media (max-width: 640px){
-      .container{width:min(96%, 96%)}
-      .hero,.card,.side-card,.round-header,.round-body,.celebration,.modal-card{padding:16px}
-      .btn-row,.choice-grid,.inline-grid{flex-direction:column}
-      button{width:100%}
-      .badge-grid{grid-template-columns:1fr}
-      .certificate h2,.certificate .big-name{font-size:1.6rem}
+    @media (max-width:980px){
+      .hud{ grid-template-columns:1fr; }
+    }
+
+    @media (max-width:640px){
+      .container{ width:min(96%,96%); }
+      .hero,.card,.side-card,.round-header,.round-body,.celebration,.modal-card,.quest-rail{ padding:16px; }
+      .btn-row,.choice-grid{ flex-direction:column; }
+      button{ width:100%; }
+      .badge-grid{ grid-template-columns:1fr; }
+      .stats{ grid-template-columns:1fr 1fr 1fr; }
     }
 
     @media print{
-      body *{
-        visibility:hidden;
-      }
-      #certificateArea, #certificateArea *{
-        visibility:visible;
-      }
+      body *{visibility:hidden}
+      #certificateArea,#certificateArea *{visibility:visible}
       #certificateArea{
         position:absolute;
         left:0;
@@ -657,70 +824,63 @@
   </style>
 </head>
 <body>
-  <div class="grid-bg"></div>
-  <div class="glow-orb orb1"></div>
-  <div class="glow-orb orb2"></div>
-  <div class="glow-orb orb3"></div>
+  <div class="noise"></div>
 
   <div class="container">
     <section class="hero">
-      <div class="eyebrow">🎮 Classroom Game Mode Activated</div>
+      <div class="eyebrow">🎮 Interactive JavaScript Sandbox Mode</div>
       <h1>JavaScript Quest Arena</h1>
       <p>
-        Work with a team or go solo. Complete rounds, unlock badges, earn points, beat the boss battle, and leave class actually understanding how JavaScript makes webpages react.
+        Work with a team or go solo. Predict what code will do, edit tiny JavaScript snippets, press Run Code, and watch the page react in real time.
       </p>
-      <div class="hero-meta">
-        <span class="meta-pill">⚡ Clicks</span>
-        <span class="meta-pill">🔢 Variables</span>
-        <span class="meta-pill">🚦 Logic</span>
-        <span class="meta-pill">🎁 Arrays</span>
-        <span class="meta-pill">🏆 Achievements</span>
-        <span class="meta-pill">🖨️ Certificate</span>
+      <div class="hero-pills">
+        <span class="pill">Run code live</span>
+        <span class="pill">Predict code</span>
+        <span class="pill">Fix bugs</span>
+        <span class="pill">Unlock rounds</span>
+        <span class="pill">Earn badges</span>
+        <span class="pill">Certificate</span>
       </div>
     </section>
 
     <div class="sticky-top">
       <section class="hud">
         <div class="hud-left">
-          <div class="progress-wrap">
-            <div class="progress-label">
-              <span>Quest Progress</span>
-              <span id="progressText">0 / 6 rounds complete</span>
-            </div>
-            <div class="progress-bar">
-              <div class="progress-fill" id="progressFill"></div>
-            </div>
+          <div class="progress-top">
+            <span>Quest Progress</span>
+            <span id="progressText">0 / 6 rounds complete</span>
           </div>
-          <div class="hud-row soft small">
-            <span>Level up by completing rounds, answering questions, and finishing the boss battle.</span>
+          <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
           </div>
+          <div class="hud-sub">Try the challenge in each round, then unlock the next one.</div>
         </div>
 
         <div class="hud-right">
-          <div class="hud-row">
-            <div class="hud-stat">
+          <div class="stats">
+            <div class="stat">
               <strong id="teamDisplay">---</strong>
               Team
             </div>
-            <div class="hud-stat">
+            <div class="stat">
               <strong id="modeDisplay">---</strong>
               Mode
             </div>
-            <div class="hud-stat">
+            <div class="stat">
               <strong id="pointsDisplay">0</strong>
               Points
             </div>
           </div>
-          <div class="hud-row">
-            <div class="hud-stat">
+          <div class="stats">
+            <div class="stat">
               <strong id="timerDisplay">25:00</strong>
               Timer
             </div>
-            <div class="hud-stat">
+            <div class="stat">
               <strong id="soundDisplay">On</strong>
               Sound
             </div>
-            <div class="hud-stat">
+            <div class="stat">
               <strong id="badgeCount">0</strong>
               Badges
             </div>
@@ -730,11 +890,63 @@
     </div>
 
     <div class="layout">
+      <aside class="left-column">
+        <section class="quest-rail">
+          <h3>🗺️ Quest Map</h3>
+          <p class="soft small">Each level teaches one JavaScript idea. Green means complete. Purple means current.</p>
+
+          <div class="quest-map">
+            <div class="quest-node locked" data-target="round1" data-round="1">
+              <div class="quest-icon">1</div>
+              <div class="quest-label">
+                <strong>Wake the Webpage</strong>
+                <small>Click Events</small>
+              </div>
+            </div>
+            <div class="quest-node locked" data-target="round2" data-round="2">
+              <div class="quest-icon">2</div>
+              <div class="quest-label">
+                <strong>Toggle Chaos</strong>
+                <small>State + Classes</small>
+              </div>
+            </div>
+            <div class="quest-node locked" data-target="round3" data-round="3">
+              <div class="quest-icon">3</div>
+              <div class="quest-label">
+                <strong>Score Rush</strong>
+                <small>Variables</small>
+              </div>
+            </div>
+            <div class="quest-node locked" data-target="round4" data-round="4">
+              <div class="quest-icon">4</div>
+              <div class="quest-label">
+                <strong>Bug Fix Arena</strong>
+                <small>Debugging</small>
+              </div>
+            </div>
+            <div class="quest-node locked" data-target="round5" data-round="5">
+              <div class="quest-icon">5</div>
+              <div class="quest-label">
+                <strong>Loot Generator</strong>
+                <small>Arrays + Random</small>
+              </div>
+            </div>
+            <div class="quest-node locked" data-target="round6" data-round="6">
+              <div class="quest-icon">👑</div>
+              <div class="quest-label">
+                <strong>Boss Battle</strong>
+                <small>Mini App Builder</small>
+              </div>
+            </div>
+          </div>
+        </section>
+      </aside>
+
       <main>
         <section class="card">
           <h2>🚀 Start the Game</h2>
           <p class="soft">
-            Students can work together, but the game also works for anyone working alone. Choose a mode, name your group, and enter the arena.
+            Choose team or solo mode, pick a name, and enter the arena. This works especially well in pairs or trios.
           </p>
 
           <div class="setup-grid">
@@ -754,7 +966,7 @@
 
           <div class="btn-row" style="margin-top:14px;">
             <button class="btn-primary" id="startBtn">Enter the Arena</button>
-            <button class="btn-soft" id="randomNameBtn" type="button">Random Team Name</button>
+            <button class="btn-soft" id="randomNameBtn" type="button">Random Name</button>
             <button class="btn-dark" id="soundToggleBtn" type="button">Toggle Sound</button>
             <button class="btn-soft" id="timerToggleBtn" type="button">Pause / Resume Timer</button>
           </div>
@@ -766,20 +978,42 @@
           <article class="round locked" id="round1">
             <div class="round-header">
               <div class="round-tag">Round 1 • Click Events</div>
-              <h2>Wake the Webpage 🔘</h2>
-              <p class="soft">JavaScript is what makes webpages react. Start with the core idea: action → response.</p>
+              <h2>Wake the Webpage</h2>
+              <p class="soft">Mission: use JavaScript to change text when a button is clicked.</p>
             </div>
             <div class="round-body">
-              <label for="r1Answer">With your team, what does JavaScript add to a webpage that HTML and CSS alone do not?</label>
-              <textarea id="r1Answer" placeholder="Example: JavaScript makes the page interactive and able to respond to users."></textarea>
+              <div class="demo-box">
+                <strong>Live stage</strong>
+                <p class="soft">Edit the code, then press Run Code.</p>
+                <div class="demo-stage" id="r1Stage">
+                  <div class="live-text" id="r1Text">😴 The webpage is asleep...</div>
+                  <button class="btn-pink" id="r1ActionBtn" style="margin-top:12px;">Wake Button</button>
+                </div>
+
+                <div class="sandbox-label">
+                  <span>Round 1 sandbox</span>
+                  <span class="sandbox-help">Available names: btn, text</span>
+                </div>
+                <textarea class="code-editor" id="r1Editor">btn.addEventListener("click", () => {
+  text.textContent = "⚡ The webpage is awake!";
+  text.style.color = "#22d3ee";
+});</textarea>
+                <div class="btn-row" style="margin-top:12px;">
+                  <button class="btn-soft" id="r1RunBtn">Run Code</button>
+                  <button class="btn-dark" id="r1ResetBtn">Reset Demo</button>
+                </div>
+                <div id="r1SandboxMsg" class="message hidden"></div>
+              </div>
 
               <div class="challenge">
-                <strong>Fun task:</strong>
-                <p class="soft">Click the button to wake the page once your answer is ready.</p>
-                <div class="btn-row">
-                  <button class="btn-pink" id="wakeBtn">Wake the Page</button>
+                <strong>Quick check</strong>
+                <p class="soft">What just happened here?</p>
+                <div class="choice-grid">
+                  <button class="btn-soft r1-choice" data-correct="true">JavaScript listened for a click and changed the page</button>
+                  <button class="btn-soft r1-choice" data-correct="false">CSS ran a database query</button>
+                  <button class="btn-soft r1-choice" data-correct="false">HTML randomly changed itself</button>
                 </div>
-                <div class="fun-output" id="wakeOutput"></div>
+                <div id="r1CheckMsg" class="message hidden"></div>
               </div>
 
               <div class="btn-row" style="margin-top:14px;">
@@ -791,21 +1025,53 @@
 
           <article class="round locked" id="round2">
             <div class="round-header">
-              <div class="round-tag">Round 2 • Toggles</div>
-              <h2>Toggle Chaos 🌗</h2>
-              <p class="soft">Now think about states. Websites constantly switch things on and off.</p>
+              <div class="round-tag">Round 2 • Toggling</div>
+              <h2>Toggle Chaos</h2>
+              <p class="soft">Mission: make a mini panel switch between light and dark states.</p>
             </div>
             <div class="round-body">
-              <label for="r2Answer">Name 3 things on websites or apps that can toggle on and off.</label>
-              <textarea id="r2Answer" placeholder="Example: dark mode, menu, mute, password visibility, notifications."></textarea>
+              <div class="demo-box">
+                <strong>Live stage</strong>
+                <div class="demo-stage light" id="r2Stage">
+                  <div class="live-text" id="r2Text">Theme: Light Mode</div>
+                  <button class="btn-cyan" id="r2ActionBtn" style="margin-top:12px;">Toggle Theme</button>
+                </div>
+
+                <div class="sandbox-label">
+                  <span>Round 2 sandbox</span>
+                  <span class="sandbox-help">Available names: btn, stage, text</span>
+                </div>
+                <textarea class="code-editor" id="r2Editor">let dark = false;
+
+btn.addEventListener("click", () => {
+  dark = !dark;
+
+  if (dark) {
+    stage.classList.remove("light");
+    text.textContent = "Theme: Dark Mode";
+    text.style.color = "#f8fafc";
+  } else {
+    stage.classList.add("light");
+    text.textContent = "Theme: Light Mode";
+    text.style.color = "#111827";
+  }
+});</textarea>
+                <div class="btn-row" style="margin-top:12px;">
+                  <button class="btn-soft" id="r2RunBtn">Run Code</button>
+                  <button class="btn-dark" id="r2ResetBtn">Reset Demo</button>
+                </div>
+                <div id="r2SandboxMsg" class="message hidden"></div>
+              </div>
 
               <div class="challenge">
-                <strong>Fun task:</strong>
-                <p class="soft">Hit the toggle 3 times to prove your team understands state changes.</p>
-                <div class="btn-row">
-                  <button class="btn-cyan" id="toggleBtn">Toggle Arena Mode</button>
+                <strong>Quick check</strong>
+                <p class="soft">Which JavaScript idea is most important here?</p>
+                <div class="choice-grid">
+                  <button class="btn-soft r2-choice" data-correct="true">State changing between two options</button>
+                  <button class="btn-soft r2-choice" data-correct="false">Building a spreadsheet</button>
+                  <button class="btn-soft r2-choice" data-correct="false">Creating an SQL table</button>
                 </div>
-                <div class="fun-output">Toggle count: <span id="toggleCount">0</span></div>
+                <div id="r2CheckMsg" class="message hidden"></div>
               </div>
 
               <div class="btn-row" style="margin-top:14px;">
@@ -818,22 +1084,43 @@
           <article class="round locked" id="round3">
             <div class="round-header">
               <div class="round-tag">Round 3 • Variables</div>
-              <h2>Score Rush 🔢</h2>
-              <p class="soft">Variables help code remember changing values over time.</p>
+              <h2>Score Rush</h2>
+              <p class="soft">Mission: store a changing value and display it on the page.</p>
             </div>
             <div class="round-body">
-              <label for="r3Answer">What kinds of changing information might a website track?</label>
-              <textarea id="r3Answer" placeholder="Example: likes, cart total, clicks, score, notifications, comments."></textarea>
+              <div class="demo-box">
+                <strong>Live stage</strong>
+                <div class="demo-stage" id="r3Stage">
+                  <div class="live-text">Team score: <span id="r3ScoreText">0</span></div>
+                  <button class="btn-yellow" id="r3ActionBtn" style="margin-top:12px;">Add Point</button>
+                </div>
+
+                <div class="sandbox-label">
+                  <span>Round 3 sandbox</span>
+                  <span class="sandbox-help">Available names: btn, scoreText</span>
+                </div>
+                <textarea class="code-editor" id="r3Editor">let score = 0;
+
+btn.addEventListener("click", () => {
+  score++;
+  scoreText.textContent = score;
+});</textarea>
+                <div class="btn-row" style="margin-top:12px;">
+                  <button class="btn-soft" id="r3RunBtn">Run Code</button>
+                  <button class="btn-dark" id="r3ResetBtn">Reset Demo</button>
+                </div>
+                <div id="r3SandboxMsg" class="message hidden"></div>
+              </div>
 
               <div class="challenge">
-                <strong>Fun task:</strong>
-                <p class="soft">Get your score to 5 to unlock the next round.</p>
-                <div class="btn-row">
-                  <button class="btn-yellow" id="scoreBtn">Add Point</button>
-                  <button class="btn-soft" id="resetScoreBtn" type="button">Reset Score</button>
+                <strong>Quick check</strong>
+                <p class="soft">Why does the score keep changing?</p>
+                <div class="choice-grid">
+                  <button class="btn-soft r3-choice" data-correct="true">A variable stores the value and updates it</button>
+                  <button class="btn-soft r3-choice" data-correct="false">The browser guesses a number</button>
+                  <button class="btn-soft r3-choice" data-correct="false">HTML counts automatically</button>
                 </div>
-                <div class="fun-output">Team score: <span id="scoreValue">0</span></div>
-                <div class="fun-output" id="scoreOutput"></div>
+                <div id="r3CheckMsg" class="message hidden"></div>
               </div>
 
               <div class="btn-row" style="margin-top:14px;">
@@ -845,23 +1132,39 @@
 
           <article class="round locked" id="round4">
             <div class="round-header">
-              <div class="round-tag">Round 4 • Conditionals</div>
-              <h2>Logic Gate 🚦</h2>
-              <p class="soft">If statements help JavaScript make decisions.</p>
+              <div class="round-tag">Round 4 • Debugging</div>
+              <h2>Bug Fix Arena</h2>
+              <p class="soft">Mission: fix a broken if statement so the button works properly.</p>
             </div>
             <div class="round-body">
-              <label for="r4Answer">In your own words, what does an if statement help a webpage decide?</label>
-              <textarea id="r4Answer" placeholder="Example: It checks if something is true and decides what happens next."></textarea>
+              <div class="demo-box">
+                <strong>Live stage</strong>
+                <div class="demo-stage" id="r4Stage">
+                  <div class="live-text" id="r4Text">Current score: 6</div>
+                  <button class="btn-pink" id="r4ActionBtn" style="margin-top:12px;">Check Score</button>
+                </div>
+
+                <div class="sandbox-label">
+                  <span>Round 4 sandbox</span>
+                  <span class="sandbox-help">Available names: btn, text</span>
+                </div>
+                <textarea class="code-editor" id="r4Editor">let score = 6;
+
+btn.addEventListener("click", () => {
+  if score > 5 {
+    text.textContent = "🏆 You win!";
+  }
+});</textarea>
+                <div class="btn-row" style="margin-top:12px;">
+                  <button class="btn-soft" id="r4RunBtn">Run Code</button>
+                  <button class="btn-dark" id="r4ResetBtn">Reset Demo</button>
+                </div>
+                <div id="r4SandboxMsg" class="message hidden"></div>
+              </div>
 
               <div class="challenge">
-                <strong>Fun task:</strong>
-                <p class="soft">Choose the correct statement to open the gate.</p>
-                <div class="choice-grid">
-                  <button class="btn-soft logicChoice" data-correct="false">An if statement changes HTML into CSS</button>
-                  <button class="btn-soft logicChoice" data-correct="true">An if statement checks a condition and decides what code runs next</button>
-                  <button class="btn-soft logicChoice" data-correct="false">An if statement only works for colors</button>
-                </div>
-                <div id="logicOutput" class="message hidden"></div>
+                <strong>Debug tip</strong>
+                <p class="soft">Fix the <code>if</code> statement in the editor, then click <strong>Run Code</strong>.</p>
               </div>
 
               <div class="btn-row" style="margin-top:14px;">
@@ -873,22 +1176,49 @@
 
           <article class="round locked" id="round5">
             <div class="round-header">
-              <div class="round-tag">Round 5 • Arrays</div>
-              <h2>Loot Generator 🎁</h2>
-              <p class="soft">Arrays store collections. JavaScript can pull items from those collections dynamically.</p>
+              <div class="round-tag">Round 5 • Arrays + Random</div>
+              <h2>Loot Generator</h2>
+              <p class="soft">Mission: use a list and randomly pick one item from it.</p>
             </div>
             <div class="round-body">
-              <label for="r5Answer">What are some lists or collections a webpage might store?</label>
-              <textarea id="r5Answer" placeholder="Example: products, songs, users, posts, comments, menu items."></textarea>
+              <div class="demo-box">
+                <strong>Live stage</strong>
+                <div class="demo-stage" id="r5Stage">
+                  <div class="live-text" id="r5Text">No loot yet...</div>
+                  <button class="btn-pink" id="r5ActionBtn" style="margin-top:12px;">Generate Loot</button>
+                </div>
+
+                <div class="sandbox-label">
+                  <span>Round 5 sandbox</span>
+                  <span class="sandbox-help">Available names: btn, text</span>
+                </div>
+                <textarea class="code-editor" id="r5Editor">const loot = [
+  "🏆 DOM Ninja",
+  "⚡ Event Listener Legend",
+  "🎯 Variable Mastermind",
+  "🐞 Bug Hunter Supreme"
+];
+
+btn.addEventListener("click", () => {
+  const index = Math.floor(Math.random() * loot.length);
+  text.textContent = loot[index];
+});</textarea>
+                <div class="btn-row" style="margin-top:12px;">
+                  <button class="btn-soft" id="r5RunBtn">Run Code</button>
+                  <button class="btn-dark" id="r5ResetBtn">Reset Demo</button>
+                </div>
+                <div id="r5SandboxMsg" class="message hidden"></div>
+              </div>
 
               <div class="challenge">
-                <strong>Fun task:</strong>
-                <p class="soft">Generate 2 random titles to unlock the boss battle.</p>
-                <div class="btn-row">
-                  <button class="btn-pink" id="prizeBtn">Generate Loot</button>
+                <strong>Quick check</strong>
+                <p class="soft">What helps the app choose a random item?</p>
+                <div class="choice-grid">
+                  <button class="btn-soft r5-choice" data-correct="true">Math.random() plus the array length</button>
+                  <button class="btn-soft r5-choice" data-correct="false">The HTML title tag</button>
+                  <button class="btn-soft r5-choice" data-correct="false">A CSS border radius</button>
                 </div>
-                <div class="fun-output" id="prizeOutput">No loot yet...</div>
-                <div class="fun-output">Loot generated: <span id="prizeCount">0</span></div>
+                <div id="r5CheckMsg" class="message hidden"></div>
               </div>
 
               <div class="btn-row" style="margin-top:14px;">
@@ -900,19 +1230,61 @@
 
           <article class="round locked" id="round6">
             <div class="round-header">
-              <div class="round-tag">Boss Battle • Mini App Pitch</div>
-              <h2>Build the Boss Idea 👑</h2>
-              <p class="soft">Now combine clicks, variables, logic, and a visual change into one mini concept.</p>
+              <div class="round-tag">Boss Battle • Build a Mini App</div>
+              <h2>Boss Battle Builder</h2>
+              <p class="soft">Now build a tiny interactive app and test it live.</p>
             </div>
             <div class="round-body">
-              <label for="bossIdea">What mini interactive webpage would your team build?</label>
-              <textarea id="bossIdea" placeholder="Example: A roommate mood tracker that updates the page and changes color when the vibe score gets too high."></textarea>
+              <div class="setup-grid">
+                <div>
+                  <label for="bossType">Choose your mini app</label>
+                  <select id="bossType">
+                    <option value="">Choose one...</option>
+                    <option value="stress">Campus stress meter</option>
+                    <option value="roommate">Roommate mood tracker</option>
+                    <option value="lunch">Random lunch picker</option>
+                    <option value="motivation">Motivation generator</option>
+                    <option value="study">Study break button</option>
+                  </select>
+                </div>
 
-              <label for="bossFeatures" style="margin-top:12px;">Which JavaScript features would it use?</label>
-              <textarea id="bossFeatures" placeholder="Example: click event, score variable, if statement, random array response, class toggle."></textarea>
+                <div>
+                  <label for="bossTitle">Give your app a name</label>
+                  <input type="text" id="bossTitle" placeholder="Example: Finals Survival Meter" />
+                </div>
+
+                <div>
+                  <label for="bossTheme">Choose a vibe</label>
+                  <select id="bossTheme">
+                    <option value="">Choose one...</option>
+                    <option value="purple">Neon Purple</option>
+                    <option value="cyan">Cyber Cyan</option>
+                    <option value="pink">Hot Pink</option>
+                    <option value="green">Level Up Green</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="challenge">
+                <strong>Build your app</strong>
+                <p class="soft">Choose an app, name it, choose a vibe, then generate the mini app below.</p>
+                <div class="btn-row">
+                  <button class="btn-pink" id="bossBuildBtn">Build My Mini App</button>
+                </div>
+                <div id="bossPlan" class="message hidden"></div>
+              </div>
+
+              <div class="demo-box">
+                <strong>Mini app preview</strong>
+                <p class="soft">This will become your live JavaScript mini app.</p>
+                <div class="demo-stage" id="bossPreviewStage">
+                  <div class="live-text" id="bossPreviewText">Your mini app will appear here.</div>
+                  <div id="bossPreviewApp" style="margin-top:14px;"></div>
+                </div>
+              </div>
 
               <div class="btn-row" style="margin-top:14px;">
-                <button class="btn-pink" id="bossBtn">Defeat the Boss</button>
+                <button class="btn-green" id="finishBtn" disabled>Complete the Arena</button>
               </div>
               <div id="bossMsg" class="message hidden"></div>
             </div>
@@ -922,12 +1294,12 @@
         <section class="celebration hidden" id="finalCard">
           <h2>🎉 Arena Complete</h2>
           <p id="finalText"></p>
-          <div class="pill-wrap">
+          <div class="hero-pills" style="margin-top:14px;">
             <span class="pill">Click events</span>
             <span class="pill">Variables</span>
             <span class="pill">Conditionals</span>
             <span class="pill">Arrays</span>
-            <span class="pill">DOM updates</span>
+            <span class="pill">Debugging</span>
             <span class="pill">Interactive thinking</span>
           </div>
 
@@ -936,12 +1308,48 @@
             <button class="btn-dark" id="restartBtn">Play Again</button>
           </div>
         </section>
+
+        <section class="card hidden" id="showcaseCard" style="margin-top:20px;">
+          <h2>🏆 Class Showcase Board</h2>
+          <p class="soft">
+            Submit your mini app to the board and see what everyone built.
+          </p>
+
+          <div class="btn-row" style="margin-top:12px;">
+            <button class="btn-primary" id="submitShowcaseBtn">Submit My App to the Board</button>
+            <button class="btn-soft" id="resetVotesBtn" type="button">Reset Votes</button>
+            <button class="btn-soft" id="resetAwardsBtn" type="button">Reset Awards</button>
+          </div>
+
+          <div id="showcaseMsg" class="message hidden"></div>
+
+          <div id="showcaseBoard" class="leaderboard" style="margin-top:16px;">
+            <div class="leader-row" style="align-items:start;">
+              <div class="rank">★</div>
+              <div class="showcase-meta-area">
+                <strong>Example App</strong><br>
+                <span class="soft small">Campus stress meter • by Demo Team</span><br>
+                <span class="showcase-tag">Neon Purple</span>
+
+                <div class="award-actions">
+                  <button class="btn-soft award-btn funniest-btn" type="button" data-award="funniest">😂 Funniest</button>
+                  <button class="btn-soft award-btn useful-btn" type="button" data-award="useful">🛠️ Most Useful</button>
+                  <button class="btn-soft award-btn bestname-btn" type="button" data-award="bestname">🏷️ Best Name</button>
+                </div>
+              </div>
+              <div style="display:grid; gap:8px; justify-items:end;">
+                <strong><span class="vote-count">0</span> votes</strong>
+                <button class="btn-soft vote-btn" type="button">Vote</button>
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
 
-      <aside class="side">
+      <aside class="right-column">
         <section class="side-card">
           <h3>🏆 Leaderboard Vibes</h3>
-          <p class="soft small">For fun only. Everyone wins by reaching the boss battle.</p>
+          <p class="soft small">Just for fun. Everyone wins by reaching the boss battle.</p>
           <div class="leaderboard">
             <div class="leader-row">
               <div class="rank">1</div>
@@ -985,8 +1393,8 @@
               <small class="soft">Complete Round 3</small>
             </div>
             <div class="badge-card" id="badge4">
-              <span>🚦</span>
-              <strong>Logic Opener</strong>
+              <span>🐞</span>
+              <strong>Bug Crusher</strong>
               <small class="soft">Complete Round 4</small>
             </div>
             <div class="badge-card" id="badge5">
@@ -1004,24 +1412,24 @@
 
         <section class="side-card">
           <h3>💡 Instructor Mode</h3>
-          <p class="small soft">
-            Let students work in pairs or trios. Pause after each round and ask one team to share their answer.
+          <p class="soft small">
+            Students now write and run tiny bits of JavaScript in each round, then finish by building and submitting a mini app.
           </p>
-          <p class="small soft">
-            Good line to repeat: <strong>JavaScript is what makes the webpage react.</strong>
+          <p class="soft small">
+            Great reminder to say out loud: <strong>JavaScript is what makes the webpage react.</strong>
           </p>
         </section>
       </aside>
     </div>
 
     <p class="footer-note">
-      Single-file HTML for GitHub Pages • Built for Intro to Web Dev • Game-style classroom experience
+      Single-file HTML for GitHub Pages • Interactive JavaScript sandbox game for intro web dev students
     </p>
   </div>
 
   <div class="modal hidden" id="certificateModal">
     <div class="modal-card">
-      <div class="btn-row" style="justify-content:space-between; align-items:center;">
+      <div class="btn-row" style="justify-content:space-between;align-items:center;">
         <h3 style="margin:0;">🏆 Quest Certificate</h3>
         <button class="btn-soft" id="closeCertificateBtn">Close</button>
       </div>
@@ -1032,8 +1440,8 @@
         <p class="soft">This certifies that</p>
         <div class="big-name" id="certificateName">Team Name</div>
         <p class="soft">
-          successfully completed the JavaScript game challenge and demonstrated understanding of
-          clicks, variables, conditionals, arrays, and interactive web thinking.
+          successfully completed the JavaScript challenge and demonstrated understanding of
+          clicks, variables, conditionals, arrays, debugging, and interactive web thinking.
         </p>
         <div class="line"></div>
         <p class="soft">Awarded in Intro to Web Development</p>
@@ -1053,45 +1461,31 @@
       "Bug Bouncers",
       "Array Avengers",
       "Function Junction",
-      "The Click Kings",
-      "Loop Legends",
       "Syntax Squad",
-      "Code Chaos Crew"
-    ];
-
-    const lootTitles = [
-      "🏆 DOM Ninja",
-      "⚡ Event Listener Legend",
-      "🎯 Variable Mastermind",
-      "🎨 UI Chaos Coordinator",
-      "🐞 Bug Hunter Supreme",
-      "🚀 Button Launch Champion",
-      "🧠 Logic Wizard",
-      "💥 Interactive Hero",
-      "🎮 Browser Battle Boss"
+      "Loop Legends",
+      "Code Chaos Crew",
+      "The Click Kings"
     ];
 
     let completed = 0;
     let points = 0;
-    let toggleCount = 0;
-    let score = 0;
-    let prizeCount = 0;
-    let logicSolved = false;
     let badges = 0;
     let soundOn = true;
     let timerRunning = true;
     let totalSeconds = 25 * 60;
+    let highestUnlocked = 0;
+    let currentRound = 0;
 
     const progressText = document.getElementById("progressText");
     const progressFill = document.getElementById("progressFill");
     const teamDisplay = document.getElementById("teamDisplay");
     const modeDisplay = document.getElementById("modeDisplay");
     const pointsDisplay = document.getElementById("pointsDisplay");
+    const timerDisplay = document.getElementById("timerDisplay");
+    const soundDisplay = document.getElementById("soundDisplay");
+    const badgeCount = document.getElementById("badgeCount");
     const boardName = document.getElementById("boardName");
     const boardScore = document.getElementById("boardScore");
-    const badgeCount = document.getElementById("badgeCount");
-    const soundDisplay = document.getElementById("soundDisplay");
-    const timerDisplay = document.getElementById("timerDisplay");
 
     const modeEl = document.getElementById("mode");
     const teamNameEl = document.getElementById("teamName");
@@ -1101,12 +1495,35 @@
     const timerToggleBtn = document.getElementById("timerToggleBtn");
     const startMsg = document.getElementById("startMsg");
 
+    const showcaseCard = document.getElementById("showcaseCard");
+    const submitShowcaseBtn = document.getElementById("submitShowcaseBtn");
+    const resetVotesBtn = document.getElementById("resetVotesBtn");
+    const resetAwardsBtn = document.getElementById("resetAwardsBtn");
+    const showcaseMsg = document.getElementById("showcaseMsg");
+    const showcaseBoard = document.getElementById("showcaseBoard");
+
     const rounds = [1,2,3,4,5,6].map(n => document.getElementById(`round${n}`));
+    const questNodes = [...document.querySelectorAll(".quest-node")];
 
     function getPlayerName() {
       const value = teamNameEl.value.trim();
       if (value) return value;
       return modeEl.value === "solo" ? "Solo Coder" : "Team";
+    }
+
+    function updateProgress() {
+      progressText.textContent = `${completed} / 6 rounds complete`;
+      progressFill.style.width = `${(completed / 6) * 100}%`;
+    }
+
+    function updatePoints(add = 0) {
+      points += add;
+      pointsDisplay.textContent = points;
+      boardScore.textContent = points;
+    }
+
+    function updateBadges() {
+      badgeCount.textContent = badges;
     }
 
     function setMessage(el, text, type = "") {
@@ -1116,19 +1533,39 @@
       el.classList.remove("hidden");
     }
 
-    function updateProgress() {
-      progressText.textContent = `${completed} / 6 rounds complete`;
-      progressFill.style.width = `${(completed / 6) * 100}%`;
+    function updateQuestMap() {
+      questNodes.forEach(node => {
+        const roundNum = Number(node.dataset.round);
+        node.classList.remove("locked", "current", "done");
+
+        if (roundNum <= completed) {
+          node.classList.add("done");
+        } else if (roundNum === currentRound) {
+          node.classList.add("current");
+        } else if (roundNum > highestUnlocked) {
+          node.classList.add("locked");
+        }
+      });
     }
 
-    function updatePoints(num = 0) {
-      points += num;
-      pointsDisplay.textContent = points;
-      boardScore.textContent = points;
-    }
+    function activateRound(n) {
+      currentRound = n;
+      if (n > highestUnlocked) highestUnlocked = n;
 
-    function updateBadges() {
-      badgeCount.textContent = badges;
+      rounds.forEach((round, index) => {
+        round.classList.remove("active");
+        if (index === n - 1) {
+          round.classList.add("active");
+          round.classList.remove("locked");
+          round.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      });
+
+      for (let i = 0; i < highestUnlocked; i++) {
+        rounds[i].classList.remove("locked");
+      }
+
+      updateQuestMap();
     }
 
     function unlockBadge(n) {
@@ -1139,17 +1576,6 @@
         updateBadges();
         playTone("badge");
       }
-    }
-
-    function activateRound(n) {
-      rounds.forEach((round, index) => {
-        round.classList.remove("active");
-        if (index === n - 1) {
-          round.classList.add("active");
-          round.classList.remove("locked");
-          round.scrollIntoView({ behavior: "smooth", block: "start" });
-        }
-      });
     }
 
     function completeRound(n) {
@@ -1164,6 +1590,7 @@
         playTone("success");
         setTimeout(() => round.classList.remove("pulse"), 800);
       }
+      updateQuestMap();
     }
 
     function randomName() {
@@ -1180,10 +1607,7 @@
     function updateTimerUI() {
       timerDisplay.textContent = formatTime(totalSeconds);
       timerDisplay.classList.remove("timer-warning", "timer-danger");
-
-      if (totalSeconds <= 300) {
-        timerDisplay.classList.add("timer-warning");
-      }
+      if (totalSeconds <= 300) timerDisplay.classList.add("timer-warning");
       if (totalSeconds <= 60) {
         timerDisplay.classList.remove("timer-warning");
         timerDisplay.classList.add("timer-danger");
@@ -1202,53 +1626,49 @@
 
     function playTone(type = "click") {
       if (!soundOn) return;
-
       try {
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         const oscillator = audioCtx.createOscillator();
-        const gainNode = audioCtx.createGain();
+        const gain = audioCtx.createGain();
 
-        oscillator.connect(gainNode);
-        gainNode.connect(audioCtx.destination);
+        oscillator.connect(gain);
+        gain.connect(audioCtx.destination);
 
         if (type === "click") {
-          oscillator.frequency.value = 520;
-          gainNode.gain.value = 0.03;
+          oscillator.frequency.value = 560;
+          gain.gain.value = 0.03;
         } else if (type === "success") {
-          oscillator.frequency.value = 760;
-          gainNode.gain.value = 0.05;
+          oscillator.frequency.value = 780;
+          gain.gain.value = 0.05;
         } else if (type === "badge") {
-          oscillator.frequency.value = 910;
-          gainNode.gain.value = 0.05;
+          oscillator.frequency.value = 940;
+          gain.gain.value = 0.05;
         } else if (type === "warn") {
           oscillator.frequency.value = 380;
-          gainNode.gain.value = 0.04;
+          gain.gain.value = 0.04;
         } else if (type === "danger") {
           oscillator.frequency.value = 220;
-          gainNode.gain.value = 0.05;
+          gain.gain.value = 0.05;
         }
 
         oscillator.type = "sine";
         oscillator.start();
-
-        gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.18);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.18);
         oscillator.stop(audioCtx.currentTime + 0.18);
-      } catch (e) {
-        // ignore sound errors
-      }
+      } catch (e) {}
     }
 
     function launchConfetti() {
-      const colors = ["#22d3ee", "#3b82f6", "#8b5cf6", "#ec4899", "#facc15", "#22c55e"];
-      for (let i = 0; i < 110; i++) {
+      const colors = ["#22d3ee","#7c3aed","#a855f7","#ec4899","#22c55e","#f59e0b"];
+      for (let i = 0; i < 100; i++) {
         const piece = document.createElement("div");
         piece.className = "confetti-piece";
         piece.style.left = Math.random() * 100 + "vw";
         piece.style.background = colors[Math.floor(Math.random() * colors.length)];
-        piece.style.animationDuration = (3 + Math.random() * 3) + "s";
+        piece.style.animationDuration = (3 + Math.random() * 2.8) + "s";
         piece.style.transform = `rotate(${Math.random() * 360}deg)`;
         document.body.appendChild(piece);
-        setTimeout(() => piece.remove(), 7000);
+        setTimeout(() => piece.remove(), 6500);
       }
     }
 
@@ -1263,6 +1683,113 @@
       }
       return true;
     }
+
+    function clearAward(categoryClass) {
+      document.querySelectorAll(`.award-chip.${categoryClass}`).forEach(el => el.remove());
+      document.querySelectorAll(`.award-btn[data-award="${categoryClass}"]`).forEach(btn => {
+        btn.classList.remove("active");
+      });
+    }
+
+    function applyAwardToRow(row, categoryClass, label) {
+      clearAward(categoryClass);
+      const metaArea = row.querySelector(".showcase-meta-area");
+      const button = row.querySelector(`.award-btn[data-award="${categoryClass}"]`);
+
+      const chip = document.createElement("span");
+      chip.className = `award-chip ${categoryClass}`;
+      chip.textContent = label;
+
+      metaArea.appendChild(chip);
+      if (button) button.classList.add("active");
+    }
+
+    function bindVoteAndAwardsForRow(row) {
+      if (row.dataset.initialized === "true") return;
+
+      const voteBtn = row.querySelector(".vote-btn");
+      const voteCountEl = row.querySelector(".vote-count");
+      let votes = parseInt(voteCountEl?.textContent || "0", 10);
+
+      voteBtn?.addEventListener("click", () => {
+        votes++;
+        if (voteCountEl) voteCountEl.textContent = votes;
+        playTone("success");
+
+        const sortableRows = Array.from(showcaseBoard.querySelectorAll(".leader-row"));
+        sortableRows.sort((a, b) => {
+          const aVotes = parseInt(a.querySelector(".vote-count")?.textContent || "0", 10);
+          const bVotes = parseInt(b.querySelector(".vote-count")?.textContent || "0", 10);
+          return bVotes - aVotes;
+        });
+        sortableRows.forEach(r => showcaseBoard.appendChild(r));
+      });
+
+      row.querySelector('.award-btn[data-award="funniest"]')?.addEventListener("click", () => {
+        applyAwardToRow(row, "funniest", "😂 Funniest");
+        playTone("success");
+      });
+
+      row.querySelector('.award-btn[data-award="useful"]')?.addEventListener("click", () => {
+        applyAwardToRow(row, "useful", "🛠️ Most Useful");
+        playTone("success");
+      });
+
+      row.querySelector('.award-btn[data-award="bestname"]')?.addEventListener("click", () => {
+        applyAwardToRow(row, "bestname", "🏷️ Best Name");
+        playTone("success");
+      });
+
+      row.dataset.initialized = "true";
+    }
+
+    function bindExistingVoteButtons() {
+      const rows = Array.from(showcaseBoard.querySelectorAll(".leader-row"));
+      rows.forEach(bindVoteAndAwardsForRow);
+    }
+
+    function addShowcaseEntry(teamName, appTitle, appType, themeLabel) {
+      const row = document.createElement("div");
+      row.className = "leader-row pop";
+      row.style.alignItems = "start";
+
+      row.innerHTML = `
+        <div class="rank">✓</div>
+        <div class="showcase-meta-area">
+          <strong>${appTitle}</strong><br>
+          <span class="soft small">${appType} • by ${teamName}</span><br>
+          <span class="showcase-tag">${themeLabel}</span>
+
+          <div class="award-actions">
+            <button class="btn-soft award-btn funniest-btn" type="button" data-award="funniest">😂 Funniest</button>
+            <button class="btn-soft award-btn useful-btn" type="button" data-award="useful">🛠️ Most Useful</button>
+            <button class="btn-soft award-btn bestname-btn" type="button" data-award="bestname">🏷️ Best Name</button>
+          </div>
+        </div>
+        <div style="display:grid; gap:8px; justify-items:end;">
+          <strong><span class="vote-count">0</span> votes</strong>
+          <button class="btn-soft vote-btn" type="button">Vote</button>
+        </div>
+      `;
+
+      showcaseBoard.prepend(row);
+      bindVoteAndAwardsForRow(row);
+    }
+
+    questNodes.forEach(node => {
+      node.addEventListener("click", () => {
+        const roundNum = Number(node.dataset.round);
+        if (roundNum <= highestUnlocked && roundNum > 0) {
+          document.getElementById(node.dataset.target).scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+          });
+          currentRound = roundNum;
+          updateQuestMap();
+          playTone("click");
+        }
+      });
+    });
 
     randomNameBtn.addEventListener("click", () => {
       randomName();
@@ -1282,206 +1809,264 @@
 
     startBtn.addEventListener("click", () => {
       if (!validateStart()) return;
-
       const player = getPlayerName();
       teamDisplay.textContent = player;
       modeDisplay.textContent = modeEl.value === "team" ? "Team" : "Solo";
       boardName.textContent = player;
       document.getElementById("certificateName").textContent = player;
 
-      setMessage(startMsg, `🚀 Welcome, <strong>${player}</strong>. Round 1 is now unlocked. Time to make the browser do things.`, "success");
+      setMessage(startMsg, `🚀 Welcome, <strong>${player}</strong>. Round 1 is now unlocked.`, "success");
+      highestUnlocked = 1;
       activateRound(1);
       updatePoints(20);
       playTone("success");
     });
 
-    // Round 1
-    const wakeBtn = document.getElementById("wakeBtn");
-    const wakeOutput = document.getElementById("wakeOutput");
-    const r1Next = document.getElementById("r1Next");
-    const r1Msg = document.getElementById("r1Msg");
+    function bindSandbox({ editorId, runBtnId, resetBtnId, msgId, setupFn, successCheck }) {
+      const editor = document.getElementById(editorId);
+      const runBtn = document.getElementById(runBtnId);
+      const resetBtn = document.getElementById(resetBtnId);
+      const msg = document.getElementById(msgId);
 
-    wakeBtn.addEventListener("click", () => {
-      const answer = document.getElementById("r1Answer").value.trim();
-      if (!answer) {
-        wakeOutput.textContent = "Your team needs to answer the question first.";
-        playTone("warn");
-        return;
+      let state = setupFn();
+
+      function reset() {
+        state = setupFn();
       }
 
-      wakeOutput.textContent = `✨ ${getPlayerName()} woke the page. JavaScript gives the webpage actions and reactions.`;
-      document.querySelector(".hero").classList.add("pulse");
-      updatePoints(25);
-      r1Next.disabled = false;
-      playTone("click");
-      setTimeout(() => document.querySelector(".hero").classList.remove("pulse"), 600);
-    });
-
-    r1Next.addEventListener("click", () => {
-      completeRound(1);
-      setMessage(r1Msg, "Nice. You connected JavaScript to interaction and user response.", "success");
-      activateRound(2);
-    });
-
-    // Round 2
-    const toggleBtn = document.getElementById("toggleBtn");
-    const toggleCountEl = document.getElementById("toggleCount");
-    const r2Next = document.getElementById("r2Next");
-    const r2Msg = document.getElementById("r2Msg");
-
-    toggleBtn.addEventListener("click", () => {
-      const answer = document.getElementById("r2Answer").value.trim();
-      if (!answer) {
-        setMessage(r2Msg, "Answer the toggle question first.", "warn");
-        playTone("warn");
-        return;
-      }
-
-      toggleCount++;
-      toggleCountEl.textContent = toggleCount;
-      document.body.style.filter = toggleCount % 2 === 0 ? "saturate(1)" : "saturate(1.15)";
-      document.body.style.background =
-        toggleCount % 2 === 0
-          ? `radial-gradient(circle at 10% 10%, rgba(34,211,238,0.16), transparent 18%),
-             radial-gradient(circle at 88% 12%, rgba(236,72,153,0.16), transparent 18%),
-             radial-gradient(circle at 50% 88%, rgba(139,92,246,0.14), transparent 22%),
-             linear-gradient(180deg, #060a16, #0b1120 28%, #0d1326 100%)`
-          : `radial-gradient(circle at 14% 18%, rgba(250,204,21,0.16), transparent 18%),
-             radial-gradient(circle at 86% 10%, rgba(34,197,94,0.16), transparent 18%),
-             radial-gradient(circle at 56% 85%, rgba(59,130,246,0.14), transparent 22%),
-             linear-gradient(180deg, #08111e, #0b1425 28%, #101a2d 100%)`;
-
-      updatePoints(15);
-      playTone("click");
-
-      if (toggleCount >= 3) {
-        r2Next.disabled = false;
-      }
-    });
-
-    r2Next.addEventListener("click", () => {
-      completeRound(2);
-      setMessage(r2Msg, "Great. You explored state changes, which are everywhere in web interfaces.", "success");
-      activateRound(3);
-    });
-
-    // Round 3
-    const scoreBtn = document.getElementById("scoreBtn");
-    const resetScoreBtn = document.getElementById("resetScoreBtn");
-    const scoreValue = document.getElementById("scoreValue");
-    const scoreOutput = document.getElementById("scoreOutput");
-    const r3Next = document.getElementById("r3Next");
-    const r3Msg = document.getElementById("r3Msg");
-
-    scoreBtn.addEventListener("click", () => {
-      const answer = document.getElementById("r3Answer").value.trim();
-      if (!answer) {
-        setMessage(r3Msg, "Answer the variable question first.", "warn");
-        playTone("warn");
-        return;
-      }
-
-      score++;
-      scoreValue.textContent = score;
-      updatePoints(10);
-      playTone("click");
-
-      if (score < 5) {
-        scoreOutput.textContent = `${getPlayerName()} is building momentum...`;
-      } else {
-        scoreOutput.textContent = `🔥 Score target reached. Variable power unlocked.`;
-        r3Next.disabled = false;
-        updatePoints(25);
-        playTone("success");
-      }
-    });
-
-    resetScoreBtn.addEventListener("click", () => {
-      score = 0;
-      scoreValue.textContent = "0";
-      scoreOutput.textContent = "";
-      r3Next.disabled = true;
-      playTone("click");
-    });
-
-    r3Next.addEventListener("click", () => {
-      completeRound(3);
-      setMessage(r3Msg, "Exactly. Variables help JavaScript remember and update changing information.", "success");
-      activateRound(4);
-    });
-
-    // Round 4
-    const logicChoices = document.querySelectorAll(".logicChoice");
-    const logicOutput = document.getElementById("logicOutput");
-    const r4Next = document.getElementById("r4Next");
-    const r4Msg = document.getElementById("r4Msg");
-
-    logicChoices.forEach(btn => {
-      btn.addEventListener("click", () => {
-        const answer = document.getElementById("r4Answer").value.trim();
-        if (!answer) {
-          setMessage(logicOutput, "Write your explanation first, then choose an answer.", "warn");
-          playTone("warn");
-          return;
+      runBtn.addEventListener("click", () => {
+        reset();
+        const code = editor.value;
+        try {
+          const runner = new Function(...Object.keys(state), code);
+          runner(...Object.values(state));
+          setMessage(msg, "Code ran. Try the button in the demo stage.", "success");
+          updatePoints(8);
+          playTone("click");
+          if (typeof successCheck === "function") successCheck();
+        } catch (err) {
+          setMessage(msg, `Error: ${err.message}`, "danger");
+          playTone("danger");
         }
+      });
 
+      resetBtn.addEventListener("click", () => {
+        reset();
+        setMessage(msg, "Demo reset.", "success");
+        playTone("click");
+      });
+    }
+
+    // Round 1
+    bindSandbox({
+      editorId: "r1Editor",
+      runBtnId: "r1RunBtn",
+      resetBtnId: "r1ResetBtn",
+      msgId: "r1SandboxMsg",
+      setupFn: () => {
+        const btnOld = document.getElementById("r1ActionBtn");
+        const btn = btnOld.cloneNode(true);
+        btnOld.replaceWith(btn);
+        const text = document.getElementById("r1Text");
+        text.textContent = "😴 The webpage is asleep...";
+        text.style.color = "";
+        return { btn, text };
+      }
+    });
+
+    document.querySelectorAll(".r1-choice").forEach(btn => {
+      btn.addEventListener("click", () => {
         const correct = btn.dataset.correct === "true";
+        const msg = document.getElementById("r1CheckMsg");
         if (correct) {
-          logicSolved = true;
-          setMessage(logicOutput, "✅ Correct. An if statement checks a condition and decides what happens next.", "success");
-          r4Next.disabled = false;
-          updatePoints(35);
+          setMessage(msg, "Correct. JavaScript listened for a click and changed the page.", "success");
+          document.getElementById("r1Next").disabled = false;
+          updatePoints(20);
           playTone("success");
         } else {
-          setMessage(logicOutput, "Not quite. Think about decision-making in code and try again.", "danger");
+          setMessage(msg, "Not quite. Focus on what happened after the click.", "danger");
           playTone("danger");
         }
       });
     });
 
-    r4Next.addEventListener("click", () => {
-      if (!logicSolved) return;
+    document.getElementById("r1Next").addEventListener("click", () => {
+      completeRound(1);
+      setMessage(document.getElementById("r1Msg"), "Nice. You used a click event to change page content.", "success");
+      highestUnlocked = Math.max(highestUnlocked, 2);
+      activateRound(2);
+    });
+
+    // Round 2
+    bindSandbox({
+      editorId: "r2Editor",
+      runBtnId: "r2RunBtn",
+      resetBtnId: "r2ResetBtn",
+      msgId: "r2SandboxMsg",
+      setupFn: () => {
+        const oldBtn = document.getElementById("r2ActionBtn");
+        const btn = oldBtn.cloneNode(true);
+        oldBtn.replaceWith(btn);
+        const stage = document.getElementById("r2Stage");
+        const text = document.getElementById("r2Text");
+        stage.classList.add("light");
+        text.textContent = "Theme: Light Mode";
+        text.style.color = "#111827";
+        return { btn, stage, text };
+      }
+    });
+
+    document.querySelectorAll(".r2-choice").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const correct = btn.dataset.correct === "true";
+        const msg = document.getElementById("r2CheckMsg");
+        if (correct) {
+          setMessage(msg, "Correct. This round is all about switching state.", "success");
+          document.getElementById("r2Next").disabled = false;
+          updatePoints(20);
+          playTone("success");
+        } else {
+          setMessage(msg, "Not quite. Think about what changes back and forth.", "danger");
+          playTone("danger");
+        }
+      });
+    });
+
+    document.getElementById("r2Next").addEventListener("click", () => {
+      completeRound(2);
+      setMessage(document.getElementById("r2Msg"), "Great. You made a live toggle with JavaScript.", "success");
+      highestUnlocked = Math.max(highestUnlocked, 3);
+      activateRound(3);
+    });
+
+    // Round 3
+    bindSandbox({
+      editorId: "r3Editor",
+      runBtnId: "r3RunBtn",
+      resetBtnId: "r3ResetBtn",
+      msgId: "r3SandboxMsg",
+      setupFn: () => {
+        const oldBtn = document.getElementById("r3ActionBtn");
+        const btn = oldBtn.cloneNode(true);
+        oldBtn.replaceWith(btn);
+        const scoreText = document.getElementById("r3ScoreText");
+        scoreText.textContent = "0";
+        return { btn, scoreText };
+      }
+    });
+
+    document.querySelectorAll(".r3-choice").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const correct = btn.dataset.correct === "true";
+        const msg = document.getElementById("r3CheckMsg");
+        if (correct) {
+          setMessage(msg, "Correct. A variable stores the changing number.", "success");
+          document.getElementById("r3Next").disabled = false;
+          updatePoints(20);
+          playTone("success");
+        } else {
+          setMessage(msg, "Not quite. Something in JavaScript has to remember the number.", "danger");
+          playTone("danger");
+        }
+      });
+    });
+
+    document.getElementById("r3Next").addEventListener("click", () => {
+      completeRound(3);
+      setMessage(document.getElementById("r3Msg"), "Nice. You used a variable to store and display changing data.", "success");
+      highestUnlocked = Math.max(highestUnlocked, 4);
+      activateRound(4);
+    });
+
+    // Round 4
+    bindSandbox({
+      editorId: "r4Editor",
+      runBtnId: "r4RunBtn",
+      resetBtnId: "r4ResetBtn",
+      msgId: "r4SandboxMsg",
+      setupFn: () => {
+        const oldBtn = document.getElementById("r4ActionBtn");
+        const btn = oldBtn.cloneNode(true);
+        oldBtn.replaceWith(btn);
+        const text = document.getElementById("r4Text");
+        text.textContent = "Current score: 6";
+        text.style.color = "";
+        return { btn, text };
+      },
+      successCheck: () => {
+        const code = document.getElementById("r4Editor").value;
+        if (code.includes("if (score > 5)") || code.includes("if(score > 5)")) {
+          document.getElementById("r4Next").disabled = false;
+        }
+      }
+    });
+
+    document.getElementById("r4RunBtn").addEventListener("click", () => {
+      const code = document.getElementById("r4Editor").value;
+      if ((code.includes("if (score > 5)") || code.includes("if(score > 5)")) && !document.getElementById("r4Next").disabled) {
+        updatePoints(20);
+        playTone("success");
+      }
+    });
+
+    document.getElementById("r4Next").addEventListener("click", () => {
       completeRound(4);
-      setMessage(r4Msg, "You opened the logic gate. Conditionals are a huge JavaScript skill.", "success");
+      setMessage(document.getElementById("r4Msg"), "Nice debugging. Fixing syntax is real JavaScript work.", "success");
+      highestUnlocked = Math.max(highestUnlocked, 5);
       activateRound(5);
     });
 
     // Round 5
-    const prizeBtn = document.getElementById("prizeBtn");
-    const prizeOutput = document.getElementById("prizeOutput");
-    const prizeCountEl = document.getElementById("prizeCount");
-    const r5Next = document.getElementById("r5Next");
-    const r5Msg = document.getElementById("r5Msg");
-
-    prizeBtn.addEventListener("click", () => {
-      const answer = document.getElementById("r5Answer").value.trim();
-      if (!answer) {
-        setMessage(r5Msg, "Answer the array question first.", "warn");
-        playTone("warn");
-        return;
-      }
-
-      const i = Math.floor(Math.random() * lootTitles.length);
-      prizeOutput.textContent = `${getPlayerName()} earned: ${lootTitles[i]}`;
-      prizeCount++;
-      prizeCountEl.textContent = prizeCount;
-      updatePoints(20);
-      playTone("click");
-
-      if (prizeCount >= 2) {
-        r5Next.disabled = false;
+    bindSandbox({
+      editorId: "r5Editor",
+      runBtnId: "r5RunBtn",
+      resetBtnId: "r5ResetBtn",
+      msgId: "r5SandboxMsg",
+      setupFn: () => {
+        const oldBtn = document.getElementById("r5ActionBtn");
+        const btn = oldBtn.cloneNode(true);
+        oldBtn.replaceWith(btn);
+        const text = document.getElementById("r5Text");
+        text.textContent = "No loot yet...";
+        return { btn, text };
       }
     });
 
-    r5Next.addEventListener("click", () => {
+    document.querySelectorAll(".r5-choice").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const correct = btn.dataset.correct === "true";
+        const msg = document.getElementById("r5CheckMsg");
+        if (correct) {
+          setMessage(msg, "Correct. Math.random() plus array length helps pick a random item.", "success");
+          document.getElementById("r5Next").disabled = false;
+          updatePoints(20);
+          playTone("success");
+        } else {
+          setMessage(msg, "Not quite. Look for the code that calculates a random index.", "danger");
+          playTone("danger");
+        }
+      });
+    });
+
+    document.getElementById("r5Next").addEventListener("click", () => {
       completeRound(5);
-      setMessage(r5Msg, "Nice. Arrays let JavaScript work with collections of data instead of just one value.", "success");
+      setMessage(document.getElementById("r5Msg"), "Nice. You used an array and random logic to generate loot.", "success");
+      highestUnlocked = Math.max(highestUnlocked, 6);
       activateRound(6);
     });
 
-    // Round 6
-    const bossBtn = document.getElementById("bossBtn");
+    // Boss battle
+    const bossType = document.getElementById("bossType");
+    const bossTitle = document.getElementById("bossTitle");
+    const bossTheme = document.getElementById("bossTheme");
+    const bossBuildBtn = document.getElementById("bossBuildBtn");
+    const bossPlan = document.getElementById("bossPlan");
     const bossMsg = document.getElementById("bossMsg");
+    const finishBtn = document.getElementById("finishBtn");
+    const bossPreviewStage = document.getElementById("bossPreviewStage");
+    const bossPreviewText = document.getElementById("bossPreviewText");
+    const bossPreviewApp = document.getElementById("bossPreviewApp");
+
     const finalCard = document.getElementById("finalCard");
     const finalText = document.getElementById("finalText");
     const restartBtn = document.getElementById("restartBtn");
@@ -1490,30 +2075,265 @@
     const closeCertificateBtn = document.getElementById("closeCertificateBtn");
     const printCertificateBtn = document.getElementById("printCertificateBtn");
 
-    bossBtn.addEventListener("click", () => {
-      const idea = document.getElementById("bossIdea").value.trim();
-      const features = document.getElementById("bossFeatures").value.trim();
+    function applyBossTheme(theme) {
+      bossPreviewStage.style.borderColor = "#334155";
+      bossPreviewStage.style.boxShadow = "none";
 
-      if (!idea || !features) {
-        setMessage(bossMsg, "Write both your mini project idea and the JavaScript features it would use.", "warn");
+      if (theme === "purple") {
+        bossPreviewStage.style.borderColor = "#7c3aed";
+        bossPreviewStage.style.boxShadow = "0 0 20px rgba(124, 58, 237, 0.25)";
+      } else if (theme === "cyan") {
+        bossPreviewStage.style.borderColor = "#22d3ee";
+        bossPreviewStage.style.boxShadow = "0 0 20px rgba(34, 211, 238, 0.25)";
+      } else if (theme === "pink") {
+        bossPreviewStage.style.borderColor = "#ec4899";
+        bossPreviewStage.style.boxShadow = "0 0 20px rgba(236, 72, 153, 0.25)";
+      } else if (theme === "green") {
+        bossPreviewStage.style.borderColor = "#22c55e";
+        bossPreviewStage.style.boxShadow = "0 0 20px rgba(34, 197, 94, 0.25)";
+      }
+    }
+
+    function renderStressApp(title) {
+      bossPreviewApp.innerHTML = `
+        <div style="display:grid; gap:12px;">
+          <div style="font-size:1.1rem; font-weight:700;">${title}</div>
+          <div>Stress level: <span id="stressValue">0</span></div>
+          <div class="btn-row">
+            <button class="btn-yellow" id="stressBtn">Add Stress</button>
+            <button class="btn-soft" id="stressResetBtn">Reset</button>
+          </div>
+          <div id="stressMsg" class="message">Current vibe: calm... for now.</div>
+        </div>
+      `;
+
+      let stress = 0;
+      const stressValue = document.getElementById("stressValue");
+      const stressMsg = document.getElementById("stressMsg");
+
+      document.getElementById("stressBtn").addEventListener("click", () => {
+        stress++;
+        stressValue.textContent = stress;
+        if (stress < 3) {
+          stressMsg.textContent = "Still manageable.";
+        } else if (stress < 6) {
+          stressMsg.textContent = "Okay... maybe take a breath.";
+        } else {
+          stressMsg.textContent = "🚨 Immediate snack or nap recommended.";
+        }
+        playTone("click");
+      });
+
+      document.getElementById("stressResetBtn").addEventListener("click", () => {
+        stress = 0;
+        stressValue.textContent = stress;
+        stressMsg.textContent = "Current vibe: calm... for now.";
+        playTone("click");
+      });
+    }
+
+    function renderRoommateApp(title) {
+      bossPreviewApp.innerHTML = `
+        <div style="display:grid; gap:12px;">
+          <div style="font-size:1.1rem; font-weight:700;">${title}</div>
+          <div>Mood level: <span id="roommateValue">0</span></div>
+          <div class="btn-row">
+            <button class="btn-cyan" id="roommateBtn">Check Mood</button>
+          </div>
+          <div id="roommateMsg" class="message">Click to reveal the roommate vibe.</div>
+        </div>
+      `;
+
+      document.getElementById("roommateBtn").addEventListener("click", () => {
+        const moods = [
+          "😎 Unbothered and vibing.",
+          "🫠 Barely surviving group projects.",
+          "🍕 In a good mood because food arrived.",
+          "🎧 Emotionally unavailable but listening to playlists.",
+          "🚨 Needs everyone to stop touching their stuff."
+        ];
+        const index = Math.floor(Math.random() * moods.length);
+        document.getElementById("roommateValue").textContent = index + 1;
+        document.getElementById("roommateMsg").textContent = moods[index];
+        playTone("click");
+      });
+    }
+
+    function renderLunchApp(title) {
+      bossPreviewApp.innerHTML = `
+        <div style="display:grid; gap:12px;">
+          <div style="font-size:1.1rem; font-weight:700;">${title}</div>
+          <div class="btn-row">
+            <button class="btn-pink" id="lunchBtn">Pick My Lunch</button>
+          </div>
+          <div id="lunchMsg" class="message">No decision yet.</div>
+        </div>
+      `;
+
+      document.getElementById("lunchBtn").addEventListener("click", () => {
+        const lunches = [
+          "🍔 Burger",
+          "🌯 Burrito",
+          "🍜 Ramen",
+          "🥗 Salad pretending to be enough",
+          "🍕 Pizza",
+          "🐔 Chicken tenders, obviously"
+        ];
+        const pick = lunches[Math.floor(Math.random() * lunches.length)];
+        document.getElementById("lunchMsg").textContent = `Today's winner: ${pick}`;
+        playTone("click");
+      });
+    }
+
+    function renderMotivationApp(title) {
+      bossPreviewApp.innerHTML = `
+        <div style="display:grid; gap:12px;">
+          <div style="font-size:1.1rem; font-weight:700;">${title}</div>
+          <div class="btn-row">
+            <button class="btn-green" id="motivationBtn">Generate Motivation</button>
+          </div>
+          <div id="motivationMsg" class="message">You got this. Probably.</div>
+        </div>
+      `;
+
+      document.getElementById("motivationBtn").addEventListener("click", () => {
+        const quotes = [
+          "💪 Your code does not have to be perfect to be progress.",
+          "🚀 Every good developer has broken things first.",
+          "🔥 You are one semicolon away from greatness.",
+          "🧠 Debugging is learning in disguise.",
+          "✨ Tiny wins build real skill."
+        ];
+        const pick = quotes[Math.floor(Math.random() * quotes.length)];
+        document.getElementById("motivationMsg").textContent = pick;
+        playTone("click");
+      });
+    }
+
+    function renderStudyApp(title) {
+      bossPreviewApp.innerHTML = `
+        <div style="display:grid; gap:12px;">
+          <div style="font-size:1.1rem; font-weight:700;">${title}</div>
+          <div class="btn-row">
+            <button class="btn-primary" id="studyBtn">Need a Study Break?</button>
+          </div>
+          <div id="studyMsg" class="message">Press the button when your brain starts buffering.</div>
+        </div>
+      `;
+
+      document.getElementById("studyBtn").addEventListener("click", () => {
+        const breaks = [
+          "Stand up and stretch for 30 seconds.",
+          "Drink water.",
+          "Look away from your screen for 20 seconds.",
+          "Text nobody. Stay focused. 😅",
+          "Take three deep breaths."
+        ];
+        const pick = breaks[Math.floor(Math.random() * breaks.length)];
+        document.getElementById("studyMsg").textContent = `🧘 ${pick}`;
+        playTone("click");
+      });
+    }
+
+    bossBuildBtn.addEventListener("click", () => {
+      const type = bossType.value;
+      const title = bossTitle.value.trim();
+      const theme = bossTheme.value;
+
+      if (!type || !title || !theme) {
+        setMessage(bossPlan, "Choose an app type, enter a title, and choose a vibe before building.", "warn");
         playTone("warn");
         return;
       }
 
+      bossPreviewText.textContent = "Mini app built successfully. Try it below.";
+      applyBossTheme(theme);
+
+      if (type === "stress") {
+        renderStressApp(title);
+      } else if (type === "roommate") {
+        renderRoommateApp(title);
+      } else if (type === "lunch") {
+        renderLunchApp(title);
+      } else if (type === "motivation") {
+        renderMotivationApp(title);
+      } else if (type === "study") {
+        renderStudyApp(title);
+      }
+
+      setMessage(
+        bossPlan,
+        `<strong>Mini App Built:</strong><br><br>
+        <strong>App type:</strong> ${bossType.options[bossType.selectedIndex].text}<br>
+        <strong>App title:</strong> ${title}<br>
+        <strong>Theme:</strong> ${bossTheme.options[bossTheme.selectedIndex].text}<br><br>
+        Your app now includes interaction, visible output, and JavaScript behavior.`,
+        "success"
+      );
+
+      finishBtn.disabled = false;
+      submitShowcaseBtn.disabled = false;
+      updatePoints(35);
+      playTone("success");
+    });
+
+    finishBtn.addEventListener("click", () => {
       completeRound(6);
-      updatePoints(60);
-      setMessage(bossMsg, `🏆 Boss defeated. ${getPlayerName()} completed the arena.`, "success");
+      setMessage(bossMsg, `🏆 Boss defeated. ${getPlayerName()} completed the arena by building a live mini app.`, "success");
 
       finalCard.classList.remove("hidden");
       finalCard.classList.add("pulse");
+      showcaseCard.classList.remove("hidden");
+
       finalText.innerHTML = `
-        <strong>${getPlayerName()}</strong> completed all six rounds and practiced the core idea of JavaScript:
-        webpages can listen, react, update, decide, and feel alive.
+        <strong>${getPlayerName()}</strong> completed all six rounds and built a working mini app using JavaScript ideas like events, variables, conditionals, and dynamic output.
       `;
 
       launchConfetti();
       playTone("success");
+      updateQuestMap();
       finalCard.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    submitShowcaseBtn.addEventListener("click", () => {
+      const teamName = getPlayerName();
+      const appTitle = bossTitle.value.trim();
+      const appTypeText = bossType.options[bossType.selectedIndex]?.text || "";
+      const themeText = bossTheme.options[bossTheme.selectedIndex]?.text || "";
+
+      if (!appTitle || !appTypeText || !themeText) {
+        setMessage(showcaseMsg, "Build your mini app first so it has something to submit to the board.", "warn");
+        playTone("warn");
+        return;
+      }
+
+      addShowcaseEntry(teamName, appTitle, appTypeText, themeText);
+      setMessage(showcaseMsg, `🎉 ${teamName} submitted <strong>${appTitle}</strong> to the showcase board.`, "success");
+      updatePoints(15);
+      playTone("success");
+
+      submitShowcaseBtn.disabled = true;
+    });
+
+    resetVotesBtn.addEventListener("click", () => {
+      const voteCounts = document.querySelectorAll(".vote-count");
+      voteCounts.forEach(count => {
+        count.textContent = "0";
+      });
+
+      const rows = Array.from(showcaseBoard.querySelectorAll(".leader-row"));
+      rows.forEach(r => showcaseBoard.appendChild(r));
+
+      setMessage(showcaseMsg, "🗳️ All showcase votes have been reset.", "success");
+      playTone("click");
+    });
+
+    resetAwardsBtn.addEventListener("click", () => {
+      document.querySelectorAll(".award-chip").forEach(el => el.remove());
+      document.querySelectorAll(".award-btn").forEach(btn => btn.classList.remove("active"));
+
+      setMessage(showcaseMsg, "🏅 All award badges have been reset.", "success");
+      playTone("click");
     });
 
     openCertificateBtn.addEventListener("click", () => {
@@ -1534,9 +2354,11 @@
       window.location.reload();
     });
 
+    bindExistingVoteButtons();
     updateProgress();
     updateBadges();
     updateTimerUI();
+    updateQuestMap();
     soundDisplay.textContent = soundOn ? "On" : "Off";
   </script>
 </body>
