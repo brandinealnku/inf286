@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JavaScript Quest Arena — Student (Firebase)</title>
+  <style>
+    :root{
+      --bg:#0b0f17; --panel:#111827ee; --panel2:#0f172ae8; --text:#f8fafc; --muted:#94a3b8;
+      --brand:#7c3aed; --brand2:#a855f7; --cyan:#22d3ee; --green:#22c55e; --yellow:#f59e0b; --pink:#ec4899; --red:#ef4444;
+      --shadow:0 20px 50px rgba(0,0,0,.45);
+    }
+    *{box-sizing:border-box} html{scroll-behavior:smooth}
+    body{
+      margin:0;font-family:Inter,Arial,Helvetica,sans-serif;color:var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(124,58,237,.18), transparent 20%),
+        radial-gradient(circle at top right, rgba(34,211,238,.10), transparent 16%),
+        linear-gradient(180deg, #070b12 0%, #0b0f17 35%, #0f172a 100%);
+      min-height:100vh;
+    }
+    .container{width:min(1200px,94%);margin:0 auto;padding:18px 0 70px}
+    .hero,.card,.round{
+      background:var(--panel);border:1px solid rgba(148,163,184,.12);border-radius:24px;box-shadow:var(--shadow);backdrop-filter:blur(14px)
+    }
+    .hero{padding:28px}
+    .hero h1{margin:0 0 10px;font-size:clamp(2rem,4.8vw,3.5rem);line-height:1.02}
+    .hero p{margin:0;color:#dbeafe;max-width:860px}
+    .pillrow{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+    .pill{padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);font-size:.92rem}
+    .notice{margin-top:14px;padding:14px 16px;border-radius:16px;background:rgba(245,158,11,.10);border:1px solid rgba(245,158,11,.35)}
+    .hud{display:grid;grid-template-columns:1.3fr .7fr;gap:14px;margin:14px 0 18px;padding:14px;background:rgba(11,15,23,.82);border:1px solid rgba(148,163,184,.12);border-radius:20px;position:sticky;top:0;z-index:40;backdrop-filter:blur(14px);box-shadow:var(--shadow)}
+    .progress-top{display:flex;justify-content:space-between;margin-bottom:6px;color:#dbeafe;font-size:.95rem}
+    .progress-bar{height:16px;background:#0a1120;border:1px solid #1f2a3d;border-radius:999px;overflow:hidden}
+    .progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--cyan),var(--brand2),var(--pink));transition:width .3s ease}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+    .stat{background:#0d1422;border:1px solid #1f2a3d;border-radius:16px;padding:12px;text-align:center}
+    .stat strong{display:block;font-size:1.1rem}
+    .layout{display:grid;grid-template-columns:280px 1fr;gap:18px;align-items:start}
+    .sidebar{position:sticky;top:108px}
+    .quest{padding:20px}
+    .quest h3{margin-top:0}
+    .quest-map{display:flex;flex-direction:column;gap:10px;position:relative}
+    .quest-map::before{content:"";position:absolute;left:20px;top:8px;bottom:8px;width:2px;background:linear-gradient(180deg, rgba(124,58,237,.45), rgba(34,211,238,.25))}
+    .quest-node{position:relative;z-index:1;display:grid;grid-template-columns:32px 1fr;gap:12px;align-items:center;padding:12px;border-radius:16px;background:#0b1220;border:1px solid #243248;opacity:.45}
+    .quest-node.current{opacity:1;border-color:rgba(124,58,237,.55);background:rgba(124,58,237,.10)}
+    .quest-node.done{opacity:1;border-color:rgba(34,197,94,.42);background:rgba(34,197,94,.08)}
+    .quest-icon{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#1f2937,#111827);border:1px solid #32445f}
+    .quest-node.current .quest-icon{background:linear-gradient(135deg,var(--brand),var(--brand2))}
+    .quest-node.done .quest-icon{background:linear-gradient(135deg,#16a34a,#22c55e)}
+    .rounds{display:flex;flex-direction:column;gap:18px}
+    .round{overflow:hidden;opacity:.45;transform:scale(.994);transition:all .25s ease}
+    .round.active,.round.complete{opacity:1;transform:scale(1)}
+    .round.active{border-color:rgba(124,58,237,.36);box-shadow:0 0 0 1px rgba(124,58,237,.14), var(--shadow)}
+    .round.complete{border-color:rgba(34,197,94,.34);box-shadow:0 0 0 1px rgba(34,197,94,.12), var(--shadow)}
+    .round-header{padding:20px 22px;background:linear-gradient(90deg, rgba(124,58,237,.14), rgba(34,211,238,.08));border-bottom:1px solid rgba(148,163,184,.12)}
+    .round-body{padding:22px}
+    .tag{display:inline-block;padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.06);font-size:.88rem;margin-bottom:8px;color:#ddd6fe}
+    .soft{color:var(--muted)} .small{font-size:.94rem}
+    .demo,.challenge,.note{margin-top:14px;padding:16px;border-radius:18px;background:var(--panel2);border:1px solid #263347}
+    .stage{margin-top:12px;padding:18px;border-radius:16px;border:1px dashed #334155;background:#111827}
+    .stage.light{background:#f8fafc;color:#111827}
+    .live-text{font-size:1.05rem;font-weight:700}
+    .code-editor,input[type="text"],select{
+      width:100%;padding:13px 14px;border-radius:16px;border:1px solid #263347;background:#0b1220;color:#fff;font-size:1rem;outline:none
+    }
+    .code-editor{min-height:110px;resize:vertical;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.95rem;line-height:1.45}
+    .btn-row,.choices{display:flex;flex-wrap:wrap;gap:12px}
+    button{
+      border:none;border-radius:16px;padding:12px 18px;font-size:1rem;font-weight:700;cursor:pointer;color:white;
+      transition:transform .14s ease, filter .14s ease, opacity .14s ease;box-shadow:0 12px 24px rgba(0,0,0,.25)
+    }
+    button:hover{transform:translateY(-1px);filter:brightness(1.04)}
+    button:disabled{opacity:.45;cursor:not-allowed;transform:none;filter:none}
+    .btn-primary{background:linear-gradient(90deg,#6366f1,var(--brand2))}
+    .btn-cyan{background:linear-gradient(90deg,#0891b2,var(--cyan));color:#05131a}
+    .btn-green{background:linear-gradient(90deg,#16a34a,var(--green))}
+    .btn-yellow{background:linear-gradient(90deg,#d97706,var(--yellow));color:#111827}
+    .btn-pink{background:linear-gradient(90deg,#db2777,var(--pink))}
+    .btn-dark{background:linear-gradient(90deg,#111827,#1f2937)}
+    .btn-soft{background:#111827;border:1px solid #2b3a51;color:#e5e7eb}
+    .message{margin-top:14px;border-radius:16px;padding:14px 16px;background:#0b1220;border:1px solid #243248}
+    .success{background:rgba(34,197,94,.10);border-color:rgba(34,197,94,.35)}
+    .warn{background:rgba(245,158,11,.10);border-color:rgba(245,158,11,.35)}
+    .danger{background:rgba(239,68,68,.10);border-color:rgba(239,68,68,.35)}
+    .hidden{display:none !important}
+    .final{margin-top:20px;padding:24px;border-radius:26px;background:linear-gradient(135deg, rgba(34,197,94,.10), rgba(124,58,237,.10), rgba(34,211,238,.08)), rgba(15,23,42,.92);border:1px solid rgba(148,163,184,.12);box-shadow:var(--shadow)}
+    .footer-note{text-align:center;color:#94a3b8;margin-top:22px;font-size:.94rem}
+    @media (max-width:1080px){.layout{grid-template-columns:1fr}.sidebar{position:static}}
+    @media (max-width:860px){.hud{grid-template-columns:1fr}}
+    @media (max-width:640px){.btn-row,.choices{flex-direction:column}button{width:100%}.stats{grid-template-columns:1fr 1fr 1fr}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="hero">
+      <div class="pill">Firebase Student Page</div>
+      <h1>JavaScript Quest Arena</h1>
+      <p>This version submits built apps to Cloud Firestore so the instructor dashboard can update live across devices.</p>
+      <div class="pillrow">
+        <span class="pill">Live Firestore submit</span>
+        <span class="pill">Multi-device ready</span>
+        <span class="pill">Instructor dashboard sync</span>
+      </div>
+      <div class="notice">
+        Replace the placeholder <code>firebaseConfig</code> in the script at the bottom with your real Firebase web app config.
+      </div>
+    </section>
+
+    <section class="hud">
+      <div>
+        <div class="progress-top">
+          <span>Quest Progress</span>
+          <span id="progressText">0 / 6 rounds complete</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="soft" style="margin-top:8px;font-size:.92rem;">Complete each mission, then build and submit your boss battle app.</div>
+      </div>
+      <div class="stats">
+        <div class="stat"><strong id="teamDisplay">---</strong>Team</div>
+        <div class="stat"><strong id="modeDisplay">---</strong>Mode</div>
+        <div class="stat"><strong id="pointsDisplay">0</strong>Points</div>
+      </div>
+    </section>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <section class="quest card">
+          <h3>🗺️ Quest Map</h3>
+          <p class="soft small">Green means done. Purple means current.</p>
+          <div class="quest-map">
+            <div class="quest-node" data-round="1"><div class="quest-icon">1</div><div><strong>Wake the Webpage</strong><br><span class="soft small">Click Events</span></div></div>
+            <div class="quest-node" data-round="2"><div class="quest-icon">2</div><div><strong>Toggle Chaos</strong><br><span class="soft small">State + Classes</span></div></div>
+            <div class="quest-node" data-round="3"><div class="quest-icon">3</div><div><strong>Score Rush</strong><br><span class="soft small">Variables</span></div></div>
+            <div class="quest-node" data-round="4"><div class="quest-icon">4</div><div><strong>Bug Fix Arena</strong><br><span class="soft small">Debugging</span></div></div>
+            <div class="quest-node" data-round="5"><div class="quest-icon">5</div><div><strong>Loot Generator</strong><br><span class="soft small">Arrays + Random</span></div></div>
+            <div class="quest-node" data-round="6"><div class="quest-icon">👑</div><div><strong>Boss Battle</strong><br><span class="soft small">Mini App Builder</span></div></div>
+          </div>
+        </section>
+      </aside>
+
+      <main>
+        <section class="card" style="padding:22px;">
+          <h2>🚀 Start the Game</h2>
+          <p class="soft">Choose team or solo mode, pick a name, and enter the arena.</p>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:12px;">
+            <div>
+              <label for="mode">How are you playing today?</label>
+              <select id="mode">
+                <option value="">Choose one...</option>
+                <option value="team">We are working in a team</option>
+                <option value="solo">I am working solo</option>
+              </select>
+            </div>
+            <div>
+              <label for="teamName">Team or player name</label>
+              <input type="text" id="teamName" placeholder="Example: The DOMinators" />
+            </div>
+          </div>
+          <div class="btn-row" style="margin-top:14px;">
+            <button class="btn-primary" id="startBtn">Enter the Arena</button>
+            <button class="btn-soft" id="randomNameBtn" type="button">Random Name</button>
+          </div>
+          <div id="startMsg" class="message hidden"></div>
+        </section>
+
+        <section class="rounds">
+          <article class="round" id="round1">
+            <div class="round-header"><div class="tag">Round 1 • Click Events</div><h2>Wake the Webpage</h2><p class="soft">Use JavaScript to change text when a button is clicked.</p></div>
+            <div class="round-body">
+              <div class="demo">
+                <strong>Live stage</strong>
+                <div class="stage"><div class="live-text" id="r1Text">😴 The webpage is asleep...</div><button class="btn-pink" id="r1ActionBtn" style="margin-top:12px;">Wake Button</button></div>
+                <div class="soft small" style="margin:12px 0 8px;">Available names: btn, text</div>
+                <textarea class="code-editor" id="r1Editor">btn.addEventListener("click", () => {
+  text.textContent = "⚡ The webpage is awake!";
+  text.style.color = "#22d3ee";
+});</textarea>
+                <div class="btn-row" style="margin-top:12px;"><button class="btn-soft" id="r1RunBtn">Run Code</button><button class="btn-dark" id="r1ResetBtn">Reset Demo</button></div>
+                <div id="r1SandboxMsg" class="message hidden"></div>
+              </div>
+              <div class="challenge">
+                <strong>Quick check</strong><p class="soft">What just happened here?</p>
+                <div class="choices">
+                  <button class="btn-soft r1-choice" data-correct="true">JavaScript listened for a click and changed the page</button>
+                  <button class="btn-soft r1-choice" data-correct="false">CSS ran a database query</button>
+                  <button class="btn-soft r1-choice" data-correct="false">HTML randomly changed itself</button>
+                </div>
+                <div id="r1CheckMsg" class="message hidden"></div>
+              </div>
+              <div class="btn-row" style="margin-top:14px;"><button class="btn-green" id="r1Next" disabled>Unlock Round 2</button></div>
+            </div>
+          </article>
+
+          <article class="round" id="round2">
+            <div class="round-header"><div class="tag">Round 2 • Toggling</div><h2>Toggle Chaos</h2><p class="soft">Make a mini panel switch between light and dark states.</p></div>
+            <div class="round-body">
+              <div class="demo">
+                <strong>Live stage</strong>
+                <div class="stage light" id="r2Stage"><div class="live-text" id="r2Text">Theme: Light Mode</div><button class="btn-cyan" id="r2ActionBtn" style="margin-top:12px;">Toggle Theme</button></div>
+                <div class="soft small" style="margin:12px 0 8px;">Available names: btn, stage, text</div>
+                <textarea class="code-editor" id="r2Editor">let dark = false;
+
+btn.addEventListener("click", () => {
+  dark = !dark;
+  if (dark) {
+    stage.classList.remove("light");
+    text.textContent = "Theme: Dark Mode";
+    text.style.color = "#f8fafc";
+  } else {
+    stage.classList.add("light");
+    text.textContent = "Theme: Light Mode";
+    text.style.color = "#111827";
+  }
+});</textarea>
+                <div class="btn-row" style="margin-top:12px;"><button class="btn-soft" id="r2RunBtn">Run Code</button><button class="btn-dark" id="r2ResetBtn">Reset Demo</button></div>
+                <div id="r2SandboxMsg" class="message hidden"></div>
+              </div>
+              <div class="challenge">
+                <strong>Quick check</strong><p class="soft">Which JavaScript idea is most important here?</p>
+                <div class="choices">
+                  <button class="btn-soft r2-choice" data-correct="true">State changing between two options</button>
+                  <button class="btn-soft r2-choice" data-correct="false">Building a spreadsheet</button>
+                  <button class="btn-soft r2-choice" data-correct="false">Creating an SQL table</button>
+                </div>
+                <div id="r2CheckMsg" class="message hidden"></div>
+              </div>
+              <div class="btn-row" style="margin-top:14px;"><button class="btn-green" id="r2Next" disabled>Unlock Round 3</button></div>
+            </div>
+          </article>
+
+          <article class="round" id="round3">
+            <div class="round-header"><div class="tag">Round 3 • Variables</div><h2>Score Rush</h2><p class="soft">Store a changing value and display it on the page.</p></div>
+            <div class="round-body">
+              <div class="demo">
+                <strong>Live stage</strong>
+                <div class="stage"><div class="live-text">Team score: <span id="r3ScoreText">0</span></div><button class="btn-yellow" id="r3ActionBtn" style="margin-top:12px;">Add Point</button></div>
+                <div class="soft small" style="margin:12px 0 8px;">Available names: btn, scoreText</div>
+                <textarea class="code-editor" id="r3Editor">let score = 0;
+
+btn.addEventListener("click", () => {
+  score++;
+  scoreText.textContent = score;
+});</textarea>
+                <div class="btn-row" style="margin-top:12px;"><button class="btn-soft" id="r3RunBtn">Run Code</button><button class="btn-dark" id="r3ResetBtn">Reset Demo</button></div>
+                <div id="r3SandboxMsg" class="message hidden"></div>
+              </div>
+              <div class="challenge">
+                <strong>Quick check</strong><p class="soft">Why does the score keep changing?</p>
+                <div class="choices">
+                  <button class="btn-soft r3-choice" data-correct="true">A variable stores the value and updates it</button>
+                  <button class="btn-soft r3-choice" data-correct="false">The browser guesses a number</button>
+                  <button class="btn-soft r3-choice" data-correct="false">HTML counts automatically</button>
+                </div>
+                <div id="r3CheckMsg" class="message hidden"></div>
+              </div>
+              <div class="btn-row" style="margin-top:14px;"><button class="btn-green" id="r3Next" disabled>Unlock Round 4</button></div>
+            </div>
+          </article>
+
+          <article class="round" id="round4">
+            <div class="round-header"><div class="tag">Round 4 • Debugging</div><h2>Bug Fix Arena</h2><p class="soft">Fix a broken if statement so the button works properly.</p></div>
+            <div class="round-body">
+              <div class="demo">
+                <strong>Live stage</strong>
+                <div class="stage"><div class="live-text" id="r4Text">Current score: 6</div><button class="btn-pink" id="r4ActionBtn" style="margin-top:12px;">Check Score</button></div>
+                <div class="soft small" style="margin:12px 0 8px;">Available names: btn, text</div>
+                <textarea class="code-editor" id="r4Editor">let score = 6;
+
+btn.addEventListener("click", () => {
+  if (score > 5) {
+    text.textContent = "🏆 You win!";
+  }
+});</textarea>
+                <div class="btn-row" style="margin-top:12px;"><button class="btn-soft" id="r4RunBtn">Run Code</button><button class="btn-dark" id="r4ResetBtn">Reset Demo</button></div>
+                <div id="r4SandboxMsg" class="message hidden"></div>
+              </div>
+              <div class="note soft">Try editing the score or the winning text, then run it again.</div>
+              <div class="btn-row" style="margin-top:14px;"><button class="btn-green" id="r4Next" disabled>Unlock Round 5</button></div>
+            </div>
+          </article>
+
+          <article class="round" id="round5">
+            <div class="round-header"><div class="tag">Round 5 • Arrays + Random</div><h2>Loot Generator</h2><p class="soft">Use a list and randomly pick one item from it.</p></div>
+            <div class="round-body">
+              <div class="demo">
+                <strong>Live stage</strong>
+                <div class="stage"><div class="live-text" id="r5Text">No loot yet...</div><button class="btn-pink" id="r5ActionBtn" style="margin-top:12px;">Generate Loot</button></div>
+                <div class="soft small" style="margin:12px 0 8px;">Available names: btn, text</div>
+                <textarea class="code-editor" id="r5Editor">const loot = [
+  "🏆 DOM Ninja",
+  "⚡ Event Listener Legend",
+  "🎯 Variable Mastermind",
+  "🐞 Bug Hunter Supreme"
+];
+
+btn.addEventListener("click", () => {
+  const index = Math.floor(Math.random() * loot.length);
+  text.textContent = loot[index];
+});</textarea>
+                <div class="btn-row" style="margin-top:12px;"><button class="btn-soft" id="r5RunBtn">Run Code</button><button class="btn-dark" id="r5ResetBtn">Reset Demo</button></div>
+                <div id="r5SandboxMsg" class="message hidden"></div>
+              </div>
+              <div class="challenge">
+                <strong>Quick check</strong><p class="soft">What helps the app choose a random item?</p>
+                <div class="choices">
+                  <button class="btn-soft r5-choice" data-correct="true">Math.random() plus the array length</button>
+                  <button class="btn-soft r5-choice" data-correct="false">The HTML title tag</button>
+                  <button class="btn-soft r5-choice" data-correct="false">A CSS border radius</button>
+                </div>
+                <div id="r5CheckMsg" class="message hidden"></div>
+              </div>
+              <div class="btn-row" style="margin-top:14px;"><button class="btn-green" id="r5Next" disabled>Unlock Boss Battle</button></div>
+            </div>
+          </article>
+
+          <article class="round" id="round6">
+            <div class="round-header"><div class="tag">Boss Battle • Build a Mini App</div><h2>Boss Battle Builder</h2><p class="soft">Build a tiny interactive app and submit it to the instructor dashboard.</p></div>
+            <div class="round-body">
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;">
+                <div>
+                  <label for="bossType">Choose your mini app</label>
+                  <select id="bossType">
+                    <option value="">Choose one...</option>
+                    <option value="stress">Campus stress meter</option>
+                    <option value="roommate">Roommate mood tracker</option>
+                    <option value="lunch">Random lunch picker</option>
+                    <option value="motivation">Motivation generator</option>
+                    <option value="study">Study break button</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="bossTitle">Give your app a name</label>
+                  <input type="text" id="bossTitle" placeholder="Example: Finals Survival Meter" />
+                </div>
+                <div>
+                  <label for="bossTheme">Choose a vibe</label>
+                  <select id="bossTheme">
+                    <option value="">Choose one...</option>
+                    <option value="purple">Neon Purple</option>
+                    <option value="cyan">Cyber Cyan</option>
+                    <option value="pink">Hot Pink</option>
+                    <option value="green">Level Up Green</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="challenge">
+                <strong>Build your app</strong>
+                <div class="btn-row" style="margin-top:12px;"><button class="btn-pink" id="bossBuildBtn">Build My Mini App</button></div>
+                <div id="bossPlan" class="message hidden"></div>
+              </div>
+
+              <div class="demo">
+                <strong>Mini app preview</strong>
+                <div class="stage" id="bossPreviewStage">
+                  <div class="live-text" id="bossPreviewText">Your mini app will appear here.</div>
+                  <div id="bossPreviewApp" style="margin-top:14px;"></div>
+                </div>
+              </div>
+
+              <div class="btn-row" style="margin-top:14px;">
+                <button class="btn-green" id="finishBtn" disabled>Complete the Arena</button>
+                <button class="btn-primary" id="submitDashboardBtn" disabled>Submit to Instructor Dashboard</button>
+              </div>
+              <div id="bossMsg" class="message hidden"></div>
+            </div>
+          </article>
+        </section>
+
+        <section class="final hidden" id="finalCard">
+          <h2>🎉 Arena Complete</h2>
+          <p id="finalText"></p>
+        </section>
+      </main>
+    </div>
+
+    <p class="footer-note">Student game page • Firebase / Firestore version</p>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs, query, where, updateDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "REPLACE_ME",
+      authDomain: "REPLACE_ME",
+      projectId: "REPLACE_ME",
+      storageBucket: "REPLACE_ME",
+      messagingSenderId: "REPLACE_ME",
+      appId: "REPLACE_ME"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const showcaseRef = collection(db, "showcaseApps");
+
+    let completed = 0, points = 0, badges = 0, highestUnlocked = 0, currentRound = 0, totalSeconds = 25 * 60;
+    const progressText = document.getElementById("progressText");
+    const progressFill = document.getElementById("progressFill");
+    const teamDisplay = document.getElementById("teamDisplay");
+    const modeDisplay = document.getElementById("modeDisplay");
+    const pointsDisplay = document.getElementById("pointsDisplay");
+    const startBtn = document.getElementById("startBtn");
+    const randomNameBtn = document.getElementById("randomNameBtn");
+    const startMsg = document.getElementById("startMsg");
+    const modeEl = document.getElementById("mode");
+    const teamNameEl = document.getElementById("teamName");
+    const timerDisplay = document.getElementById("timerDisplay");
+    const badgeCount = document.getElementById("badgeCount");
+    const questNodes = [...document.querySelectorAll(".quest-node")];
+    const rounds = [1,2,3,4,5,6].map(n => document.getElementById(`round${n}`));
+
+    function getPlayerName() {
+      const value = teamNameEl.value.trim();
+      if (value) return value;
+      return modeEl.value === "solo" ? "Solo Coder" : "Team";
+    }
+    function setMessage(el, text, type="") {
+      el.className = "message";
+      if (type) el.classList.add(type);
+      el.innerHTML = text;
+      el.classList.remove("hidden");
+    }
+    function updateProgress() { progressText.textContent = `${completed} / 6 rounds complete`; progressFill.style.width = `${(completed/6)*100}%`; }
+    function updatePoints(add=0) { points += add; pointsDisplay.textContent = points; }
+    function updateBadges() { badgeCount.textContent = badges; }
+    function unlockBadge() { badges++; updateBadges(); }
+    function updateQuestMap() {
+      questNodes.forEach(node => {
+        const n = Number(node.dataset.round);
+        node.classList.remove("current","done");
+        if (n <= completed) node.classList.add("done");
+        else if (n === currentRound) node.classList.add("current");
+      });
+    }
+    function activateRound(n) {
+      currentRound = n; if (n > highestUnlocked) highestUnlocked = n;
+      rounds.forEach((round, idx) => { round.classList.remove("active"); if (idx === n-1) { round.classList.add("active"); round.scrollIntoView({behavior:"smooth", block:"start"}); }});
+      updateQuestMap();
+    }
+    function completeRound(n) {
+      const round = document.getElementById(`round${n}`);
+      if (!round.classList.contains("complete")) { round.classList.add("complete"); completed++; updateProgress(); updatePoints(100); unlockBadge(); }
+      updateQuestMap();
+    }
+    function randomName() {
+      const names = ["The DOMinators","Console Crushers","Pixel Pirates","Bug Bouncers","Array Avengers","Function Junction","Syntax Squad","Loop Legends","Code Chaos Crew","The Click Kings"];
+      teamNameEl.value = names[Math.floor(Math.random()*names.length)];
+    }
+    function playTone(type="click") {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const o = ctx.createOscillator(); const g = ctx.createGain();
+        o.connect(g); g.connect(ctx.destination);
+        o.frequency.value = type === "success" ? 780 : type === "danger" ? 220 : 560;
+        g.gain.value = 0.03; o.start(); g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.15); o.stop(ctx.currentTime + 0.15);
+      } catch {}
+    }
+    function launchConfetti() {
+      const colors = ["#22d3ee","#7c3aed","#a855f7","#ec4899","#22c55e","#f59e0b"];
+      for (let i = 0; i < 90; i++) {
+        const piece = document.createElement("div");
+        piece.style.position = "fixed"; piece.style.width = "10px"; piece.style.height = "16px"; piece.style.top = "-20px"; piece.style.left = Math.random()*100 + "vw";
+        piece.style.background = colors[Math.floor(Math.random()*colors.length)]; piece.style.zIndex = "999"; piece.style.borderRadius = "2px";
+        document.body.appendChild(piece);
+        piece.animate([{transform:'translateY(0px)'},{transform:`translateY(${window.innerHeight+100}px) rotate(760deg)`}], {duration:(3000+Math.random()*2500), easing:'linear'});
+        setTimeout(() => piece.remove(), 6000);
+      }
+    }
+    function formatTime(seconds){ const m = Math.floor(seconds/60); const s = seconds%60; return `${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`; }
+    timerDisplay.textContent = formatTime(totalSeconds);
+    setInterval(() => { if (totalSeconds > 0) { totalSeconds--; timerDisplay.textContent = formatTime(totalSeconds); } }, 1000);
+
+    randomNameBtn.addEventListener("click", () => { randomName(); playTone(); });
+    startBtn.addEventListener("click", () => {
+      if (!modeEl.value || !teamNameEl.value.trim()) { setMessage(startMsg, "Choose a mode and enter a team or player name to begin.", "warn"); return; }
+      teamDisplay.textContent = getPlayerName();
+      modeDisplay.textContent = modeEl.value === "team" ? "Team" : "Solo";
+      setMessage(startMsg, `🚀 Welcome, <strong>${getPlayerName()}</strong>. Round 1 is unlocked.`, "success");
+      activateRound(1); highestUnlocked = 1; updatePoints(20); playTone("success");
+    });
+
+    function bindSandbox({ editorId, runBtnId, resetBtnId, msgId, setupFn, successCheck }) {
+      const editor = document.getElementById(editorId), runBtn = document.getElementById(runBtnId), resetBtn = document.getElementById(resetBtnId), msg = document.getElementById(msgId);
+      let state = setupFn();
+      function reset() { state = setupFn(); }
+      runBtn.addEventListener("click", () => {
+        reset();
+        try {
+          const runner = new Function(...Object.keys(state), editor.value);
+          runner(...Object.values(state));
+          setMessage(msg, "Code ran. Try the button in the demo stage.", "success");
+          updatePoints(8); playTone(); if (typeof successCheck === "function") successCheck();
+        } catch (err) {
+          setMessage(msg, `Error: ${err.message}`, "danger"); playTone("danger");
+        }
+      });
+      resetBtn.addEventListener("click", () => { reset(); setMessage(msg, "Demo reset.", "success"); });
+    }
+
+    bindSandbox({
+      editorId:"r1Editor", runBtnId:"r1RunBtn", resetBtnId:"r1ResetBtn", msgId:"r1SandboxMsg",
+      setupFn:() => {
+        const old = document.getElementById("r1ActionBtn"), btn = old.cloneNode(true); old.replaceWith(btn);
+        const text = document.getElementById("r1Text"); text.textContent = "😴 The webpage is asleep..."; text.style.color = ""; return { btn, text };
+      }
+    });
+    document.querySelectorAll(".r1-choice").forEach(btn => btn.addEventListener("click", () => {
+      const ok = btn.dataset.correct === "true";
+      setMessage(document.getElementById("r1CheckMsg"), ok ? "Correct. JavaScript listened for a click and changed the page." : "Not quite. Focus on what happened after the click.", ok ? "success" : "danger");
+      if (ok) { document.getElementById("r1Next").disabled = false; updatePoints(20); playTone("success"); }
+    }));
+    document.getElementById("r1Next").addEventListener("click", () => { completeRound(1); highestUnlocked=2; activateRound(2); });
+
+    bindSandbox({
+      editorId:"r2Editor", runBtnId:"r2RunBtn", resetBtnId:"r2ResetBtn", msgId:"r2SandboxMsg",
+      setupFn:() => {
+        const old = document.getElementById("r2ActionBtn"), btn = old.cloneNode(true); old.replaceWith(btn);
+        const stage = document.getElementById("r2Stage"), text = document.getElementById("r2Text");
+        stage.classList.add("light"); text.textContent = "Theme: Light Mode"; text.style.color = "#111827"; return { btn, stage, text };
+      }
+    });
+    document.querySelectorAll(".r2-choice").forEach(btn => btn.addEventListener("click", () => {
+      const ok = btn.dataset.correct === "true";
+      setMessage(document.getElementById("r2CheckMsg"), ok ? "Correct. This round is all about switching state." : "Not quite. Think about what changes back and forth.", ok ? "success" : "danger");
+      if (ok) { document.getElementById("r2Next").disabled = false; updatePoints(20); playTone("success"); }
+    }));
+    document.getElementById("r2Next").addEventListener("click", () => { completeRound(2); highestUnlocked=3; activateRound(3); });
+
+    bindSandbox({
+      editorId:"r3Editor", runBtnId:"r3RunBtn", resetBtnId:"r3ResetBtn", msgId:"r3SandboxMsg",
+      setupFn:() => {
+        const old = document.getElementById("r3ActionBtn"), btn = old.cloneNode(true); old.replaceWith(btn);
+        const scoreText = document.getElementById("r3ScoreText"); scoreText.textContent = "0"; return { btn, scoreText };
+      }
+    });
+    document.querySelectorAll(".r3-choice").forEach(btn => btn.addEventListener("click", () => {
+      const ok = btn.dataset.correct === "true";
+      setMessage(document.getElementById("r3CheckMsg"), ok ? "Correct. A variable stores the changing number." : "Not quite. Something in JavaScript has to remember the number.", ok ? "success" : "danger");
+      if (ok) { document.getElementById("r3Next").disabled = false; updatePoints(20); playTone("success"); }
+    }));
+    document.getElementById("r3Next").addEventListener("click", () => { completeRound(3); highestUnlocked=4; activateRound(4); });
+
+    bindSandbox({
+      editorId:"r4Editor", runBtnId:"r4RunBtn", resetBtnId:"r4ResetBtn", msgId:"r4SandboxMsg",
+      setupFn:() => {
+        const old = document.getElementById("r4ActionBtn"), btn = old.cloneNode(true); old.replaceWith(btn);
+        const text = document.getElementById("r4Text"); text.textContent = "Current score: 6"; return { btn, text };
+      },
+      successCheck:() => { document.getElementById("r4Next").disabled = false; updatePoints(20); playTone("success"); }
+    });
+    document.getElementById("r4Next").addEventListener("click", () => { completeRound(4); highestUnlocked=5; activateRound(5); });
+
+    bindSandbox({
+      editorId:"r5Editor", runBtnId:"r5RunBtn", resetBtnId:"r5ResetBtn", msgId:"r5SandboxMsg",
+      setupFn:() => {
+        const old = document.getElementById("r5ActionBtn"), btn = old.cloneNode(true); old.replaceWith(btn);
+        const text = document.getElementById("r5Text"); text.textContent = "No loot yet..."; return { btn, text };
+      }
+    });
+    document.querySelectorAll(".r5-choice").forEach(btn => btn.addEventListener("click", () => {
+      const ok = btn.dataset.correct === "true";
+      setMessage(document.getElementById("r5CheckMsg"), ok ? "Correct. Math.random() plus array length helps pick a random item." : "Not quite. Look for the code that calculates a random index.", ok ? "success" : "danger");
+      if (ok) { document.getElementById("r5Next").disabled = false; updatePoints(20); playTone("success"); }
+    }));
+    document.getElementById("r5Next").addEventListener("click", () => { completeRound(5); highestUnlocked=6; activateRound(6); });
+
+    const bossType = document.getElementById("bossType"), bossTitle = document.getElementById("bossTitle"), bossTheme = document.getElementById("bossTheme"), bossBuildBtn = document.getElementById("bossBuildBtn");
+    const bossPlan = document.getElementById("bossPlan"), bossPreviewStage = document.getElementById("bossPreviewStage"), bossPreviewText = document.getElementById("bossPreviewText"), bossPreviewApp = document.getElementById("bossPreviewApp");
+    const finishBtn = document.getElementById("finishBtn"), submitDashboardBtn = document.getElementById("submitDashboardBtn"), bossMsg = document.getElementById("bossMsg");
+    let builtAppTypeText = "", builtThemeText = "";
+
+    function applyBossTheme(theme) {
+      bossPreviewStage.style.borderColor = "#334155"; bossPreviewStage.style.boxShadow = "none";
+      const map = { purple:["#7c3aed","0 0 20px rgba(124, 58, 237, 0.25)"], cyan:["#22d3ee","0 0 20px rgba(34, 211, 238, 0.25)"], pink:["#ec4899","0 0 20px rgba(236, 72, 153, 0.25)"], green:["#22c55e","0 0 20px rgba(34, 197, 94, 0.25)"] };
+      if (map[theme]) { bossPreviewStage.style.borderColor = map[theme][0]; bossPreviewStage.style.boxShadow = map[theme][1]; }
+    }
+    function renderStressApp(title) {
+      bossPreviewApp.innerHTML = `<div style="display:grid; gap:12px;"><div style="font-size:1.1rem; font-weight:700;">${title}</div><div>Stress level: <span id="stressValue">0</span></div><div class="btn-row"><button class="btn-yellow" id="stressBtn">Add Stress</button><button class="btn-soft" id="stressResetBtn">Reset</button></div><div id="stressMsg" class="message">Current vibe: calm... for now.</div></div>`;
+      let stress = 0;
+      document.getElementById("stressBtn").addEventListener("click", () => { stress++; document.getElementById("stressValue").textContent = stress; document.getElementById("stressMsg").textContent = stress < 3 ? "Still manageable." : stress < 6 ? "Okay... maybe take a breath." : "🚨 Immediate snack or nap recommended."; });
+      document.getElementById("stressResetBtn").addEventListener("click", () => { stress = 0; document.getElementById("stressValue").textContent = stress; document.getElementById("stressMsg").textContent = "Current vibe: calm... for now."; });
+    }
+    function renderRoommateApp(title) {
+      bossPreviewApp.innerHTML = `<div style="display:grid; gap:12px;"><div style="font-size:1.1rem; font-weight:700;">${title}</div><div>Mood level: <span id="roommateValue">0</span></div><div class="btn-row"><button class="btn-cyan" id="roommateBtn">Check Mood</button></div><div id="roommateMsg" class="message">Click to reveal the roommate vibe.</div></div>`;
+      document.getElementById("roommateBtn").addEventListener("click", () => { const moods = ["😎 Unbothered and vibing.","🫠 Barely surviving group projects.","🍕 In a good mood because food arrived.","🎧 Emotionally unavailable but listening to playlists.","🚨 Needs everyone to stop touching their stuff."]; const i = Math.floor(Math.random()*moods.length); document.getElementById("roommateValue").textContent = i+1; document.getElementById("roommateMsg").textContent = moods[i]; });
+    }
+    function renderLunchApp(title) {
+      bossPreviewApp.innerHTML = `<div style="display:grid; gap:12px;"><div style="font-size:1.1rem; font-weight:700;">${title}</div><div class="btn-row"><button class="btn-pink" id="lunchBtn">Pick My Lunch</button></div><div id="lunchMsg" class="message">No decision yet.</div></div>`;
+      document.getElementById("lunchBtn").addEventListener("click", () => { const lunches = ["🍔 Burger","🌯 Burrito","🍜 Ramen","🥗 Salad pretending to be enough","🍕 Pizza","🐔 Chicken tenders, obviously"]; document.getElementById("lunchMsg").textContent = `Today's winner: ${lunches[Math.floor(Math.random()*lunches.length)]}`; });
+    }
+    function renderMotivationApp(title) {
+      bossPreviewApp.innerHTML = `<div style="display:grid; gap:12px;"><div style="font-size:1.1rem; font-weight:700;">${title}</div><div class="btn-row"><button class="btn-green" id="motivationBtn">Generate Motivation</button></div><div id="motivationMsg" class="message">You got this. Probably.</div></div>`;
+      document.getElementById("motivationBtn").addEventListener("click", () => { const quotes = ["💪 Your code does not have to be perfect to be progress.","🚀 Every good developer has broken things first.","🔥 You are one semicolon away from greatness.","🧠 Debugging is learning in disguise.","✨ Tiny wins build real skill."]; document.getElementById("motivationMsg").textContent = quotes[Math.floor(Math.random()*quotes.length)]; });
+    }
+    function renderStudyApp(title) {
+      bossPreviewApp.innerHTML = `<div style="display:grid; gap:12px;"><div style="font-size:1.1rem; font-weight:700;">${title}</div><div class="btn-row"><button class="btn-primary" id="studyBtn">Need a Study Break?</button></div><div id="studyMsg" class="message">Press the button when your brain starts buffering.</div></div>`;
+      document.getElementById("studyBtn").addEventListener("click", () => { const breaks = ["Stand up and stretch for 30 seconds.","Drink water.","Look away from your screen for 20 seconds.","Text nobody. Stay focused. 😅","Take three deep breaths."]; document.getElementById("studyMsg").textContent = `🧘 ${breaks[Math.floor(Math.random()*breaks.length)]}`; });
+    }
+
+    bossBuildBtn.addEventListener("click", () => {
+      const type = bossType.value, title = bossTitle.value.trim(), theme = bossTheme.value;
+      if (!type || !title || !theme) { setMessage(bossPlan, "Choose an app type, enter a title, and choose a vibe before building.", "warn"); return; }
+      bossPreviewText.textContent = "Mini app built successfully. Try it below.";
+      applyBossTheme(theme);
+      builtAppTypeText = bossType.options[bossType.selectedIndex].text;
+      builtThemeText = bossTheme.options[bossTheme.selectedIndex].text;
+      if (type === "stress") renderStressApp(title);
+      else if (type === "roommate") renderRoommateApp(title);
+      else if (type === "lunch") renderLunchApp(title);
+      else if (type === "motivation") renderMotivationApp(title);
+      else if (type === "study") renderStudyApp(title);
+      setMessage(bossPlan, `<strong>Mini App Built:</strong><br><br><strong>App type:</strong> ${builtAppTypeText}<br><strong>App title:</strong> ${title}<br><strong>Theme:</strong> ${builtThemeText}<br><br>Your app now includes interaction, visible output, and JavaScript behavior.`, "success");
+      finishBtn.disabled = false; submitDashboardBtn.disabled = false; updatePoints(35); playTone("success");
+    });
+
+    finishBtn.addEventListener("click", () => {
+      completeRound(6);
+      setMessage(bossMsg, `🏆 Boss defeated. ${getPlayerName()} completed the arena by building a live mini app.`, "success");
+      const finalCard = document.getElementById("finalCard"), finalText = document.getElementById("finalText");
+      finalCard.classList.remove("hidden");
+      finalText.innerHTML = `<strong>${getPlayerName()}</strong> completed all six rounds and built a working mini app using JavaScript ideas like events, variables, conditionals, and dynamic output.`;
+      launchConfetti(); updateQuestMap(); finalCard.scrollIntoView({behavior:"smooth", block:"start"});
+    });
+
+    submitDashboardBtn.addEventListener("click", async () => {
+      const teamName = getPlayerName(), appTitle = bossTitle.value.trim();
+      if (!appTitle || !builtAppTypeText || !builtThemeText) { setMessage(bossMsg, "Build your mini app first, then submit it.", "warn"); return; }
+      try {
+        const existingQuery = query(showcaseRef, where("teamName", "==", teamName));
+        const existingSnap = await getDocs(existingQuery);
+
+        if (!existingSnap.empty) {
+          const existingDoc = existingSnap.docs[0];
+          await updateDoc(doc(db, "showcaseApps", existingDoc.id), {
+            teamName,
+            appTitle,
+            appType: builtAppTypeText,
+            theme: builtThemeText,
+            updatedAt: serverTimestamp()
+          });
+        } else {
+          await addDoc(showcaseRef, {
+            teamName,
+            appTitle,
+            appType: builtAppTypeText,
+            theme: builtThemeText,
+            votes: 0,
+            awards: { funniest: false, useful: false, bestname: false },
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp()
+          });
+        }
+
+        setMessage(bossMsg, `📡 Submitted <strong>${appTitle}</strong> to the instructor dashboard.`, "success");
+        updatePoints(15);
+        submitDashboardBtn.disabled = true;
+        playTone("success");
+      } catch (error) {
+        setMessage(bossMsg, `Firestore submit failed: ${error.message}`, "danger");
+      }
+    });
+
+    updateProgress(); updateBadges(); updateQuestMap();
+  </script>
+</body>
+</html>
