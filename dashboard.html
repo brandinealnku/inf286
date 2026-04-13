@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JavaScript Quest Arena — Instructor Dashboard (Firebase)</title>
+  <style>
+    :root{
+      --panel:#101827ee; --text:#f8fafc; --muted:#94a3b8; --brand:#7c3aed; --cyan:#22d3ee; --green:#22c55e; --pink:#ec4899;
+      --shadow:0 20px 50px rgba(0,0,0,.45);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;font-family:Inter,Arial,Helvetica,sans-serif;color:var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(124,58,237,.18), transparent 20%),
+        radial-gradient(circle at top right, rgba(34,211,238,.10), transparent 16%),
+        linear-gradient(180deg, #050913 0%, #08111d 45%, #0d1326 100%);
+      min-height:100vh
+    }
+    .container{width:min(1400px,95%);margin:0 auto;padding:18px 0 70px}
+    .hero,.card{background:var(--panel);border:1px solid rgba(148,163,184,.12);border-radius:24px;box-shadow:var(--shadow);backdrop-filter:blur(14px)}
+    .hero{padding:28px}.hero h1{margin:0 0 8px;font-size:clamp(2.2rem,4.8vw,4rem)}.hero p{margin:0;color:#dbeafe;max-width:900px}
+    .pillrow{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}.pill{padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);font-size:.92rem}
+    .topgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin:14px 0 18px}
+    .card{padding:20px}.statbig{font-size:2.2rem;font-weight:800}.soft{color:var(--muted)}
+    .btn-row,.award-actions{display:flex;flex-wrap:wrap;gap:10px}
+    button{border:none;border-radius:16px;padding:12px 18px;font-size:1rem;font-weight:700;cursor:pointer;color:white;transition:transform .14s ease, filter .14s ease;box-shadow:0 12px 24px rgba(0,0,0,.25)}
+    button:hover{transform:translateY(-1px);filter:brightness(1.04)}
+    .btn-primary{background:linear-gradient(90deg,#6366f1,#a855f7)}.btn-soft{background:#111827;border:1px solid #2b3a51;color:#e5e7eb}.btn-pink{background:linear-gradient(90deg,#db2777,#ec4899)}.btn-green{background:linear-gradient(90deg,#16a34a,#22c55e)}
+    .dashboard-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}
+    .leaderboard{display:grid;gap:12px}
+    .app-card{display:grid;grid-template-columns:46px 1fr auto;gap:14px;align-items:start;background:#0b1220;border:1px solid #243248;border-radius:18px;padding:14px}
+    .rank{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--brand),var(--cyan));font-weight:800}
+    .showcase-tag{display:inline-block;margin-top:8px;padding:6px 10px;border-radius:999px;background:rgba(124,58,237,.12);border:1px solid rgba(124,58,237,.25);color:#ddd6fe;font-size:.82rem}
+    .award-chip{display:inline-block;margin-top:8px;margin-right:6px;padding:6px 10px;border-radius:999px;font-size:.8rem;font-weight:700;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:#fff}
+    .award-chip.funniest{background:rgba(236,72,153,0.14);border-color:rgba(236,72,153,0.32);color:#fbcfe8}
+    .award-chip.useful{background:rgba(34,197,94,0.14);border-color:rgba(34,197,94,0.32);color:#bbf7d0}
+    .award-chip.bestname{background:rgba(34,211,238,0.14);border-color:rgba(34,211,238,0.32);color:#cffafe}
+    .award-btn{padding:8px 10px;border-radius:999px;font-size:.82rem}.award-btn.active{outline:2px solid rgba(255,255,255,.18)}
+    .voteBox{display:grid;gap:8px;justify-items:end}.big-awards{display:grid;gap:12px}.award-panel{padding:16px;border-radius:18px;background:#0b1220;border:1px solid #243248}
+    .award-panel h3{margin:0 0 8px;font-size:1rem}.award-winner{font-size:1.2rem;font-weight:800}
+    .message{margin-top:14px;border-radius:16px;padding:14px 16px;background:#0b1220;border:1px solid #243248}.success{background:rgba(34,197,94,.10);border-color:rgba(34,197,94,.35)}.warn{background:rgba(245,158,11,.10);border-color:rgba(245,158,11,.35)}
+    @media (max-width:1100px){.dashboard-grid,.topgrid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="hero">
+      <div class="pill">Firebase Instructor Dashboard</div>
+      <h1>Instructor Dashboard</h1>
+      <p>Project this page. It listens to Cloud Firestore in real time so student submissions, votes, and awards update live across devices.</p>
+      <div class="pillrow">
+        <span class="pill">Realtime Firestore</span>
+        <span class="pill">Live showcase board</span>
+        <span class="pill">Votes + awards</span>
+      </div>
+      <div class="message warn" style="margin-top:16px;">
+        Replace the placeholder <code>firebaseConfig</code> in the script at the bottom with the same Firebase web app config used by the student page.
+      </div>
+    </section>
+
+    <section class="topgrid">
+      <div class="card"><div class="soft">Apps Submitted</div><div class="statbig" id="appsCount">0</div></div>
+      <div class="card"><div class="soft">Total Votes</div><div class="statbig" id="votesCount">0</div></div>
+      <div class="card"><div class="soft">Current Leader</div><div class="statbig" id="leaderName" style="font-size:1.4rem">—</div></div>
+    </section>
+
+    <section class="card" style="margin-bottom:18px;">
+      <div class="btn-row">
+        <button class="btn-primary" id="refreshBtn">Refresh Board</button>
+        <button class="btn-soft" id="resetVotesBtn">Reset Votes</button>
+        <button class="btn-soft" id="resetAwardsBtn">Reset Awards</button>
+        <button class="btn-pink" id="clearBoardBtn">Clear Board</button>
+      </div>
+      <div id="dashboardMsg" class="message" style="display:none;"></div>
+    </section>
+
+    <section class="dashboard-grid">
+      <div class="card">
+        <h2 style="margin-top:0;">🏆 Showcase Board</h2>
+        <div class="leaderboard" id="showcaseBoard"></div>
+      </div>
+      <div class="card">
+        <h2 style="margin-top:0;">🏅 Award Winners</h2>
+        <div class="big-awards">
+          <div class="award-panel"><h3>😂 Funniest</h3><div class="award-winner" id="funniestWinner">No winner yet</div></div>
+          <div class="award-panel"><h3>🛠️ Most Useful</h3><div class="award-winner" id="usefulWinner">No winner yet</div></div>
+          <div class="award-panel"><h3>🏷️ Best Name</h3><div class="award-winner" id="bestnameWinner">No winner yet</div></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+    import { getFirestore, collection, onSnapshot, query, orderBy, updateDoc, doc, increment, getDocs, writeBatch } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "REPLACE_ME",
+      authDomain: "REPLACE_ME",
+      projectId: "REPLACE_ME",
+      storageBucket: "REPLACE_ME",
+      messagingSenderId: "REPLACE_ME",
+      appId: "REPLACE_ME"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const showcaseRef = collection(db, "showcaseApps");
+
+    const showcaseBoard = document.getElementById("showcaseBoard");
+    const appsCount = document.getElementById("appsCount");
+    const votesCount = document.getElementById("votesCount");
+    const leaderName = document.getElementById("leaderName");
+    const funniestWinner = document.getElementById("funniestWinner");
+    const usefulWinner = document.getElementById("usefulWinner");
+    const bestnameWinner = document.getElementById("bestnameWinner");
+    const dashboardMsg = document.getElementById("dashboardMsg");
+
+    let currentApps = [];
+
+    function setMsg(text, cls="success") {
+      dashboardMsg.style.display = "block";
+      dashboardMsg.className = "message " + cls;
+      dashboardMsg.textContent = text;
+    }
+
+    function awardChipHtml(awards) {
+      let html = "";
+      if (awards?.funniest) html += '<span class="award-chip funniest">😂 Funniest</span>';
+      if (awards?.useful) html += '<span class="award-chip useful">🛠️ Most Useful</span>';
+      if (awards?.bestname) html += '<span class="award-chip bestname">🏷️ Best Name</span>';
+      return html;
+    }
+
+    async function voteForApp(appId) {
+      await updateDoc(doc(db, "showcaseApps", appId), { votes: increment(1) });
+    }
+
+    async function applyAward(appId, category) {
+      const updates = [];
+      for (const app of currentApps) {
+        const awards = { funniest:false, useful:false, bestname:false, ...(app.awards || {}) };
+        if (category === "funniest") awards.funniest = app.id === appId;
+        if (category === "useful") awards.useful = app.id === appId;
+        if (category === "bestname") awards.bestname = app.id === appId;
+        if (category !== "funniest") awards.funniest = !!app.awards?.funniest;
+        if (category !== "useful") awards.useful = !!app.awards?.useful;
+        if (category !== "bestname") awards.bestname = !!app.awards?.bestname;
+        updates.push(updateDoc(doc(db, "showcaseApps", app.id), { awards }));
+      }
+      await Promise.all(updates);
+    }
+
+    async function resetVotes() {
+      const snap = await getDocs(showcaseRef);
+      const batch = writeBatch(db);
+      snap.forEach(d => batch.update(d.ref, { votes: 0 }));
+      await batch.commit();
+      setMsg("All votes have been reset.");
+    }
+
+    async function resetAwards() {
+      const snap = await getDocs(showcaseRef);
+      const batch = writeBatch(db);
+      snap.forEach(d => batch.update(d.ref, { awards: { funniest:false, useful:false, bestname:false } }));
+      await batch.commit();
+      setMsg("All awards have been reset.");
+    }
+
+    async function clearBoard() {
+      const snap = await getDocs(showcaseRef);
+      const batch = writeBatch(db);
+      snap.forEach(d => batch.delete(d.ref));
+      await batch.commit();
+      setMsg("Showcase board cleared.");
+    }
+
+    function renderBoard(apps) {
+      currentApps = [...apps].sort((a,b) => (b.votes || 0) - (a.votes || 0));
+      showcaseBoard.innerHTML = "";
+
+      if (!currentApps.length) {
+        showcaseBoard.innerHTML = '<div class="app-card"><div class="rank">★</div><div><strong>No submissions yet</strong><br><span class="soft">Students can submit from the student page once they finish the boss battle.</span></div><div class="voteBox"><strong>0 votes</strong></div></div>';
+      } else {
+        currentApps.forEach((app, idx) => {
+          const row = document.createElement("div");
+          row.className = "app-card";
+          row.innerHTML = `
+            <div class="rank">${idx + 1}</div>
+            <div>
+              <strong>${app.appTitle}</strong><br>
+              <span class="soft">${app.appType} • by ${app.teamName}</span><br>
+              <span class="showcase-tag">${app.theme}</span>
+              <div>${awardChipHtml(app.awards)}</div>
+              <div class="award-actions">
+                <button class="btn-soft award-btn ${app.awards?.funniest ? 'active' : ''}" data-award="funniest">😂 Funniest</button>
+                <button class="btn-soft award-btn ${app.awards?.useful ? 'active' : ''}" data-award="useful">🛠️ Most Useful</button>
+                <button class="btn-soft award-btn ${app.awards?.bestname ? 'active' : ''}" data-award="bestname">🏷️ Best Name</button>
+              </div>
+            </div>
+            <div class="voteBox">
+              <strong>${app.votes || 0} votes</strong>
+              <button class="btn-green vote-btn">Vote</button>
+            </div>
+          `;
+          row.querySelector(".vote-btn").addEventListener("click", () => voteForApp(app.id));
+          row.querySelector('[data-award="funniest"]').addEventListener("click", () => applyAward(app.id, "funniest"));
+          row.querySelector('[data-award="useful"]').addEventListener("click", () => applyAward(app.id, "useful"));
+          row.querySelector('[data-award="bestname"]').addEventListener("click", () => applyAward(app.id, "bestname"));
+          showcaseBoard.appendChild(row);
+        });
+      }
+
+      appsCount.textContent = currentApps.length;
+      votesCount.textContent = currentApps.reduce((sum, app) => sum + (app.votes || 0), 0);
+      leaderName.textContent = currentApps[0]?.appTitle || "—";
+      funniestWinner.textContent = currentApps.find(a => a.awards?.funniest)?.appTitle || "No winner yet";
+      usefulWinner.textContent = currentApps.find(a => a.awards?.useful)?.appTitle || "No winner yet";
+      bestnameWinner.textContent = currentApps.find(a => a.awards?.bestname)?.appTitle || "No winner yet";
+    }
+
+    document.getElementById("refreshBtn").addEventListener("click", () => setMsg("Realtime listener is already active. Manual refresh is not needed."));
+    document.getElementById("resetVotesBtn").addEventListener("click", resetVotes);
+    document.getElementById("resetAwardsBtn").addEventListener("click", resetAwards);
+    document.getElementById("clearBoardBtn").addEventListener("click", clearBoard);
+
+    const showcaseQuery = query(showcaseRef, orderBy("votes", "desc"));
+    onSnapshot(showcaseQuery, (snapshot) => {
+      const apps = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderBoard(apps);
+    }, (error) => {
+      setMsg(`Firestore listener error: ${error.message}`, "warn");
+    });
+  </script>
+</body>
+</html>
