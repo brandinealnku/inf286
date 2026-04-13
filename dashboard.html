@@ -92,153 +92,168 @@
     </section>
   </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-    import { getFirestore, collection, onSnapshot, query, orderBy, updateDoc, doc, increment, getDocs, writeBatch } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+  import {
+    getFirestore,
+    collection,
+    onSnapshot,
+    query,
+    orderBy,
+    updateDoc,
+    doc,
+    increment,
+    getDocs,
+    writeBatch
+  } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-    // Your web app's Firebase configuration
-    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-    const firebaseConfig = {
-      apiKey: "AIzaSyDeEli-_KGFTLiq-mdy6abvkz-KnNdhSrk",
-      authDomain: "webdev-686d9.firebaseapp.com",
-      projectId: "webdev-686d9",
-      storageBucket: "webdev-686d9.firebasestorage.app",
-      messagingSenderId: "941024763004",
-      appId: "1:941024763004:web:931f9d69ed43d49a97fdf9",
-      measurementId: "G-LGQTTR656K"
-    };
+  const firebaseConfig = {
+    apiKey: "AIzaSyDeEli-_KGFTLiq-mdy6abvkz-KnNdhSrk",
+    authDomain: "webdev-686d9.firebaseapp.com",
+    projectId: "webdev-686d9",
+    storageBucket: "webdev-686d9.firebasestorage.app",
+    messagingSenderId: "941024763004",
+    appId: "1:941024763004:web:931f9d69ed43d49a97fdf9",
+    measurementId: "G-LGQTTR656K"
+  };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const showcaseRef = collection(db, "showcaseApps");
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const showcaseRef = collection(db, "showcaseApps");
 
-    const showcaseBoard = document.getElementById("showcaseBoard");
-    const appsCount = document.getElementById("appsCount");
-    const votesCount = document.getElementById("votesCount");
-    const leaderName = document.getElementById("leaderName");
-    const funniestWinner = document.getElementById("funniestWinner");
-    const usefulWinner = document.getElementById("usefulWinner");
-    const bestnameWinner = document.getElementById("bestnameWinner");
-    const dashboardMsg = document.getElementById("dashboardMsg");
+  const showcaseBoard = document.getElementById("showcaseBoard");
+  const appsCount = document.getElementById("appsCount");
+  const votesCount = document.getElementById("votesCount");
+  const leaderName = document.getElementById("leaderName");
+  const funniestWinner = document.getElementById("funniestWinner");
+  const usefulWinner = document.getElementById("usefulWinner");
+  const bestnameWinner = document.getElementById("bestnameWinner");
+  const dashboardMsg = document.getElementById("dashboardMsg");
 
-    let currentApps = [];
+  let currentApps = [];
 
-    function setMsg(text, cls="success") {
-      dashboardMsg.style.display = "block";
-      dashboardMsg.className = "message " + cls;
-      dashboardMsg.textContent = text;
+  function setMsg(text, cls = "success") {
+    dashboardMsg.style.display = "block";
+    dashboardMsg.className = "message " + cls;
+    dashboardMsg.textContent = text;
+  }
+
+  function awardChipHtml(awards) {
+    let html = "";
+    if (awards?.funniest) html += '<span class="award-chip funniest">😂 Funniest</span>';
+    if (awards?.useful) html += '<span class="award-chip useful">🛠️ Most Useful</span>';
+    if (awards?.bestname) html += '<span class="award-chip bestname">🏷️ Best Name</span>';
+    return html;
+  }
+
+  async function voteForApp(appId) {
+    await updateDoc(doc(db, "showcaseApps", appId), { votes: increment(1) });
+  }
+
+  async function applyAward(appId, category) {
+    const updates = [];
+    for (const app of currentApps) {
+      const awards = { funniest: false, useful: false, bestname: false, ...(app.awards || {}) };
+      if (category === "funniest") awards.funniest = app.id === appId;
+      if (category === "useful") awards.useful = app.id === appId;
+      if (category === "bestname") awards.bestname = app.id === appId;
+      if (category !== "funniest") awards.funniest = !!app.awards?.funniest;
+      if (category !== "useful") awards.useful = !!app.awards?.useful;
+      if (category !== "bestname") awards.bestname = !!app.awards?.bestname;
+      updates.push(updateDoc(doc(db, "showcaseApps", app.id), { awards }));
     }
+    await Promise.all(updates);
+  }
 
-    function awardChipHtml(awards) {
-      let html = "";
-      if (awards?.funniest) html += '<span class="award-chip funniest">😂 Funniest</span>';
-      if (awards?.useful) html += '<span class="award-chip useful">🛠️ Most Useful</span>';
-      if (awards?.bestname) html += '<span class="award-chip bestname">🏷️ Best Name</span>';
-      return html;
-    }
+  async function resetVotes() {
+    const snap = await getDocs(showcaseRef);
+    const batch = writeBatch(db);
+    snap.forEach(d => batch.update(d.ref, { votes: 0 }));
+    await batch.commit();
+    setMsg("All votes have been reset.");
+  }
 
-    async function voteForApp(appId) {
-      await updateDoc(doc(db, "showcaseApps", appId), { votes: increment(1) });
-    }
+  async function resetAwards() {
+    const snap = await getDocs(showcaseRef);
+    const batch = writeBatch(db);
+    snap.forEach(d => batch.update(d.ref, {
+      awards: { funniest: false, useful: false, bestname: false }
+    }));
+    await batch.commit();
+    setMsg("All awards have been reset.");
+  }
 
-    async function applyAward(appId, category) {
-      const updates = [];
-      for (const app of currentApps) {
-        const awards = { funniest:false, useful:false, bestname:false, ...(app.awards || {}) };
-        if (category === "funniest") awards.funniest = app.id === appId;
-        if (category === "useful") awards.useful = app.id === appId;
-        if (category === "bestname") awards.bestname = app.id === appId;
-        if (category !== "funniest") awards.funniest = !!app.awards?.funniest;
-        if (category !== "useful") awards.useful = !!app.awards?.useful;
-        if (category !== "bestname") awards.bestname = !!app.awards?.bestname;
-        updates.push(updateDoc(doc(db, "showcaseApps", app.id), { awards }));
-      }
-      await Promise.all(updates);
-    }
+  async function clearBoard() {
+    const snap = await getDocs(showcaseRef);
+    const batch = writeBatch(db);
+    snap.forEach(d => batch.delete(d.ref));
+    await batch.commit();
+    setMsg("Showcase board cleared.");
+  }
 
-    async function resetVotes() {
-      const snap = await getDocs(showcaseRef);
-      const batch = writeBatch(db);
-      snap.forEach(d => batch.update(d.ref, { votes: 0 }));
-      await batch.commit();
-      setMsg("All votes have been reset.");
-    }
+  function renderBoard(apps) {
+    currentApps = [...apps].sort((a, b) => (b.votes || 0) - (a.votes || 0));
+    showcaseBoard.innerHTML = "";
 
-    async function resetAwards() {
-      const snap = await getDocs(showcaseRef);
-      const batch = writeBatch(db);
-      snap.forEach(d => batch.update(d.ref, { awards: { funniest:false, useful:false, bestname:false } }));
-      await batch.commit();
-      setMsg("All awards have been reset.");
-    }
-
-    async function clearBoard() {
-      const snap = await getDocs(showcaseRef);
-      const batch = writeBatch(db);
-      snap.forEach(d => batch.delete(d.ref));
-      await batch.commit();
-      setMsg("Showcase board cleared.");
-    }
-
-    function renderBoard(apps) {
-      currentApps = [...apps].sort((a,b) => (b.votes || 0) - (a.votes || 0));
-      showcaseBoard.innerHTML = "";
-
-      if (!currentApps.length) {
-        showcaseBoard.innerHTML = '<div class="app-card"><div class="rank">★</div><div><strong>No submissions yet</strong><br><span class="soft">Students can submit from the student page once they finish the boss battle.</span></div><div class="voteBox"><strong>0 votes</strong></div></div>';
-      } else {
-        currentApps.forEach((app, idx) => {
-          const row = document.createElement("div");
-          row.className = "app-card";
-          row.innerHTML = `
-            <div class="rank">${idx + 1}</div>
-            <div>
-              <strong>${app.appTitle}</strong><br>
-              <span class="soft">${app.appType} • by ${app.teamName}</span><br>
-              <span class="showcase-tag">${app.theme}</span>
-              <div>${awardChipHtml(app.awards)}</div>
-              <div class="award-actions">
-                <button class="btn-soft award-btn ${app.awards?.funniest ? 'active' : ''}" data-award="funniest">😂 Funniest</button>
-                <button class="btn-soft award-btn ${app.awards?.useful ? 'active' : ''}" data-award="useful">🛠️ Most Useful</button>
-                <button class="btn-soft award-btn ${app.awards?.bestname ? 'active' : ''}" data-award="bestname">🏷️ Best Name</button>
-              </div>
+    if (!currentApps.length) {
+      showcaseBoard.innerHTML =
+        '<div class="app-card"><div class="rank">★</div><div><strong>No submissions yet</strong><br><span class="soft">Students can submit from the student page once they finish the boss battle.</span></div><div class="voteBox"><strong>0 votes</strong></div></div>';
+    } else {
+      currentApps.forEach((app, idx) => {
+        const row = document.createElement("div");
+        row.className = "app-card";
+        row.innerHTML = `
+          <div class="rank">${idx + 1}</div>
+          <div>
+            <strong>${app.appTitle}</strong><br>
+            <span class="soft">${app.appType} • by ${app.teamName}</span><br>
+            <span class="showcase-tag">${app.theme}</span>
+            <div>${awardChipHtml(app.awards)}</div>
+            <div class="award-actions">
+              <button class="btn-soft award-btn ${app.awards?.funniest ? "active" : ""}" data-award="funniest">😂 Funniest</button>
+              <button class="btn-soft award-btn ${app.awards?.useful ? "active" : ""}" data-award="useful">🛠️ Most Useful</button>
+              <button class="btn-soft award-btn ${app.awards?.bestname ? "active" : ""}" data-award="bestname">🏷️ Best Name</button>
             </div>
-            <div class="voteBox">
-              <strong>${app.votes || 0} votes</strong>
-              <button class="btn-green vote-btn">Vote</button>
-            </div>
-          `;
-          row.querySelector(".vote-btn").addEventListener("click", () => voteForApp(app.id));
-          row.querySelector('[data-award="funniest"]').addEventListener("click", () => applyAward(app.id, "funniest"));
-          row.querySelector('[data-award="useful"]').addEventListener("click", () => applyAward(app.id, "useful"));
-          row.querySelector('[data-award="bestname"]').addEventListener("click", () => applyAward(app.id, "bestname"));
-          showcaseBoard.appendChild(row);
-        });
-      }
-
-      appsCount.textContent = currentApps.length;
-      votesCount.textContent = currentApps.reduce((sum, app) => sum + (app.votes || 0), 0);
-      leaderName.textContent = currentApps[0]?.appTitle || "—";
-      funniestWinner.textContent = currentApps.find(a => a.awards?.funniest)?.appTitle || "No winner yet";
-      usefulWinner.textContent = currentApps.find(a => a.awards?.useful)?.appTitle || "No winner yet";
-      bestnameWinner.textContent = currentApps.find(a => a.awards?.bestname)?.appTitle || "No winner yet";
+          </div>
+          <div class="voteBox">
+            <strong>${app.votes || 0} votes</strong>
+            <button class="btn-green vote-btn">Vote</button>
+          </div>
+        `;
+        row.querySelector(".vote-btn").addEventListener("click", () => voteForApp(app.id));
+        row.querySelector('[data-award="funniest"]').addEventListener("click", () => applyAward(app.id, "funniest"));
+        row.querySelector('[data-award="useful"]').addEventListener("click", () => applyAward(app.id, "useful"));
+        row.querySelector('[data-award="bestname"]').addEventListener("click", () => applyAward(app.id, "bestname"));
+        showcaseBoard.appendChild(row);
+      });
     }
 
-    document.getElementById("refreshBtn").addEventListener("click", () => setMsg("Realtime listener is already active. Manual refresh is not needed."));
-    document.getElementById("resetVotesBtn").addEventListener("click", resetVotes);
-    document.getElementById("resetAwardsBtn").addEventListener("click", resetAwards);
-    document.getElementById("clearBoardBtn").addEventListener("click", clearBoard);
+    appsCount.textContent = currentApps.length;
+    votesCount.textContent = currentApps.reduce((sum, app) => sum + (app.votes || 0), 0);
+    leaderName.textContent = currentApps[0]?.appTitle || "—";
+    funniestWinner.textContent = currentApps.find(a => a.awards?.funniest)?.appTitle || "No winner yet";
+    usefulWinner.textContent = currentApps.find(a => a.awards?.useful)?.appTitle || "No winner yet";
+    bestnameWinner.textContent = currentApps.find(a => a.awards?.bestname)?.appTitle || "No winner yet";
+  }
 
-    const showcaseQuery = query(showcaseRef, orderBy("votes", "desc"));
-    onSnapshot(showcaseQuery, (snapshot) => {
+  document.getElementById("refreshBtn").addEventListener("click", () => {
+    setMsg("Realtime listener is already active. Manual refresh is not needed.");
+  });
+  document.getElementById("resetVotesBtn").addEventListener("click", resetVotes);
+  document.getElementById("resetAwardsBtn").addEventListener("click", resetAwards);
+  document.getElementById("clearBoardBtn").addEventListener("click", clearBoard);
+
+  const showcaseQuery = query(showcaseRef, orderBy("votes", "desc"));
+  onSnapshot(
+    showcaseQuery,
+    (snapshot) => {
       const apps = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
       renderBoard(apps);
-    }, (error) => {
+    },
+    (error) => {
       setMsg(`Firestore listener error: ${error.message}`, "warn");
-    });
-  </script>
+    }
+  );
+</script>
 </body>
 </html>
