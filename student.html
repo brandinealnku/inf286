@@ -575,7 +575,7 @@ btn.addEventListener("click", () => {
                   <div class="live-text">Team score: <span id="r3ScoreText">0</span></div>
                   <button class="btn-yellow" id="r3ActionBtn" style="margin-top:12px;">Add Point</button>
                 </div>
-                <div class="soft small" style="margin:12px 0 8px;">Goal: replace <code>score++</code> with <code>score += 2</code>.</div>
+                <div class="soft small" style="margin:12px 0 8px;">Goal: replace <code>score++</code> with <code>score += 2</code>, then click <strong>Run Code</strong>.</div>
                 <textarea class="code-editor" id="r3Editor">let score = 0;
 
 btn.addEventListener("click", () => {
@@ -1210,7 +1210,7 @@ btn.addEventListener("click", () => {
         const code = document.getElementById("r3Editor").value;
         if (code.includes("score += 2")) {
           document.getElementById("r3Next").disabled = false;
-          setMessage(document.getElementById("r3SandboxMsg"), "Nice. You changed the variable logic so the score jumps by 2.", "success");
+          setMessage(document.getElementById("r3SandboxMsg"), "Nice. You changed the score logic so it adds 2 points.", "success");
           updatePoints(20);
           playTone("success");
         }
