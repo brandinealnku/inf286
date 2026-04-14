@@ -1208,7 +1208,13 @@ btn.addEventListener("click", () => {
       },
       successCheck: () => {
         const code = document.getElementById("r3Editor").value;
-        if (code.includes("score += 2")) {
+        const addsTwoPatterns = [
+          /score\s*\+=\s*2/,
+          /score\s*=\s*score\s*\+\s*2/,
+          /score\s*=\s*2\s*\+\s*score/
+        ];
+        const isValidScoreBoost = addsTwoPatterns.some((pattern) => pattern.test(code));
+        if (isValidScoreBoost) {
           document.getElementById("r3Next").disabled = false;
           setMessage(document.getElementById("r3SandboxMsg"), "Nice. You changed the score logic so it adds 2 points.", "success");
           updatePoints(20);
