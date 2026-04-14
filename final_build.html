@@ -474,6 +474,7 @@
         <a href="#concepts">Concepts</a>
         <a href="#tools">Tools</a>
         <a href="#quiz">Quiz</a>
+        <a href="#starterlab">Starter Help</a>
         <a href="#paths">Publish Paths</a>
         <a href="#checklist">Checklist</a>
       </nav>
@@ -800,6 +801,105 @@
       </div>
     </section>
 
+    <section id="starterlab">
+      <div class="container">
+        <h2 class="section-title">Get unstuck: starter helper</h2>
+        <p class="section-intro">
+          Not sure how to begin? Use these choices to generate a star([docs.github.com](https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages?utm_source=chatgpt.com))an copy into your own project. This section is designed to help you move from blank page to working website faster.
+        </p>
+
+        <div class="grid grid-2">
+          <div class="card">
+            <div class="tag tag-green">Step 1</div>
+            <h3>Choose what you need help with</h3>
+            <div class="question">
+              <h3>What are you building?</h3>
+              <div class="options">
+                <label class="option"><input type="radio" name="builderType" value="personal" checked> My individual personal website</label>
+                <label class="option"><input type="radio" name="builderType" value="redesign"> My group website redesign</label>
+              </div>
+            </div>
+
+            <div class="question">
+              <h3>What do you want to generate?</h3>
+              <div class="options">
+                <label class="option"><input type="radio" name="snippetType" value="structure" checked> Starter HTML page structure</label>
+                <label class="option"><input type="radio" name="snippetType" value="nav"> Navigation bar</label>
+                <label class="option"><input type="radio" name="snippetType" value="cards"> Responsive card layout</label>
+                <label class="option"><input type="radio" name="snippetType" value="contact"> Contact section</label>
+                <label class="option"><input type="radio" name="snippetType" value="checklist"> Project checklist block</label>
+              </div>
+            </div>
+
+            <div class="question">
+              <h3>What platform are you using?</h3>
+              <div class="options">
+                <label class="option"><input type="radio" name="platformType" value="github" checked> GitHub Pages</label>
+                <label class="option"><input type="radio" name="platformType" value="codepen"> CodePen</label>
+              </div>
+            </div>
+
+            <div class="hero-actions">
+              <button type="button" class="btn btn-primary" id="generateSnippet">Generate starter help</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="tag tag-blue">Generated for you</div>
+            <h3>Starter plan + code snippet</h3>
+            <p class="muted">This gives you something practical to start with. Edit the text and styling so it fits your actual project.</p>
+            <div class="callout" id="starterPlan">
+              <strong>Starter plan</strong>
+              Choose your options, then generate a suggested starting point.
+            </div>
+            <div class="callout" style="margin-top: 1rem;">
+              <strong>Copy-ready snippet</strong>
+              <pre id="snippetOutput" style="white-space: pre-wrap; overflow:auto; margin:0; font-size:0.9rem; color:#e2e8f0;">Your snippet will appear here.</pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-2" style="margin-top: 1rem;">
+          <div class="card">
+            <div class="tag tag-yellow">New to GitHub?</div>
+            <h3>Beginner-friendly GitHub Pages help</h3>
+            <p class="muted">
+              If GitHub Pages feels new, start small. You do not need advanced Git commands for this class. Focus on creating a repository, adding your files, and turning on Pages.
+            </p>
+            <ol class="pros-cons">
+              <li>Create a new repository with a simple name</li>
+              <li>Upload your index.html, CSS, JavaScript, and images</li>
+              <li>Commit your files</li>
+              <li>Open Settings → Pages</li>
+              <li>Select the branch/folder to publish</li>
+              <li>Open your live link and test it</li>
+            </ol>
+            <p><strong>Helpful official resources:</strong></p>
+            <ul class="pros-cons">
+              <li><a href="https://docs.github.com/pages/quickstart" target="_blank" rel="noopener noreferrer">GitHub Pages quickstart</a></li>
+              <li><a href="https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site" target="_blank" rel="noopener noreferrer">Create a GitHub Pages site</a></li>
+              <li><a href="https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site" target="_blank" rel="noopener noreferrer">Configure the publishing source</a></li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div class="tag tag-purple">Helpful starting resources</div>
+            <h3>Use these when you need a push</h3>
+            <ul class="pros-cons">
+              <li><a href="https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages" target="_blank" rel="noopener noreferrer">What GitHub Pages is</a></li>
+              <li><a href="https://blog.codepen.io/docs/pens/" target="_blank" rel="noopener noreferrer">What a CodePen Pen is</a></li>
+              <li><a href="https://blog.codepen.io/documentation/exporting-pens/" target="_blank" rel="noopener noreferrer">How to export code from CodePen</a></li>
+              <li><a href="https://blog.codepen.io/documentation/console/" target="_blank" rel="noopener noreferrer">Using the CodePen console</a></li>
+            </ul>
+            <div class="callout">
+              <strong>Best advice for this class</strong>
+              If your project has multiple pages and folders, GitHub Pages is usually the better choice. If you want the fastest path for a smaller front-end build, CodePen may be easier.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section id="paths">
       <div class="container">
         <h2 class="section-title">Step-by-step publish paths</h2>
@@ -1021,6 +1121,187 @@
           <p class="muted">Tip: GitHub Pages is usually best for larger final websites. CodePen is often best for quick, one-page, lower-setup builds.</p>
         `;
       }, 0);
+    });
+
+    const generateSnippetBtn = document.getElementById('generateSnippet');
+    const starterPlan = document.getElementById('starterPlan');
+    const snippetOutput = document.getElementById('snippetOutput');
+
+    const snippets = {
+      personal: {
+        structure: {
+          plan: 'Start with a simple multi-page personal site. Build your Home page first, then reuse the header and footer across your other pages.',
+          code: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Personal Website</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header>
+    <h1>Your Name</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="projects.html">Projects</a>
+      <a href="experience.html">Experience</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <section>
+      <h2>Welcome</h2>
+      <p>Introduce yourself and explain what this website is about.</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2026 Your Name</p>
+  </footer>
+</body>
+</html>`
+        },
+        nav: {
+          plan: 'Use a simple navigation menu across all 5 pages so your website feels consistent and easy to explore.',
+          code: `<nav class="main-nav">
+  <a href="index.html">Home</a>
+  <a href="about.html">About</a>
+  <a href="experience.html">Experience</a>
+  <a href="projects.html">Projects</a>
+  <a href="contact.html">Contact</a>
+</nav>`
+        },
+        cards: {
+          plan: 'A card layout works well for projects, interests, skills, or featured experiences on your personal site.',
+          code: `<section class="card-grid">
+  <article class="card">
+    <h3>Project One</h3>
+    <p>Brief description of the project or interest.</p>
+  </article>
+  <article class="card">
+    <h3>Project Two</h3>
+    <p>Brief description of the project or interest.</p>
+  </article>
+</section>`
+        },
+        contact: {
+          plan: 'Give visitors a clear way to connect with you. This is especially useful if you want the site to help with internships or jobs.',
+          code: `<section>
+  <h2>Contact</h2>
+  <p>Email: yourname@email.com</p>
+  <p>LinkedIn: add your profile link</p>
+  <p>GitHub: add your GitHub link</p>
+</section>`
+        },
+        checklist: {
+          plan: 'Use a checklist to make sure your personal site feels complete before you publish.',
+          code: `<section>
+  <h2>Before I Publish</h2>
+  <ul>
+    <li>All 5 pages are complete</li>
+    <li>Navigation works</li>
+    <li>Layout looks good on mobile</li>
+    <li>No broken links or missing images</li>
+  </ul>
+</section>`
+        }
+      },
+      redesign: {
+        structure: {
+          plan: 'For the redesign, rebuild the original site with stronger structure and clearer sections. Start with the homepage first.',
+          code: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Redesigned Website</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header>
+    <h1>Organization Name</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="services.html">Services</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <section>
+      <h2>Welcome to Our Redesigned Site</h2>
+      <p>Explain the organization clearly and make the first impression stronger than the original site.</p>
+    </section>
+  </main>
+</body>
+</html>`
+        },
+        nav: {
+          plan: 'A better navigation structure is one of the easiest ways to improve a confusing original website.',
+          code: `<nav class="main-nav">
+  <a href="index.html">Home</a>
+  <a href="about.html">About</a>
+  <a href="services.html">Services</a>
+  <a href="gallery.html">Gallery</a>
+  <a href="contact.html">Contact</a>
+</nav>`
+        },
+        cards: {
+          plan: 'Card layouts are useful for services, team members, featured content, or reasons users should trust the organization.',
+          code: `<section class="card-grid">
+  <article class="card">
+    <h3>Service One</h3>
+    <p>Short, readable explanation of the service.</p>
+  </article>
+  <article class="card">
+    <h3>Service Two</h3>
+    <p>Short, readable explanation of the service.</p>
+  </article>
+</section>`
+        },
+        contact: {
+          plan: 'A clearer contact section improves usability and helps make the redesign feel more polished and real.',
+          code: `<section>
+  <h2>Contact Us</h2>
+  <p>Email: info@example.com</p>
+  <p>Phone: (123) 456-7890</p>
+  <p>Address: 123 Main Street</p>
+</section>`
+        },
+        checklist: {
+          plan: 'Use this to confirm that your redesign clearly improves the original website.',
+          code: `<section>
+  <h2>Redesign Improvement Check</h2>
+  <ul>
+    <li>Navigation is clearer</li>
+    <li>Typography is more readable</li>
+    <li>Spacing is more consistent</li>
+    <li>Mobile experience is improved</li>
+  </ul>
+</section>`
+        }
+      }
+    };
+
+    generateSnippetBtn.addEventListener('click', () => {
+      const builderType = document.querySelector('input[name="builderType"]:checked').value;
+      const snippetType = document.querySelector('input[name="snippetType"]:checked').value;
+      const platformType = document.querySelector('input[name="platformType"]:checked').value;
+      const selected = snippets[builderType][snippetType];
+
+      let platformNote = '';
+      if (platformType === 'github') {
+        platformNote = 'Platform note: For GitHub Pages, save your main page as index.html and keep your file names clean and consistent.';
+      } else {
+        platformNote = 'Platform note: For CodePen, this snippet can help you plan your structure even if your editor layout looks different.';
+      }
+
+      starterPlan.innerHTML = `<strong>Starter plan</strong><p>${selected.plan}</p><p class="muted">${platformNote}</p>`;
+      snippetOutput.textContent = selected.code;
     });
 
     const tabButtons = document.querySelectorAll('.tab-btn');
