@@ -3,23 +3,30 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NKU Web Development Final Build Launchpad</title>
+  <title>NKU Web Dev Launchpad</title>
+  <meta name="description" content="A polished student launchpad for NKU Introduction to Web Development final projects." />
   <style>
     :root {
-      --bg: #0f172a;
-      --bg-soft: #111827;
-      --panel: rgba(255,255,255,0.06);
-      --panel-strong: rgba(255,255,255,0.1);
-      --border: rgba(255,255,255,0.12);
+      --bg: #07111f;
+      --bg-soft: #0b1728;
+      --panel: rgba(255,255,255,0.07);
+      --panel-2: rgba(255,255,255,0.05);
+      --border: rgba(255,255,255,0.10);
       --text: #f8fafc;
-      --muted: #cbd5e1;
+      --muted: #bfd1e6;
+      --muted-2: #8fa8c7;
       --accent: #facc15;
       --accent-2: #f59e0b;
+      --accent-3: #38bdf8;
       --good: #34d399;
-      --warn: #fbbf24;
-      --shadow: 0 18px 50px rgba(0,0,0,0.28);
-      --radius: 22px;
-      --max: 1180px;
+      --danger: #fb7185;
+      --shadow: 0 24px 70px rgba(0,0,0,0.35);
+      --shadow-soft: 0 10px 24px rgba(0,0,0,0.18);
+      --radius: 24px;
+      --radius-lg: 30px;
+      --radius-sm: 16px;
+      --max: 1220px;
+      --header-h: 78px;
     }
 
     * { box-sizing: border-box; }
@@ -29,14 +36,17 @@
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       color: var(--text);
       background:
-        radial-gradient(circle at top left, rgba(250,204,21,0.14), transparent 30%),
-        radial-gradient(circle at top right, rgba(245,158,11,0.12), transparent 28%),
-        linear-gradient(180deg, #020617 0%, #0f172a 45%, #111827 100%);
+        radial-gradient(circle at 0% 0%, rgba(250,204,21,0.12), transparent 24%),
+        radial-gradient(circle at 100% 0%, rgba(56,189,248,0.12), transparent 20%),
+        radial-gradient(circle at 50% 100%, rgba(245,158,11,0.08), transparent 24%),
+        linear-gradient(180deg, #040814 0%, #081120 35%, #0b1728 100%);
       min-height: 100vh;
       line-height: 1.6;
     }
 
-    a { color: inherit; }
+    a { color: inherit; text-decoration: none; }
+    button, input, select { font: inherit; }
+    code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
 
     .container {
       width: min(var(--max), calc(100% - 2rem));
@@ -46,43 +56,107 @@
     .site-header {
       position: sticky;
       top: 0;
-      z-index: 50;
-      backdrop-filter: blur(12px);
-      background: rgba(2, 6, 23, 0.72);
-      border-bottom: 1px solid rgba(255,255,255,0.08);
+      z-index: 100;
+      background: rgba(4, 8, 20, 0.78);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
     }
 
     .nav {
+      min-height: var(--header-h);
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 1rem;
-      padding: 0.95rem 0;
+      padding: 0.85rem 0;
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(250,204,21,0.22), rgba(56,189,248,0.22));
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow: var(--shadow-soft);
+      font-weight: 900;
+      color: #fff7cc;
+      flex: 0 0 auto;
     }
 
     .brand {
       font-weight: 800;
       letter-spacing: -0.03em;
       font-size: 1.05rem;
+      line-height: 1.05;
     }
 
-    .brand span {
-      color: var(--accent);
+    .brand span { color: var(--accent); }
+    .brand small {
+      display: block;
+      color: var(--muted-2);
+      font-weight: 600;
+      font-size: 0.74rem;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      margin-top: 0.18rem;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .mode-toggle {
+      display: inline-flex;
+      gap: 0.35rem;
+      padding: 0.22rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+    }
+
+    .mode-btn {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      padding: 0.58rem 0.9rem;
+      border-radius: 999px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.18s ease;
+    }
+
+    .mode-btn.active,
+    .mode-btn:hover {
+      color: var(--text);
+      background: linear-gradient(135deg, rgba(250,204,21,0.18), rgba(245,158,11,0.18));
     }
 
     .nav-links {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.75rem;
+      gap: 0.45rem;
+      align-items: center;
     }
 
     .nav-links a {
-      text-decoration: none;
       color: var(--muted);
-      font-size: 0.95rem;
-      padding: 0.45rem 0.75rem;
+      font-size: 0.93rem;
+      padding: 0.58rem 0.85rem;
       border-radius: 999px;
-      transition: 0.2s ease;
+      transition: 0.18s ease;
     }
 
     .nav-links a:hover,
@@ -92,60 +166,136 @@
       outline: none;
     }
 
+    .nav-cta {
+      background: linear-gradient(135deg, rgba(250,204,21,0.24), rgba(245,158,11,0.24));
+      border: 1px solid rgba(255,255,255,0.10);
+      color: #fff7cc !important;
+    }
+
+    main { padding-bottom: 2rem; }
+    section { padding: 1.1rem 0 1.4rem; scroll-margin-top: 92px; }
+
     .hero {
-      padding: 4.5rem 0 3rem;
+      padding-top: 4rem;
+      padding-bottom: 1.8rem;
     }
 
     .hero-wrap {
       display: grid;
       grid-template-columns: 1.2fr 0.8fr;
-      gap: 1.5rem;
+      gap: 1.2rem;
       align-items: stretch;
     }
 
+    .card,
     .hero-card,
     .glass {
-      background: var(--panel);
+      background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.045));
       border: 1px solid var(--border);
-      border-radius: 30px;
+      border-radius: var(--radius-lg);
       box-shadow: var(--shadow);
+    }
+
+    .card {
+      padding: 1.25rem;
+      overflow: hidden;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 26px 72px rgba(0,0,0,0.38);
     }
 
     .hero-card {
       padding: 2rem;
+      position: relative;
+      overflow: hidden;
     }
+
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      right: -70px;
+      bottom: -70px;
+      width: 220px;
+      height: 220px;
+      background: radial-gradient(circle, rgba(56,189,248,0.18), transparent 65%);
+      pointer-events: none;
+    }
+
+    .hero-side {
+      padding: 1.25rem;
+      display: grid;
+      gap: 0.9rem;
+      align-content: start;
+    }
+
+    .mini-card {
+      padding: 1rem 1.05rem;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .mini-card strong { display: block; margin-bottom: 0.25rem; }
 
     .eyebrow {
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
-      padding: 0.4rem 0.85rem;
+      padding: 0.42rem 0.9rem;
       background: rgba(250,204,21,0.12);
-      border: 1px solid rgba(250,204,21,0.28);
+      border: 1px solid rgba(250,204,21,0.24);
       color: #fde68a;
       border-radius: 999px;
-      font-size: 0.9rem;
+      font-size: 0.86rem;
       font-weight: 700;
     }
 
-    h1, h2, h3 {
-      line-height: 1.1;
-      letter-spacing: -0.03em;
-      margin: 0;
-    }
-
+    h1, h2, h3, h4 { line-height: 1.08; letter-spacing: -0.03em; margin: 0; }
     h1 {
-      font-size: clamp(2.4rem, 5vw, 4.7rem);
+      font-size: clamp(2.5rem, 5vw, 4.8rem);
       margin-top: 1rem;
       max-width: 11ch;
     }
 
-    .hero p {
-      color: var(--muted);
-      font-size: 1.08rem;
-      max-width: 62ch;
-      margin: 1rem 0 0;
+    h2.section-title {
+      font-size: clamp(1.85rem, 3vw, 2.75rem);
+      margin-bottom: 0.55rem;
     }
+
+    h3 { font-size: 1.22rem; }
+    h4 {
+      margin-top: 1.1rem;
+      margin-bottom: 0.4rem;
+      font-size: 1rem;
+      color: #fff4c5;
+    }
+
+    p { margin: 0; }
+    .hero p,
+    .section-intro,
+    .muted { color: var(--muted); }
+    .hero p { margin-top: 1rem; font-size: 1.04rem; max-width: 62ch; }
+    .small { font-size: 0.92rem; color: var(--muted-2); }
+
+    .hero-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.8rem;
+      margin-top: 1.4rem;
+    }
+
+    .metric {
+      padding: 0.95rem 1rem;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .metric strong { display: block; font-size: 1.15rem; color: white; }
+    .metric span { color: var(--muted-2); font-size: 0.88rem; }
 
     .hero-actions {
       display: flex;
@@ -158,195 +308,173 @@
       border: none;
       border-radius: 999px;
       padding: 0.95rem 1.2rem;
-      font-weight: 700;
+      font-weight: 800;
       cursor: pointer;
-      text-decoration: none;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      transition: transform 0.18s ease, opacity 0.18s ease, background 0.18s ease;
+      gap: 0.5rem;
+      transition: transform 0.18s ease, opacity 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+      box-shadow: var(--shadow-soft);
     }
 
     .btn:hover,
-    .btn:focus-visible {
-      transform: translateY(-1px);
-      outline: none;
-    }
+    .btn:focus-visible { transform: translateY(-1px); outline: none; }
 
     .btn-primary {
       background: linear-gradient(135deg, var(--accent), var(--accent-2));
       color: #1c1917;
+      box-shadow: 0 10px 28px rgba(250,204,21,0.25);
     }
 
     .btn-secondary {
       background: rgba(255,255,255,0.07);
       color: var(--text);
       border: 1px solid var(--border);
+      backdrop-filter: blur(6px);
     }
 
-    .hero-side {
-      padding: 1.5rem;
-      display: grid;
-      gap: 1rem;
-      align-content: start;
-    }
-
-    .mini-card {
-      padding: 1rem 1.1rem;
-      border-radius: 20px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .mini-card strong {
-      display: block;
-      font-size: 1rem;
-      margin-bottom: 0.3rem;
-    }
-
-    section {
-      padding: 1.25rem 0 1.5rem;
-    }
-
-    .section-title {
-      font-size: clamp(1.8rem, 3vw, 2.8rem);
-      margin-bottom: 0.6rem;
-    }
-
-    .section-intro {
-      color: var(--muted);
-      max-width: 70ch;
-      margin-bottom: 1.5rem;
-    }
-
-    .grid {
-      display: grid;
-      gap: 1rem;
-    }
-
-    .grid-3 {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    .grid-2 {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .card {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.25rem;
-      box-shadow: var(--shadow);
-    }
-
-    .card h3 {
-      font-size: 1.2rem;
-      margin-bottom: 0.6rem;
-    }
-
-    .tag {
-      display: inline-block;
-      padding: 0.3rem 0.7rem;
-      border-radius: 999px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      margin-bottom: 0.75rem;
-    }
-
-    .tag-blue { background: rgba(250,204,21,0.12); color: #fde68a; }
-    .tag-purple { background: rgba(245,158,11,0.12); color: #fde68a; }
-    .tag-green { background: rgba(52,211,153,0.12); color: #bbf7d0; }
-    .tag-yellow { background: rgba(251,191,36,0.12); color: #fde68a; }
-
-    .comparison {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 1rem;
-    }
-
-    .comparison ul,
-    .steps ol,
-    .checklist,
-    .pros-cons {
-      padding-left: 1.15rem;
-      margin: 0.7rem 0 0;
-    }
-
-    .comparison li,
-    .steps li,
-    .checklist li,
-    .pros-cons li {
-      margin-bottom: 0.5rem;
-      color: var(--muted);
+    .btn-success {
+      background: linear-gradient(135deg, rgba(52,211,153,0.95), rgba(56,189,248,0.9));
+      color: #052e1e;
     }
 
     .pill-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.7rem;
+      gap: 0.65rem;
       margin-top: 1rem;
     }
 
     .pill {
-      padding: 0.55rem 0.85rem;
+      padding: 0.56rem 0.84rem;
       border-radius: 999px;
-      background: rgba(255,255,255,0.07);
+      background: rgba(255,255,255,0.06);
       border: 1px solid rgba(255,255,255,0.08);
       color: var(--text);
-      font-size: 0.95rem;
+      font-size: 0.93rem;
+      font-weight: 600;
     }
 
-    .quiz-wrap {
-      display: grid;
-      grid-template-columns: 1fr 0.9fr;
-      gap: 1rem;
+    .section-shell {
+      padding: 1.25rem;
+      border-radius: 30px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+      border: 1px solid rgba(255,255,255,0.06);
     }
+
+    .section-intro {
+      max-width: 74ch;
+      margin-bottom: 1.4rem;
+      font-size: 1rem;
+    }
+
+    .grid { display: grid; gap: 1rem; }
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.34rem 0.74rem;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      margin-bottom: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .tag-blue { background: rgba(250,204,21,0.12); color: #fde68a; }
+    .tag-purple { background: rgba(245,158,11,0.12); color: #fde68a; }
+    .tag-green { background: rgba(52,211,153,0.12); color: #bbf7d0; }
+    .tag-yellow { background: rgba(56,189,248,0.12); color: #bae6fd; }
+
+    .comparison,
+    .two-col,
+    .quiz-wrap,
+    .example-visuals { display: grid; gap: 1rem; }
+    .comparison { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .two-col { grid-template-columns: 1fr 1fr; }
+    .quiz-wrap { grid-template-columns: 1fr 0.92fr; }
+    .example-visuals { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+    .pros-cons,
+    .steps ol {
+      padding-left: 1.15rem;
+      margin: 0.72rem 0 0;
+    }
+
+    .pros-cons li,
+    .steps li { margin-bottom: 0.48rem; color: var(--muted); }
 
     .question {
       margin-bottom: 1rem;
       padding: 1rem;
-      border-radius: 18px;
+      border-radius: 20px;
       border: 1px solid rgba(255,255,255,0.08);
       background: rgba(255,255,255,0.04);
     }
 
-    .question h3 {
-      font-size: 1rem;
-      margin-bottom: 0.8rem;
-    }
-
-    .options {
-      display: grid;
-      gap: 0.65rem;
-    }
+    .question h3 { font-size: 1rem; margin-bottom: 0.8rem; }
+    .options { display: grid; gap: 0.65rem; }
 
     .option {
       display: flex;
       align-items: center;
       gap: 0.7rem;
-      border-radius: 14px;
-      padding: 0.8rem 0.9rem;
+      border-radius: 16px;
+      padding: 0.9rem 0.95rem;
       background: rgba(255,255,255,0.04);
       border: 1px solid rgba(255,255,255,0.08);
       cursor: pointer;
+      transition: 0.18s ease;
+    }
+
+    .option:hover {
+      background: rgba(255,255,255,0.07);
+      border-color: rgba(255,255,255,0.14);
     }
 
     .option input { accent-color: var(--accent); }
+    .option.selected {
+      background: rgba(250,204,21,0.12);
+      border-color: rgba(250,204,21,0.35);
+    }
 
     .result-box {
       position: sticky;
-      top: 5.8rem;
+      top: 94px;
       align-self: start;
       min-height: 240px;
     }
 
+    .result-highlight,
+    .callout {
+      border-radius: 20px;
+      padding: 1rem 1.05rem;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.05);
+    }
+
     .result-highlight {
+      margin-top: 1rem;
+      background: linear-gradient(135deg, rgba(250,204,21,0.14), rgba(56,189,248,0.10));
+    }
+
+    .callout strong { display: block; margin-bottom: 0.35rem; }
+    pre {
+      white-space: pre-wrap;
+      overflow: auto;
+      margin: 0;
+      font-size: 0.9rem;
+      color: #e2e8f0;
+      background: rgba(4,8,20,0.6);
+      border: 1px solid rgba(255,255,255,0.08);
       border-radius: 18px;
       padding: 1rem;
-      margin-top: 1rem;
-      background: linear-gradient(135deg, rgba(250,204,21,0.14), rgba(245,158,11,0.14));
-      border: 1px solid rgba(255,255,255,0.1);
+      max-height: 360px;
     }
 
     .path-tabs {
@@ -362,42 +490,25 @@
       border: 1px solid var(--border);
       border-radius: 999px;
       padding: 0.8rem 1rem;
-      font-weight: 700;
+      font-weight: 800;
       cursor: pointer;
+      transition: 0.18s ease;
     }
 
-    .tab-btn.active {
-      background: linear-gradient(135deg, rgba(250,204,21,0.2), rgba(245,158,11,0.2));
-      border-color: rgba(255,255,255,0.18);
+    .tab-btn.active,
+    .tab-btn:hover {
+      background: linear-gradient(135deg, rgba(250,204,21,0.18), rgba(245,158,11,0.18));
+      border-color: rgba(255,255,255,0.16);
     }
 
-    .tab-panel {
-      display: none;
-    }
-
-    .tab-panel.active {
-      display: block;
-    }
-
-    .two-col {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-    }
-
-    .callout {
-      padding: 1rem 1.1rem;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.05);
-    }
-
-    .callout strong { display: block; margin-bottom: 0.35rem; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
 
     .checklist-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 0.75rem;
+      gap: 0.8rem;
+      margin-top: 1rem;
     }
 
     .check-item {
@@ -405,16 +516,14 @@
       align-items: flex-start;
       gap: 0.7rem;
       background: rgba(255,255,255,0.05);
-      padding: 0.95rem;
-      border-radius: 16px;
+      padding: 1rem;
+      border-radius: 18px;
       border: 1px solid rgba(255,255,255,0.08);
+      transition: 0.18s ease;
     }
 
-    .check-item input {
-      margin-top: 0.25rem;
-      accent-color: var(--good);
-      transform: scale(1.1);
-    }
+    .check-item:hover { background: rgba(255,255,255,0.07); }
+    .check-item input { margin-top: 0.25rem; accent-color: var(--good); transform: scale(1.1); }
 
     .progress {
       margin-top: 1rem;
@@ -428,9 +537,70 @@
     .progress-bar {
       height: 100%;
       width: 0%;
-      background: linear-gradient(90deg, var(--good), var(--accent));
+      background: linear-gradient(90deg, var(--good), var(--accent), var(--accent-3));
       transition: width 0.25s ease;
+      box-shadow: 0 0 10px rgba(52,211,153,0.5);
     }
+
+    .mockup {
+      background: #0c1422;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      padding: 1rem;
+      margin-top: 0.9rem;
+    }
+
+    .bar, .line, .block, .thumb {
+      border-radius: 8px;
+      background: #2a3448;
+    }
+
+    .bar { height: 40px; margin-bottom: 0.7rem; }
+    .line { height: 16px; margin-bottom: 0.45rem; }
+    .block { height: 90px; margin-top: 0.9rem; }
+    .thumb { height: 84px; }
+    .mockup-strong .bar { background: linear-gradient(135deg, #facc15, #f59e0b); }
+    .mockup-strong .line { background: #dbe7f5; }
+    .mockup-strong .thumb { background: #31425f; }
+    .mockup-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 0.9rem;
+      align-items: start;
+    }
+
+    .fix-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .builder-output {
+      min-height: 200px;
+    }
+
+    .output-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .copy-status {
+      font-size: 0.92rem;
+      color: var(--muted);
+      min-height: 1.4rem;
+      margin-top: 0.75rem;
+    }
+
+    .mode-build [data-mode="learn"] { display: none !important; }
+    .mode-build .hero p,
+    .mode-build .hero-metrics,
+    .mode-build .hero-side,
+    .mode-build .pill-row { display: none; }
+    .mode-build .hero { padding-top: 2.2rem; }
+    .mode-build h1 { font-size: clamp(2rem, 4vw, 3rem); max-width: 16ch; }
 
     .footer {
       padding: 2rem 0 3rem;
@@ -438,7 +608,11 @@
       text-align: center;
     }
 
-    .muted { color: var(--muted); }
+    @media (max-width: 1080px) {
+      .nav { align-items: flex-start; flex-direction: column; }
+      .nav-right { width: 100%; justify-content: flex-start; }
+      .result-box { position: static; }
+    }
 
     @media (max-width: 980px) {
       .hero-wrap,
@@ -447,37 +621,50 @@
       .grid-2,
       .comparison,
       .two-col,
-      .checklist-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .result-box {
-        position: static;
-      }
+      .checklist-grid,
+      .hero-metrics,
+      .example-visuals,
+      .fix-grid,
+      .mockup-grid { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 680px) {
-      .hero { padding-top: 3.2rem; }
-      .hero-card, .hero-side, .card { padding: 1rem; }
-      .nav { align-items: flex-start; flex-direction: column; }
+      .hero { padding-top: 3rem; }
+      .hero-card, .hero-side, .card, .section-shell { padding: 1rem; }
       .nav-links { width: 100%; }
       .nav-links a { padding-left: 0; padding-right: 0.55rem; }
+      h1 { max-width: 100%; }
+      .mode-toggle { width: 100%; justify-content: stretch; }
+      .mode-btn { flex: 1; }
+      .output-actions .btn { width: 100%; }
     }
   </style>
 </head>
 <body>
   <header class="site-header">
     <div class="container nav">
-      <div class="brand">NKU Web Dev <span>Launchpad</span></div>
-      <nav class="nav-links" aria-label="Main navigation">
-        <a href="#requirements">Requirements</a>
-        <a href="#concepts">Concepts</a>
-        <a href="#tools">Tools</a>
-        <a href="#quiz">Quiz</a>
-        <a href="#starterlab">Starter Help</a>
-        <a href="#paths">Publish Paths</a>
-        <a href="#checklist">Checklist</a>
-      </nav>
+      <div class="brand-wrap">
+        <div class="brand-mark">NK</div>
+        <div class="brand">NKU Web Dev <span>Launchpad</span><small>Final project guide + starter app</small></div>
+      </div>
+
+      <div class="nav-right">
+        <div class="mode-toggle" aria-label="Mode toggle">
+          <button class="mode-btn active" id="learnModeBtn" type="button">Learn Mode</button>
+          <button class="mode-btn" id="buildModeBtn" type="button">Build Mode 🚀</button>
+        </div>
+
+        <nav class="nav-links" aria-label="Main navigation">
+          <a href="#requirements" data-mode="learn">Requirements</a>
+          <a href="#concepts" data-mode="learn">Concepts</a>
+          <a href="#tools" data-mode="learn">Tools</a>
+          <a href="#quiz" data-mode="learn">Quiz</a>
+          <a href="#starterlab">Starter Help</a>
+          <a href="#examples" data-mode="learn">A-Level Examples</a>
+          <a href="#paths">Publish Paths</a>
+          <a href="#checklist" class="nav-cta">Launch Checklist</a>
+        </nav>
+      </div>
     </div>
   </header>
 
@@ -487,14 +674,20 @@
         <div class="hero-card">
           <div class="eyebrow">NKU Introduction to Web Development Final Build</div>
           <h1>Build your final website like a modern web developer.</h1>
-          <p>
-            This guide helps you review the most important modern web development ideas, choose the right tool for your final website, and publish a project that feels stronger than just another class submission.
-          </p>
-          <div class="hero-actions">
-            <a class="btn btn-primary" href="#quiz">Find Your Best Build Path</a>
-            <a class="btn btn-secondary" href="#paths">See the Publish Walkthroughs</a>
+          <p>This app helps you understand the final project, choose the right tool, generate starter code, organize your files, and launch a website that feels polished, professional, and portfolio-ready.</p>
+
+          <div class="hero-metrics">
+            <div class="metric"><strong>2</strong><span>Final project parts</span></div>
+            <div class="metric"><strong>5+</strong><span>Pages for personal site</span></div>
+            <div class="metric"><strong>1</strong><span>Live published link</span></div>
           </div>
-          <div class="pill-row" aria-label="Quick highlights">
+
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#starterlab">Generate Starter Help</a>
+            <a class="btn btn-secondary" href="#requirements" data-mode="learn">See Final Project Details</a>
+          </div>
+
+          <div class="pill-row">
             <span class="pill">HTML + CSS + JavaScript</span>
             <span class="pill">Responsive Design</span>
             <span class="pill">Accessibility</span>
@@ -505,538 +698,301 @@
 
         <aside class="glass hero-side" aria-label="Key takeaways">
           <div class="mini-card">
-            <strong>Best for this week</strong>
-            Decide whether CodePen or GitHub Pages is the better fit for your final build.
+            <strong>Start here</strong>
+            Read the final project section first, then use the starter helper to generate your first structure, folder plan, or navigation.
           </div>
           <div class="mini-card">
-            <strong>Workforce connection</strong>
-            Strong web projects are organized, responsive, interactive, accessible, and live online.
+            <strong>Best use of this app</strong>
+            Keep it open while you build so you can make decisions, grab starter code, and double-check your requirements.
           </div>
           <div class="mini-card">
-            <strong>End goal</strong>
-            Leave class with a published project you would feel comfortable sharing in an interview, internship conversation, or portfolio.
+            <strong>Big idea</strong>
+            Your final website should feel like something you would actually want to show to an employer, internship site, client, or collaborator.
           </div>
         </aside>
       </div>
     </section>
 
-    <section id="requirements">
-  <div class="container">
-    <h2 class="section-title">Final project: two-part build</h2>
-    <p class="section-intro">
-      Your final project has <strong>two parts</strong>: (1) a <strong>group website redesign</strong> that builds on your midterm analysis, and (2) an <strong>individual personal website</strong> you can use beyond this class. Both must be <strong>live and published</strong>.
-    </p>
+    <section id="requirements" data-mode="learn">
+      <div class="container section-shell">
+        <h2 class="section-title">Final project: two-part build</h2>
+        <p class="section-intro">Your final project has <strong>two parts</strong>: a <strong>group website redesign</strong> that continues your midterm work, and an <strong>individual personal website</strong> you can use beyond this class. Both must be <strong>live and published</strong>.</p>
 
-    <div class="grid grid-2">
-      <!-- GROUP PROJECT -->
-      <article class="card">
-        <div class="tag tag-purple">Group Project</div>
-        <h3>Website Redesign (Continuation of Midterm)</h3>
-        <p class="muted">
-          In groups of up to 4, redesign the <strong>same website</strong> you evaluated for your midterm. Your goal is to deliver a clearly improved, professional version.
-        </p>
-
-        <h4>What to redesign</h4>
-        <ul class="pros-cons">
-          <li>The same business/nonprofit/approved site from your midterm</li>
-          <li>Your redesign must show <strong>clear, meaningful improvement</strong></li>
-        </ul>
-
-        <h4>Requirements</h4>
-        <ul class="pros-cons">
-          <li>No commercial templates (inspiration is fine). Bootstrap allowed.</li>
-          <li>Valid HTML + CSS with clean, readable code</li>
-          <li>Responsive across desktop, tablet, and mobile (no horizontal scroll)</li>
-          <li>Organized files/folders (HTML, CSS, images), no broken links</li>
-          <li>Clear, consistent naming (no spaces in file names)</li>
-          <li><strong>Published live</strong> via GitHub Pages or CodePen (multi-page)</li>
-        </ul>
-
-        <h4>Show improvement</h4>
-        <ul class="pros-cons">
-          <li>Stronger visual design and layout</li>
-          <li>Better navigation and information structure</li>
-          <li>Clearer, more readable content</li>
-          <li>Improved spacing, hierarchy, and imagery</li>
-          <li>Better mobile experience</li>
-        </ul>
-
-        <h4>What to submit (one group submission)</h4>
-        <ul class="pros-cons">
-          <li>Bullet-point summary of improvements</li>
-          <li>Live site link (GitHub Pages or CodePen)</li>
-          <li>~5 minute video: problems → changes → improvements</li>
-        </ul>
-
-        <h4>Grading (30 pts)</h4>
-        <ul class="pros-cons">
-          <li>Quality & usability (10)</li>
-          <li>Technical quality (10)</li>
-          <li>Improvement vs. original (10)</li>
-        </ul>
-      </article>
-
-      <!-- INDIVIDUAL PROJECT -->
-      <article class="card">
-        <div class="tag tag-blue">Individual Project</div>
-        <h3>Personal Website</h3>
-        <p class="muted">
-          Build a personal website you can use for <strong>internships, jobs, or showcasing your work</strong>. By the end, your site will be live online.
-        </p>
-
-        <h4>What it can be</h4>
-        <ul class="pros-cons">
-          <li>Personal site or professional portfolio</li>
-          <li>Profile (education/experience)</li>
-          <li>Projects, interests, blog, or a cause you care about</li>
-        </ul>
-
-        <h4>Requirements</h4>
-        <ul class="pros-cons">
-          <li>HTML + CSS (Bootstrap allowed; no commercial templates)</li>
-          <li><strong>At least 5 pages</strong> with different layouts</li>
-          <li>Consistent header/footer across pages</li>
-          <li>Responsive (no horizontal scrolling)</li>
-          <li>Clean, properly formatted code</li>
-          <li>Organized folders; no broken links; good file naming</li>
-          <li><strong>Published live</strong> via GitHub Pages or CodePen (multi-page)</li>
-        </ul>
-
-        <h4>Content expectations</h4>
-        <ul class="pros-cons">
-          <li>Combine text, images, and links for an engaging experience</li>
-          <li>Avoid empty pages, only bullet lists, or large unstructured text</li>
-          <li>Make it something you would <strong>actually show an employer</strong></li>
-        </ul>
-
-        <h4>Grading (30 pts)</h4>
-        <ul class="pros-cons">
-          <li>Quality & usability (10)</li>
-          <li>Technical quality (10)</li>
-          <li>JavaScript features (10)</li>
-        </ul>
-
-        <h4>What to submit</h4>
-        <ul class="pros-cons">
-          <li>Live site link (GitHub Pages or CodePen)</li>
-        </ul>
-      </article>
-    </div>
-
-    <div class="card" style="margin-top: 1rem;">
-      <div class="tag tag-yellow">Before you submit</div>
-      <ul class="pros-cons">
-        <li>Test your live link in an incognito/private window</li>
-        <li>Check multiple screen sizes</li>
-        <li>Fix broken links and layout issues</li>
-        <li>Review your video (group project)</li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-    <section id="concepts">
-      <div class="container">
-        <h2 class="section-title">What matters most in modern web development?</h2>
-        <p class="section-intro">
-          Modern web development is more than getting code to work. It means building websites that are readable,
-          responsive, interactive, accessible, organized, and ready to publish.
-        </p>
-
-        <div class="grid grid-3">
+        <div class="grid grid-2">
           <article class="card">
-            <div class="tag tag-blue">Foundation</div>
-            <h3>Semantic HTML</h3>
-            <p class="muted">Use meaningful elements like header, nav, main, section, and footer so your content has structure and purpose.</p>
-            <p><strong>Why employers care:</strong> Good structure improves accessibility, maintainability, and professionalism.</p>
+            <div class="tag tag-purple">Group Project</div>
+            <h3>Website Redesign</h3>
+            <p class="muted">In groups of up to 4, redesign the same website your group evaluated for the midterm. Your goal is to deliver a clearly improved, professional version.</p>
+            <h4>Core requirements</h4>
+            <ul class="pros-cons">
+              <li>Use the same approved website from your midterm</li>
+              <li>No commercial templates. Bootstrap is allowed.</li>
+              <li>Use valid HTML and CSS with readable, organized code</li>
+              <li>Design must be responsive with no horizontal scrolling</li>
+              <li>Use clean file names and organized folders</li>
+              <li>Publish live using GitHub Pages or CodePen multi-page format</li>
+            </ul>
+            <h4>Show clear improvement</h4>
+            <ul class="pros-cons">
+              <li>Stronger layout and visual design</li>
+              <li>Better navigation and readability</li>
+              <li>Better spacing, hierarchy, and imagery</li>
+              <li>Improved mobile experience</li>
+            </ul>
+            <h4>Submit as a group</h4>
+            <ul class="pros-cons">
+              <li>Bullet-point summary of improvements</li>
+              <li>Live site link</li>
+              <li>About 5-minute video: original problems, redesign choices, and improvements</li>
+            </ul>
           </article>
+
           <article class="card">
-            <div class="tag tag-purple">Design</div>
-            <h3>Responsive Layouts</h3>
-            <p class="muted">Your site should work on phones, tablets, and desktops instead of only looking right on your own screen.</p>
-            <p><strong>Why employers care:</strong> Modern teams expect mobile-friendly interfaces by default.</p>
-          </article>
-          <article class="card">
-            <div class="tag tag-green">Layout</div>
-            <h3>Flexbox and Grid</h3>
-            <p class="muted">Use modern CSS layout tools to create clean, adaptable page structures.</p>
-            <p><strong>Why employers care:</strong> Layout skill is one of the most visible front-end strengths.</p>
-          </article>
-          <article class="card">
-            <div class="tag tag-yellow">Interaction</div>
-            <h3>JavaScript</h3>
-            <p class="muted">Use JavaScript to make your site respond to clicks, inputs, forms, menus, and dynamic changes.</p>
-            <p><strong>Why employers care:</strong> Interactivity turns static pages into usable experiences.</p>
-          </article>
-          <article class="card">
-            <div class="tag tag-blue">Inclusion</div>
-            <h3>Accessibility</h3>
-            <p class="muted">Think about readable text, alt text, keyboard use, contrast, and logical structure.</p>
-            <p><strong>Why employers care:</strong> Accessible design is increasingly expected in professional work.</p>
-          </article>
-          <article class="card">
-            <div class="tag tag-purple">Publishing</div>
-            <h3>Version Control + Deployment</h3>
-            <p class="muted">A strong project is organized, backed up, and shareable through a live link.</p>
-            <p><strong>Why employers care:</strong> Git and deployment workflows are part of real web development practice.</p>
+            <div class="tag tag-blue">Individual Project</div>
+            <h3>Personal Website</h3>
+            <p class="muted">Build a personal website you can use for internships, jobs, or showcasing your work and interests.</p>
+            <h4>Core requirements</h4>
+            <ul class="pros-cons">
+              <li>Build with HTML and CSS. Bootstrap is allowed.</li>
+              <li>No commercial templates</li>
+              <li>Include at least 5 pages with different layouts</li>
+              <li>Header and footer may stay consistent</li>
+              <li>Site must be responsive with no horizontal scrolling</li>
+              <li>Use organized folders and clean file names</li>
+              <li>Publish live using GitHub Pages or CodePen multi-page format</li>
+            </ul>
+            <h4>Content expectations</h4>
+            <ul class="pros-cons">
+              <li>Combine text, images, links, and structure</li>
+              <li>Avoid empty pages or pages made only of bullets</li>
+              <li>Make it something you would genuinely show an employer</li>
+            </ul>
           </article>
         </div>
       </div>
     </section>
 
-    <section id="tools">
-      <div class="container">
-        <h2 class="section-title">CodePen vs. GitHub Pages</h2>
-        <p class="section-intro">
-          Both can work. The best choice depends on whether you want the fastest route or the more portfolio-ready workflow.
-        </p>
+    <section id="concepts" data-mode="learn">
+      <div class="container section-shell">
+        <h2 class="section-title">What matters most in modern web development?</h2>
+        <p class="section-intro">Modern web development is more than getting code to work. It means building websites that are readable, responsive, interactive, accessible, organized, and ready to publish.</p>
+        <div class="grid grid-3">
+          <article class="card"><div class="tag tag-blue">Foundation</div><h3>Semantic HTML</h3><p class="muted">Use meaningful elements like header, nav, main, section, and footer so your content has structure and purpose.</p></article>
+          <article class="card"><div class="tag tag-purple">Design</div><h3>Responsive Layouts</h3><p class="muted">Your site should work on phones, tablets, and desktops instead of only looking right on your own screen.</p></article>
+          <article class="card"><div class="tag tag-green">Layout</div><h3>Flexbox and Grid</h3><p class="muted">Use modern CSS layout tools to create clean, adaptable page structures.</p></article>
+          <article class="card"><div class="tag tag-yellow">Interaction</div><h3>JavaScript</h3><p class="muted">Use JavaScript to make your site respond to clicks, inputs, forms, menus, and dynamic changes.</p></article>
+          <article class="card"><div class="tag tag-blue">Inclusion</div><h3>Accessibility</h3><p class="muted">Think about readable text, alt text, keyboard use, contrast, and logical structure.</p></article>
+          <article class="card"><div class="tag tag-purple">Publishing</div><h3>Version Control + Deployment</h3><p class="muted">A strong project is organized, backed up, and shareable through a live link.</p></article>
+        </div>
+      </div>
+    </section>
 
+    <section id="tools" data-mode="learn">
+      <div class="container section-shell">
+        <h2 class="section-title">CodePen vs. GitHub Pages</h2>
+        <p class="section-intro">Both can work. The best choice depends on whether you want the fastest route or the more portfolio-ready workflow.</p>
         <div class="comparison">
           <article class="card">
             <div class="tag tag-blue">Low friction</div>
             <h3>CodePen</h3>
             <p><strong>Best for:</strong> Fast prototyping, quick demos, smaller front-end builds, and students who want less setup.</p>
-            <ul class="pros-cons">
-              <li>Very easy to start</li>
-              <li>Live preview updates quickly</li>
-              <li>Great for experimenting with HTML, CSS, and JavaScript</li>
-              <li>Helpful when your project is mainly one page or a feature demo</li>
-            </ul>
-            <p><strong>Tradeoffs</strong></p>
-            <ul class="pros-cons">
-              <li>Can feel limiting for larger multi-page projects</li>
-              <li>Not the strongest fit for learning a Git-based workflow</li>
-              <li>Some expanded features depend on paid plans</li>
-            </ul>
+            <ul class="pros-cons"><li>Very easy to start</li><li>Live preview updates quickly</li><li>Great for experimenting with HTML, CSS, and JavaScript</li><li>Helpful for one-page builds or front-end demos</li></ul>
           </article>
-
           <article class="card">
             <div class="tag tag-purple">Portfolio-ready</div>
             <h3>GitHub Pages</h3>
             <p><strong>Best for:</strong> Multi-page sites, portfolios, stronger file organization, and more realistic publishing practice.</p>
-            <ul class="pros-cons">
-              <li>Great for static final websites</li>
-              <li>Builds familiarity with repositories and file structure</li>
-              <li>Easy to share as a live project URL</li>
-              <li>Closer to how many developers publish and manage front-end work</li>
-            </ul>
-            <p><strong>Tradeoffs</strong></p>
-            <ul class="pros-cons">
-              <li>Slightly steeper learning curve at the beginning</li>
-              <li>Students must manage folders, assets, and naming carefully</li>
-              <li>Better for complete projects than quick experiments</li>
-            </ul>
+            <ul class="pros-cons"><li>Great for static final websites</li><li>Builds familiarity with repositories and file structure</li><li>Easy to share as a live project URL</li><li>Closer to how many developers publish front-end work</li></ul>
           </article>
         </div>
       </div>
     </section>
 
-    <section id="quiz">
-      <div class="container">
+    <section id="quiz" data-mode="learn">
+      <div class="container section-shell">
         <h2 class="section-title">Which build path fits you best?</h2>
-        <p class="section-intro">
-          Answer the questions below. The app will recommend either CodePen or GitHub Pages based on the kind of final project you want to build.
-        </p>
-
+        <p class="section-intro">Answer the questions below. The app will recommend either CodePen or GitHub Pages based on the kind of final project you want to build.</p>
         <div class="quiz-wrap">
           <div class="card">
             <form id="toolQuiz">
-              <div class="question">
-                <h3>1. I want the easiest possible setup so I can focus on coding quickly.</h3>
-                <div class="options">
-                  <label class="option"><input type="radio" name="q1" value="codepen"> Yes, I want the fastest route</label>
-                  <label class="option"><input type="radio" name="q1" value="github"> I can handle a little setup for a stronger workflow</label>
-                </div>
-              </div>
-
-              <div class="question">
-                <h3>2. My final project will probably have multiple pages, folders, or lots of images.</h3>
-                <div class="options">
-                  <label class="option"><input type="radio" name="q2" value="github"> Yes, it is more like a complete website</label>
-                  <label class="option"><input type="radio" name="q2" value="codepen"> No, it is more like a small front-end build</label>
-                </div>
-              </div>
-
-              <div class="question">
-                <h3>3. I want practice with a workflow that feels more professional and portfolio-ready.</h3>
-                <div class="options">
-                  <label class="option"><input type="radio" name="q3" value="github"> Yes, that matters to me</label>
-                  <label class="option"><input type="radio" name="q3" value="codepen"> Not as much, I mostly want a smooth finish</label>
-                </div>
-              </div>
-
-              <div class="question">
-                <h3>4. I am mainly building one polished page or one interactive experience.</h3>
-                <div class="options">
-                  <label class="option"><input type="radio" name="q4" value="codepen"> Yes, that sounds like my project</label>
-                  <label class="option"><input type="radio" name="q4" value="github"> No, mine is broader than that</label>
-                </div>
-              </div>
-
-              <div class="question">
-                <h3>5. I want to leave class with a live site that mirrors a real GitHub publish process.</h3>
-                <div class="options">
-                  <label class="option"><input type="radio" name="q5" value="github"> Yes, definitely</label>
-                  <label class="option"><input type="radio" name="q5" value="codepen"> Not necessary for my goals</label>
-                </div>
-              </div>
-
-              <div class="hero-actions">
-                <button type="button" class="btn btn-primary" id="scoreQuiz">Get My Recommendation</button>
-                <button type="reset" class="btn btn-secondary" id="resetQuiz">Reset</button>
-              </div>
+              <div class="question"><h3>1. I want the easiest possible setup so I can focus on coding quickly.</h3><div class="options"><label class="option"><input type="radio" name="q1" value="codepen"> Yes, I want the fastest route</label><label class="option"><input type="radio" name="q1" value="github"> I can handle a little setup for a stronger workflow</label></div></div>
+              <div class="question"><h3>2. My final project will probably have multiple pages, folders, or lots of images.</h3><div class="options"><label class="option"><input type="radio" name="q2" value="github"> Yes, it is more like a complete website</label><label class="option"><input type="radio" name="q2" value="codepen"> No, it is more like a small front-end build</label></div></div>
+              <div class="question"><h3>3. I want practice with a workflow that feels more professional and portfolio-ready.</h3><div class="options"><label class="option"><input type="radio" name="q3" value="github"> Yes, that matters to me</label><label class="option"><input type="radio" name="q3" value="codepen"> Not as much, I mostly want a smooth finish</label></div></div>
+              <div class="question"><h3>4. I am mainly building one polished page or one interactive experience.</h3><div class="options"><label class="option"><input type="radio" name="q4" value="codepen"> Yes, that sounds like my project</label><label class="option"><input type="radio" name="q4" value="github"> No, mine is broader than that</label></div></div>
+              <div class="question"><h3>5. I want to leave class with a live site that mirrors a real GitHub publish process.</h3><div class="options"><label class="option"><input type="radio" name="q5" value="github"> Yes, definitely</label><label class="option"><input type="radio" name="q5" value="codepen"> Not necessary for my goals</label></div></div>
+              <div class="hero-actions"><button type="button" class="btn btn-primary" id="scoreQuiz">Get My Recommendation</button><button type="reset" class="btn btn-secondary" id="resetQuiz">Reset</button></div>
             </form>
           </div>
-
-          <aside class="card result-box" aria-live="polite">
-            <div class="tag tag-green">Live recommendation</div>
-            <h3>Your best fit will appear here</h3>
-            <p class="muted">Complete all five questions, then click the button to see your recommended final build path.</p>
-            <div class="result-highlight" id="quizResult">
-              <strong>Waiting for your answers...</strong>
-              <p class="muted">Tip: GitHub Pages is usually best for larger final websites. CodePen is often best for quick, one-page, lower-setup builds.</p>
-            </div>
-          </aside>
+          <aside class="card result-box" aria-live="polite"><div class="tag tag-green">Live recommendation</div><h3>Your best fit will appear here</h3><p class="muted">Complete all five questions, then click the button to see your recommended final build path.</p><div class="result-highlight" id="quizResult"><strong>Waiting for your answers...</strong><p class="muted">Tip: GitHub Pages is usually best for larger final websites. CodePen is often best for quick, one-page, lower-setup builds.</p></div></aside>
         </div>
       </div>
     </section>
 
     <section id="starterlab">
-      <div class="container">
+      <div class="container section-shell">
         <h2 class="section-title">Get unstuck: starter helper</h2>
-        <p class="section-intro">
-          Not sure how to begin? Use these choices to generate a star([docs.github.com](https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages?utm_source=chatgpt.com))an copy into your own project. This section is designed to help you move from blank page to working website faster.
-        </p>
+        <p class="section-intro">Use these choices to generate a starting plan, code snippet, folder structure, starter CSS, a quick layout fix, or a full starter package you can copy or download.</p>
 
         <div class="grid grid-2">
           <div class="card">
             <div class="tag tag-green">Step 1</div>
             <h3>Choose what you need help with</h3>
-            <div class="question">
-              <h3>What are you building?</h3>
-              <div class="options">
-                <label class="option"><input type="radio" name="builderType" value="personal" checked> My individual personal website</label>
-                <label class="option"><input type="radio" name="builderType" value="redesign"> My group website redesign</label>
-              </div>
-            </div>
-
-            <div class="question">
-              <h3>What do you want to generate?</h3>
-              <div class="options">
-                <label class="option"><input type="radio" name="snippetType" value="structure" checked> Starter HTML page structure</label>
-                <label class="option"><input type="radio" name="snippetType" value="nav"> Navigation bar</label>
-                <label class="option"><input type="radio" name="snippetType" value="cards"> Responsive card layout</label>
-                <label class="option"><input type="radio" name="snippetType" value="contact"> Contact section</label>
-                <label class="option"><input type="radio" name="snippetType" value="checklist"> Project checklist block</label>
-              </div>
-            </div>
-
-            <div class="question">
-              <h3>What platform are you using?</h3>
-              <div class="options">
-                <label class="option"><input type="radio" name="platformType" value="github" checked> GitHub Pages</label>
-                <label class="option"><input type="radio" name="platformType" value="codepen"> CodePen</label>
-              </div>
-            </div>
-
-            <div class="hero-actions">
-              <button type="button" class="btn btn-primary" id="generateSnippet">Generate starter help</button>
-            </div>
+            <div class="question"><h3>What are you building?</h3><div class="options"><label class="option"><input type="radio" name="builderType" value="personal" checked> My individual personal website</label><label class="option"><input type="radio" name="builderType" value="redesign"> My group website redesign</label></div></div>
+            <div class="question"><h3>What do you want to generate?</h3><div class="options">
+              <label class="option"><input type="radio" name="snippetType" value="structure" checked> Starter HTML page structure</label>
+              <label class="option"><input type="radio" name="snippetType" value="nav"> Navigation bar</label>
+              <label class="option"><input type="radio" name="snippetType" value="cards"> Responsive card layout</label>
+              <label class="option"><input type="radio" name="snippetType" value="contact"> Contact section</label>
+              <label class="option"><input type="radio" name="snippetType" value="checklist"> Project checklist block</label>
+              <label class="option"><input type="radio" name="snippetType" value="folders"> File and folder plan</label>
+              <label class="option"><input type="radio" name="snippetType" value="startercss"> Starter CSS pack</label>
+              <label class="option"><input type="radio" name="snippetType" value="fixlayout"> Fix my layout</label>
+              <label class="option"><input type="radio" name="snippetType" value="fullstarter"> Full starter package</label>
+            </div></div>
+            <div class="question"><h3>What platform are you using?</h3><div class="options"><label class="option"><input type="radio" name="platformType" value="github" checked> GitHub Pages</label><label class="option"><input type="radio" name="platformType" value="codepen"> CodePen</label></div></div>
+            <div class="hero-actions"><button type="button" class="btn btn-primary" id="generateSnippet">Generate starter help</button></div>
           </div>
 
-          <div class="card">
+          <div class="card builder-output">
             <div class="tag tag-blue">Generated for you</div>
-            <h3>Starter plan + code snippet</h3>
+            <div class="small" style="margin-bottom:0.8rem;">Answer a few questions, then copy the output into your own project and customize it.</div>
+            <h3>Starter plan + output</h3>
             <p class="muted">This gives you something practical to start with. Edit the text and styling so it fits your actual project.</p>
-            <div class="callout" id="starterPlan">
-              <strong>Starter plan</strong>
-              Choose your options, then generate a suggested starting point.
+            <div class="callout" id="starterPlan" style="margin-top: 1rem;"><strong>Starter plan</strong>Choose your options, then generate a suggested starting point.</div>
+            <div class="callout" style="margin-top: 1rem;"><strong>Copy-ready output</strong><pre id="snippetOutput">Your output will appear here.</pre></div>
+            <div class="output-actions">
+              <button type="button" class="btn btn-secondary" id="copyOutputBtn">Copy output</button>
+              <button type="button" class="btn btn-success" id="downloadPackageBtn">Download starter package</button>
             </div>
-            <div class="callout" style="margin-top: 1rem;">
-              <strong>Copy-ready snippet</strong>
-              <pre id="snippetOutput" style="white-space: pre-wrap; overflow:auto; margin:0; font-size:0.9rem; color:#e2e8f0;">Your snippet will appear here.</pre>
-            </div>
+            <div class="copy-status" id="copyStatus">Choose an option and generate output first.</div>
           </div>
         </div>
 
-        <div class="grid grid-2" style="margin-top: 1rem;">
+        <div class="fix-grid">
           <div class="card">
             <div class="tag tag-yellow">New to GitHub?</div>
+            <div class="small" style="margin-bottom:0.8rem;">This path is beginner-friendly and designed for students who have not used GitHub Pages before.</div>
             <h3>Beginner-friendly GitHub Pages help</h3>
-            <p class="muted">
-              If GitHub Pages feels new, start small. You do not need advanced Git commands for this class. Focus on creating a repository, adding your files, and turning on Pages.
-            </p>
             <ol class="pros-cons">
               <li>Create a new repository with a simple name</li>
-              <li>Upload your index.html, CSS, JavaScript, and images</li>
+              <li>Upload your <code>index.html</code>, CSS, JavaScript, and images</li>
               <li>Commit your files</li>
-              <li>Open Settings → Pages</li>
-              <li>Select the branch/folder to publish</li>
+              <li>Open <strong>Settings → Pages</strong></li>
+              <li>Select the branch and folder to publish</li>
               <li>Open your live link and test it</li>
             </ol>
-            <p><strong>Helpful official resources:</strong></p>
+          </div>
+          <div class="card">
+            <div class="tag tag-purple">Helpful starting resources</div>
+            <div class="small" style="margin-bottom:0.8rem;">Use these when you need a push instead of staring at a blank screen.</div>
+            <h3>Use these when you need a push</h3>
             <ul class="pros-cons">
               <li><a href="https://docs.github.com/pages/quickstart" target="_blank" rel="noopener noreferrer">GitHub Pages quickstart</a></li>
               <li><a href="https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site" target="_blank" rel="noopener noreferrer">Create a GitHub Pages site</a></li>
-              <li><a href="https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site" target="_blank" rel="noopener noreferrer">Configure the publishing source</a></li>
+              <li><a href="https://blog.codepen.io/docs/pens/" target="_blank" rel="noopener noreferrer">What a CodePen Pen is</a></li>
+              <li><a href="https://blog.codepen.io/documentation/exporting-pens/" target="_blank" rel="noopener noreferrer">How to export code from CodePen</a></li>
             </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="examples" data-mode="learn">
+      <div class="container section-shell">
+        <h2 class="section-title">What an A-level project looks like</h2>
+        <p class="section-intro">Use this section to compare your work against a stronger final project standard. This is not about being flashy. It is about being intentional, polished, and usable.</p>
+
+        <div class="grid grid-2">
+          <article class="card">
+            <div class="tag tag-yellow">Needs work</div>
+            <h3>Lower-quality final project</h3>
+            <ul class="pros-cons">
+              <li>Looks unfinished or rushed</li>
+              <li>Weak spacing, alignment, or inconsistent styling</li>
+              <li>Navigation is confusing or incomplete</li>
+              <li>Pages feel empty, repetitive, or thin on content</li>
+              <li>Little or no evidence of thoughtful mobile design</li>
+              <li>Broken links, missing images, or messy file structure</li>
+              <li>JavaScript is missing, minimal, or feels disconnected</li>
+              <li>Does not feel like something the student would want to show publicly</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <div class="tag tag-green">A-level target</div>
+            <h3>Higher-quality final project</h3>
+            <ul class="pros-cons">
+              <li>Clear purpose and audience from the start</li>
+              <li>Strong visual hierarchy and consistent design choices</li>
+              <li>Navigation is simple, complete, and easy to use</li>
+              <li>Content feels thoughtful, complete, and well structured</li>
+              <li>Responsive layout works cleanly on smaller screens</li>
+              <li>Images, text, colors, and spacing feel intentional</li>
+              <li>JavaScript adds meaningful interactivity or usefulness</li>
+              <li>Feels polished enough to include in a portfolio or interview conversation</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="example-visuals" style="margin-top: 1.5rem;">
+          <div class="card">
+            <div class="tag tag-yellow">Weak layout example</div>
+            <h3>Messy / low-quality design</h3>
+            <div class="mockup">
+              <div class="bar"></div>
+              <div class="line" style="width:60%;"></div>
+              <div class="line" style="width:92%;"></div>
+              <div class="line" style="width:44%;"></div>
+              <div class="block"></div>
+            </div>
+            <ul class="pros-cons"><li>No spacing or alignment</li><li>Everything feels cramped</li><li>No visual hierarchy</li><li>Hard to scan</li></ul>
           </div>
 
           <div class="card">
-            <div class="tag tag-purple">Helpful starting resources</div>
-            <h3>Use these when you need a push</h3>
-            <ul class="pros-cons">
-              <li><a href="https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages" target="_blank" rel="noopener noreferrer">What GitHub Pages is</a></li>
-              <li><a href="https://blog.codepen.io/docs/pens/" target="_blank" rel="noopener noreferrer">What a CodePen Pen is</a></li>
-              <li><a href="https://blog.codepen.io/documentation/exporting-pens/" target="_blank" rel="noopener noreferrer">How to export code from CodePen</a></li>
-              <li><a href="https://blog.codepen.io/documentation/console/" target="_blank" rel="noopener noreferrer">Using the CodePen console</a></li>
-            </ul>
-            <div class="callout">
-              <strong>Best advice for this class</strong>
-              If your project has multiple pages and folders, GitHub Pages is usually the better choice. If you want the fastest path for a smaller front-end build, CodePen may be easier.
+            <div class="tag tag-green">Strong layout example</div>
+            <h3>Clean / A-level design</h3>
+            <div class="mockup mockup-strong">
+              <div class="bar"></div>
+              <div class="mockup-grid">
+                <div>
+                  <div class="line" style="width:72%;"></div>
+                  <div class="line" style="width:95%;"></div>
+                  <div class="line" style="width:65%;"></div>
+                </div>
+                <div class="thumb"></div>
+              </div>
             </div>
+            <ul class="pros-cons"><li>Clear spacing and alignment</li><li>Strong visual hierarchy</li><li>Easy to scan content</li><li>Feels intentional and polished</li></ul>
           </div>
+        </div>
+
+        <div class="grid grid-3" style="margin-top: 1rem;">
+          <article class="card"><div class="tag tag-blue">Personal site</div><h3>A-level signs</h3><p class="muted">A strong personal website feels complete, visually consistent, and clearly about the student. It has enough content to feel real, not filler.</p></article>
+          <article class="card"><div class="tag tag-purple">Redesign project</div><h3>A-level signs</h3><p class="muted">A strong redesign makes the original site noticeably better. The improvement is visible in layout, readability, usability, and mobile experience.</p></article>
+          <article class="card"><div class="tag tag-green">Quick self-check</div><h3>Ask yourself</h3><p class="muted">Would I be proud to open this on a projector, send it to an employer, or show it to someone outside this class? If not, what still feels unfinished?</p></article>
         </div>
       </div>
     </section>
 
     <section id="paths">
-      <div class="container">
+      <div class="container section-shell">
         <h2 class="section-title">Step-by-step publish paths</h2>
-        <p class="section-intro">
-          Pick the path that matches your recommendation or your comfort level.
-        </p>
-
+        <p class="section-intro">Pick the path that matches your recommendation or your comfort level.</p>
         <div class="path-tabs" role="tablist" aria-label="Build path tabs">
-          <button class="tab-btn active" data-tab="github">GitHub Pages Path</button>
-          <button class="tab-btn" data-tab="codepen">CodePen Path</button>
-          <button class="tab-btn" data-tab="other">Other Modern Options</button>
+          <button class="tab-btn active" data-tab="github" type="button">GitHub Pages Path</button>
+          <button class="tab-btn" data-tab="codepen" type="button">CodePen Path</button>
+          <button class="tab-btn" data-tab="other" type="button">Other Modern Options</button>
         </div>
-
-        <div class="tab-panel active" id="tab-github">
-          <div class="card steps">
-            <div class="tag tag-purple">Best for multi-page and portfolio-ready sites</div>
-            <h3>GitHub Pages walkthrough</h3>
-            <div class="two-col">
-              <div>
-                <ol>
-                  <li>Create a GitHub account if you do not already have one.</li>
-                  <li>Create a new repository with a clear project name.</li>
-                  <li>Add your files, including <strong>index.html</strong>, CSS, JavaScript, and image folders.</li>
-                  <li>Check your file names carefully. Spacing, capitalization, and folder paths matter.</li>
-                  <li>Commit your changes with a useful message.</li>
-                  <li>Open repository settings and turn on GitHub Pages.</li>
-                  <li>Choose the branch and folder GitHub Pages should publish from.</li>
-                  <li>Wait for the site to build, then test the live URL on desktop and mobile.</li>
-                </ol>
-              </div>
-              <div>
-                <div class="callout">
-                  <strong>Best use case</strong>
-                  A complete final project with multiple pages, navigation, assets, and stronger portfolio value.
-                </div>
-                <div class="callout">
-                  <strong>Common mistakes</strong>
-                  Missing index.html, broken image paths, wrong file capitalization, and forgetting to republish after changes.
-                </div>
-                <div class="callout">
-                  <strong>Why this matters</strong>
-                  This route gives you practice with file structure, publishing, and a more realistic development workflow.
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="tab-panel" id="tab-codepen">
-          <div class="card steps">
-            <div class="tag tag-blue">Best for fast and simple front-end builds</div>
-            <h3>CodePen walkthrough</h3>
-            <div class="two-col">
-              <div>
-                <ol>
-                  <li>Create a CodePen account.</li>
-                  <li>Start a new Pen and separate your HTML, CSS, and JavaScript into the correct panels.</li>
-                  <li>Build and preview as you go using the live update.</li>
-                  <li>Keep your code clean and organized even if the setup feels easier.</li>
-                  <li>Test your design carefully for spacing, responsiveness, and readability.</li>
-                  <li>Save your Pen and make sure the sharing settings match your assignment needs.</li>
-                  <li>Submit the public or shareable link as your final project.</li>
-                </ol>
-              </div>
-              <div>
-                <div class="callout">
-                  <strong>Best use case</strong>
-                  A one-page site, front-end demo, creative interaction, or smaller project where speed matters most.
-                </div>
-                <div class="callout">
-                  <strong>Common mistakes</strong>
-                  Forgetting mobile checks, stuffing too much into one page, and assuming easy setup means less attention to quality.
-                </div>
-                <div class="callout">
-                  <strong>Why this matters</strong>
-                  This route helps you focus on front-end thinking without the extra overhead of repository setup.
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="tab-panel" id="tab-other">
-          <div class="card">
-            <div class="tag tag-yellow">Worth knowing</div>
-            <h3>Other modern publishing options</h3>
-            <p class="muted">
-              You may also hear about tools like Netlify and Vercel. These are modern deployment platforms often used for front-end websites and web apps.
-              They are powerful, but for this class, GitHub Pages and CodePen are probably the best fit because they keep the learning curve more manageable.
-            </p>
-            <div class="pill-row">
-              <span class="pill">Netlify</span>
-              <span class="pill">Vercel</span>
-              <span class="pill">Static sites</span>
-              <span class="pill">Modern deployment workflows</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="workforce">
-      <div class="container">
-        <h2 class="section-title">Why this final build matters beyond class</h2>
-        <p class="section-intro">
-          Your final project is more than a grade. It is evidence that you can move from an idea to a live digital product using the same kinds of skills that matter in modern web work.
-        </p>
-        <div class="grid grid-2">
-          <div class="card">
-            <h3>What employers can see</h3>
-            <ul class="pros-cons">
-              <li>You can organize files and content clearly</li>
-              <li>You can design with real users in mind</li>
-              <li>You can add interactivity with JavaScript</li>
-              <li>You can publish and share your work online</li>
-            </ul>
-          </div>
-          <div class="card">
-            <h3>What you should be able to say</h3>
-            <ul class="pros-cons">
-              <li>Why you chose your platform</li>
-              <li>Who your site is designed for</li>
-              <li>What modern web concepts you applied</li>
-              <li>What you would improve next if given more time</li>
-            </ul>
-          </div>
-        </div>
+        <div class="tab-panel active" id="tab-github"><div class="card steps"><div class="tag tag-purple">Best for multi-page and portfolio-ready sites</div><h3>GitHub Pages walkthrough</h3><div class="two-col"><div><ol><li>Create a GitHub account</li><li>Create a repository</li><li>Add <strong>index.html</strong>, CSS, JS, and images</li><li>Commit your changes</li><li>Open Settings and turn on GitHub Pages</li><li>Choose the publishing source</li><li>Test the live link on desktop and mobile</li></ol></div><div><div class="callout"><strong>Common mistakes</strong>Missing <code>index.html</code>, broken paths, wrong capitalization, and forgetting to republish after changes.</div></div></div></div></div>
+        <div class="tab-panel" id="tab-codepen"><div class="card steps"><div class="tag tag-blue">Best for fast and simple front-end builds</div><h3>CodePen walkthrough</h3><div class="two-col"><div><ol><li>Create a CodePen account</li><li>Start a new Pen</li><li>Build and preview as you go</li><li>Keep your code clean</li><li>Test responsiveness and readability</li><li>Save and share the link</li></ol></div><div><div class="callout"><strong>Best use case</strong>A one-page site, front-end demo, creative interaction, or smaller project where speed matters most.</div></div></div></div></div>
+        <div class="tab-panel" id="tab-other"><div class="card"><div class="tag tag-yellow">Worth knowing</div><h3>Other modern publishing options</h3><p class="muted">You may also hear about tools like Netlify and Vercel. They are useful platforms, but for this class, GitHub Pages and CodePen are the most straightforward options.</p></div></div>
       </div>
     </section>
 
     <section id="checklist">
-      <div class="container">
-        <h2 class="section-title">Final project readiness checklist</h2>
-        <p class="section-intro">
-          Check off each item as you complete it. This helps you see how close your project is to launch.
-        </p>
-
+      <div class="container section-shell">
+        <h2 class="section-title">Final project launch checklist</h2>
+        <p class="section-intro">Use this as your final review before submitting your live project link.</p>
         <div class="card">
           <div class="checklist-grid" id="checklistGrid">
             <label class="check-item"><input type="checkbox"> <span>My site has a clear audience and purpose</span></label>
@@ -1050,88 +1006,100 @@
             <label class="check-item"><input type="checkbox"> <span>My project has a live published link</span></label>
             <label class="check-item"><input type="checkbox"> <span>I would feel comfortable showing this project to an employer</span></label>
           </div>
-
-          <div class="progress" aria-hidden="true">
-            <div class="progress-bar" id="progressBar"></div>
-          </div>
-          <p class="muted" id="progressText">0 of 10 completed</p>
+          <div class="progress" aria-hidden="true"><div class="progress-bar" id="progressBar"></div></div>
+          <p class="muted" id="progressText" style="margin-top:0.6rem;">0 of 10 completed</p>
         </div>
       </div>
     </section>
   </main>
 
   <footer class="footer">
-    <div class="container">
-      Built as an NKU-style student launchpad for the final web development build.
-    </div>
+    <div class="container">Built as a polished student launchpad for NKU web development final projects.</div>
   </footer>
 
   <script>
-    const scoreButton = document.getElementById('scoreQuiz');
-    const resetButton = document.getElementById('resetQuiz');
-    const quizResult = document.getElementById('quizResult');
-    const quizForm = document.getElementById('toolQuiz');
-
-    scoreButton.addEventListener('click', () => {
-      const answers = new FormData(quizForm);
-      const required = ['q1', 'q2', 'q3', 'q4', 'q5'];
-      const missing = required.filter(name => !answers.get(name));
-
-      if (missing.length) {
-        quizResult.innerHTML = `
-          <strong>Please answer all five questions.</strong>
-          <p class="muted">You still have ${missing.length} question${missing.length === 1 ? '' : 's'} left before I can recommend a build path.</p>
-        `;
-        return;
-      }
-
-      let codepen = 0;
-      let github = 0;
-      required.forEach(name => {
-        const value = answers.get(name);
-        if (value === 'codepen') codepen += 1;
-        if (value === 'github') github += 1;
-      });
-
-      if (github > codepen) {
-        quizResult.innerHTML = `
-          <strong>Your best fit: GitHub Pages</strong>
-          <p class="muted">Your answers suggest you are building something that benefits from stronger file organization, a multi-page structure, or a more portfolio-ready workflow.</p>
-          <p><strong>Why this path fits:</strong> GitHub Pages is usually the better option when your final project is more complete than experimental.</p>
-        `;
-      } else if (codepen > github) {
-        quizResult.innerHTML = `
-          <strong>Your best fit: CodePen</strong>
-          <p class="muted">Your answers suggest that speed, lower setup, and a smaller front-end build matter most for your final project.</p>
-          <p><strong>Why this path fits:</strong> CodePen is often the strongest option when your project is compact and you want to focus on coding quickly.</p>
-        `;
-      } else {
-        quizResult.innerHTML = `
-          <strong>You could succeed with either path</strong>
-          <p class="muted">Your answers were balanced. Choose CodePen if you want the fastest route, or GitHub Pages if you want the more workforce-ready publishing experience.</p>
-          <p><strong>Good tie-breaker:</strong> If your site has multiple pages or folders, choose GitHub Pages.</p>
-        `;
-      }
-    });
-
-    resetButton.addEventListener('click', () => {
-      setTimeout(() => {
-        quizResult.innerHTML = `
-          <strong>Waiting for your answers...</strong>
-          <p class="muted">Tip: GitHub Pages is usually best for larger final websites. CodePen is often best for quick, one-page, lower-setup builds.</p>
-        `;
-      }, 0);
-    });
-
-    const generateSnippetBtn = document.getElementById('generateSnippet');
-    const starterPlan = document.getElementById('starterPlan');
-    const snippetOutput = document.getElementById('snippetOutput');
-
     const snippets = {
       personal: {
         structure: {
           plan: 'Start with a simple multi-page personal site. Build your Home page first, then reuse the header and footer across your other pages.',
-          code: `<!DOCTYPE html>
+          code: `<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n  <title>My Personal Website</title>\n  <link rel="stylesheet" href="css/styles.css">\n</head>\n<body>\n  <header>\n    <h1>Your Name</h1>\n    <nav>\n      <a href="index.html">Home</a>\n      <a href="about.html">About</a>\n      <a href="projects.html">Projects</a>\n      <a href="experience.html">Experience</a>\n      <a href="contact.html">Contact</a>\n    </nav>\n  </header>\n  <main>\n    <section>\n      <h2>Welcome</h2>\n      <p>Introduce yourself and explain what this website is about.</p>\n    </section>\n  </main>\n</body>\n</html>`
+        },
+        nav: {
+          plan: 'Use a simple navigation menu across all 5 pages so your website feels consistent and easy to explore.',
+          code: `<nav class="main-nav">\n  <a href="index.html">Home</a>\n  <a href="about.html">About</a>\n  <a href="experience.html">Experience</a>\n  <a href="projects.html">Projects</a>\n  <a href="contact.html">Contact</a>\n</nav>`
+        },
+        cards: {
+          plan: 'A card layout works well for projects, interests, skills, or featured experiences on your personal site.',
+          code: `<section class="card-grid">\n  <article class="card">\n    <h3>Project One</h3>\n    <p>Brief description of the project or interest.</p>\n  </article>\n  <article class="card">\n    <h3>Project Two</h3>\n    <p>Brief description of the project or interest.</p>\n  </article>\n</section>`
+        },
+        contact: {
+          plan: 'Give visitors a clear way to connect with you.',
+          code: `<section>\n  <h2>Contact</h2>\n  <p>Email: yourname@email.com</p>\n  <p>LinkedIn: add your profile link</p>\n  <p>GitHub: add your GitHub link</p>\n</section>`
+        },
+        checklist: {
+          plan: 'Use a checklist to make sure your personal site feels complete before you publish.',
+          code: `<section>\n  <h2>Before I Publish</h2>\n  <ul>\n    <li>All 5 pages are complete</li>\n    <li>Navigation works</li>\n    <li>Layout looks good on mobile</li>\n    <li>No broken links or missing images</li>\n  </ul>\n</section>`
+        },
+        folders: {
+          plan: 'Start your personal website with a simple folder structure.',
+          code: `my-personal-website/\n├── index.html\n├── about.html\n├── experience.html\n├── projects.html\n├── contact.html\n├── css/\n│   └── styles.css\n├── js/\n│   └── script.js\n└── images/\n    ├── profile-photo.jpg\n    └── project-preview.png`
+        },
+        startercss: {
+          plan: 'Use this starter CSS pack to make your site feel cleaner, more spaced out, and more responsive right away.',
+          code: `body {\n  font-family: Arial, sans-serif;\n  margin: 0;\n  color: #1f2937;\n  background: #f8fafc;\n}\n\nheader, footer {\n  background: #0f172a;\n  color: white;\n  padding: 1rem;\n}\n\nnav a {\n  color: white;\n  margin-right: 1rem;\n  text-decoration: none;\n}\n\nmain {\n  max-width: 1000px;\n  margin: 0 auto;\n  padding: 2rem 1rem;\n}\n\n.card-grid {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));\n  gap: 1rem;\n}\n\n.card {\n  background: white;\n  border: 1px solid #e5e7eb;\n  border-radius: 12px;\n  padding: 1rem;\n}\n\nimg {\n  max-width: 100%;\n  height: auto;\n}\n\n@media (max-width: 700px) {\n  nav a { display: inline-block; margin-bottom: 0.5rem; }\n}`
+        },
+        fixlayout: {
+          plan: 'Use this quick CSS patch if your layout feels cramped, uneven, or hard to scan.',
+          code: `.container {\n  max-width: 1100px;\n  margin: 0 auto;\n  padding: 0 1rem;\n}\n\nsection {\n  padding: 3rem 0;\n}\n\nh1, h2, h3 {\n  line-height: 1.2;\n  margin-bottom: 0.75rem;\n}\n\np {\n  line-height: 1.7;\n  max-width: 70ch;\n}\n\n.card-grid {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));\n  gap: 1.25rem;\n}\n\n.card {\n  padding: 1.25rem;\n  border-radius: 14px;\n}`
+        },
+        fullstarter: {
+          plan: 'Use this full starter package if you want a matched HTML, CSS, JS, and folder plan all at once for your personal site.',
+          code: `FOLDER STRUCTURE\nmy-personal-website/\n├── index.html\n├── about.html\n├── projects.html\n├── contact.html\n├── css/\n│   └── styles.css\n├── js/\n│   └── script.js\n└── images/\n\nINDEX.HTML\n<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n  <title>My Personal Website</title>\n  <link rel="stylesheet" href="css/styles.css">\n</head>\n<body>\n  <header>\n    <h1>Your Name</h1>\n    <nav>\n      <a href="index.html">Home</a>\n      <a href="about.html">About</a>\n      <a href="projects.html">Projects</a>\n      <a href="contact.html">Contact</a>\n    </nav>\n  </header>\n  <main class="container">\n    <section class="hero">\n      <h2>Welcome</h2>\n      <p>Introduce yourself and explain what this website is about.</p>\n      <button id="themeBtn">Change Accent</button>\n    </section>\n  </main>\n  <script src="js/script.js"></script>\n</body>\n</html>\n\nSTYLES.CSS\nbody {\n  font-family: Arial, sans-serif;\n  margin: 0;\n  color: #1f2937;\n  background: #f8fafc;\n}\nheader {\n  background: #0f172a;\n  color: white;\n  padding: 1rem;\n}\nnav a {\n  color: white;\n  margin-right: 1rem;\n  text-decoration: none;\n}\n.container {\n  max-width: 1000px;\n  margin: 0 auto;\n  padding: 2rem 1rem;\n}\n.hero {\n  background: white;\n  padding: 2rem;\n  border-radius: 12px;\n}\nbutton {\n  padding: 0.75rem 1rem;\n  border: none;\n  border-radius: 8px;\n  background: #2563eb;\n  color: white;\n  cursor: pointer;\n}\n\nSCRIPT.JS\nconst themeBtn = document.getElementById('themeBtn');\nif (themeBtn) {\n  themeBtn.addEventListener('click', () => {\n    document.body.style.background = '#e0f2fe';\n  });\n}`
+        }
+      },
+      redesign: {
+        structure: {
+          plan: 'For the redesign, rebuild the original site with stronger structure and clearer sections.',
+          code: `<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n  <title>Redesigned Website</title>\n  <link rel="stylesheet" href="css/styles.css">\n</head>\n<body>\n  <header>\n    <h1>Organization Name</h1>\n    <nav>\n      <a href="index.html">Home</a>\n      <a href="about.html">About</a>\n      <a href="services.html">Services</a>\n      <a href="contact.html">Contact</a>\n    </nav>\n  </header>\n  <main>\n    <section>\n      <h2>Welcome to Our Redesigned Site</h2>\n      <p>Explain the organization clearly and make the first impression stronger than the original site.</p>\n    </section>\n  </main>\n</body>\n</html>`
+        },
+        nav: {
+          plan: 'A better navigation structure is one of the easiest ways to improve a confusing original website.',
+          code: `<nav class="main-nav">\n  <a href="index.html">Home</a>\n  <a href="about.html">About</a>\n  <a href="services.html">Services</a>\n  <a href="gallery.html">Gallery</a>\n  <a href="contact.html">Contact</a>\n</nav>`
+        },
+        cards: {
+          plan: 'Card layouts are useful for services, team members, featured content, or reasons users should trust the organization.',
+          code: `<section class="card-grid">\n  <article class="card">\n    <h3>Service One</h3>\n    <p>Short, readable explanation of the service.</p>\n  </article>\n  <article class="card">\n    <h3>Service Two</h3>\n    <p>Short, readable explanation of the service.</p>\n  </article>\n</section>`
+        },
+        contact: {
+          plan: 'A clearer contact section improves usability and helps make the redesign feel more polished and real.',
+          code: `<section>\n  <h2>Contact Us</h2>\n  <p>Email: info@example.com</p>\n  <p>Phone: (123) 456-7890</p>\n  <p>Address: 123 Main Street</p>\n</section>`
+        },
+        checklist: {
+          plan: 'Use this to confirm that your redesign clearly improves the original website.',
+          code: `<section>\n  <h2>Redesign Improvement Check</h2>\n  <ul>\n    <li>Navigation is clearer</li>\n    <li>Typography is more readable</li>\n    <li>Spacing is more consistent</li>\n    <li>Mobile experience is improved</li>\n  </ul>\n</section>`
+        },
+        folders: {
+          plan: 'A clean folder plan helps your group stay organized and makes GitHub Pages much easier to manage.',
+          code: `redesigned-website/\n├── index.html\n├── about.html\n├── services.html\n├── contact.html\n├── css/\n│   └── styles.css\n├── js/\n│   └── script.js\n└── images/\n    ├── hero.jpg\n    ├── service-1.jpg\n    └── logo.png`
+        },
+        startercss: {
+          plan: 'Use this starter CSS pack to quickly improve spacing, layout, and polish in your redesign.',
+          code: `body {\n  font-family: Arial, sans-serif;\n  margin: 0;\n  color: #1f2937;\n}\nheader {\n  background: #0f172a;\n  color: white;\n  padding: 1rem;\n}\n.hero {\n  padding: 4rem 1rem;\n  background: #e2e8f0;\n}\n.container {\n  max-width: 1100px;\n  margin: 0 auto;\n  padding: 0 1rem;\n}\n.card-grid {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));\n  gap: 1rem;\n}\n.card {\n  border: 1px solid #e5e7eb;\n  border-radius: 12px;\n  padding: 1rem;\n  background: white;\n}`
+        },
+        fixlayout: {
+          plan: 'Use this quick CSS patch if your redesign still feels too busy, cramped, or hard to scan.',
+          code: `main {\n  max-width: 1100px;\n  margin: 0 auto;\n  padding: 2rem 1rem;\n}\n\nsection {\n  padding: 3rem 0;\n}\n\nh1, h2, h3 {\n  line-height: 1.2;\n  margin-bottom: 0.75rem;\n}\n\nnav a {\n  margin-right: 1rem;\n}\n\nimg {\n  max-width: 100%;\n  height: auto;\n  border-radius: 10px;\n}`
+        },
+        fullstarter: {
+          plan: 'Use this full starter package if you want a matched HTML, CSS, JS, and folder plan all at once for your redesign project.',
+          code: `FOLDER STRUCTURE\nredesigned-website/\n├── index.html\n├── about.html\n├── services.html\n├── contact.html\n├── css/\n│   └── styles.css\n├── js/\n│   └── script.js\n└── images/\n\nINDEX.HTML\n<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n  <title>Redesigned Website</title>\n  <link rel="stylesheet" href="css/styles.css">\n</head>\n<body>\n  <header>\n    <h1>Organization Name</h1>\n    <nav>\n      <a href="index.html">Home</a>\n      <a href="about.html">About</a>\n      <a href="services.html">Services</a>\n      <a href="contact.html">Contact</a>\n    </nav>\n  </header>\n  <main>\n    <section class="hero">\n      <h2>Welcome to Our Redesigned Site</h2>\n      <p>Explain the organization clearly and improve the first impression.</p>\n      <button id="ctaBtn">Learn More</button>\n    </section>\n  </main>\n  <script src="js/script.js"></script>\n</body>\n</html>\n\nSTYLES.CSS\nbody {\n  font-family: Arial, sans-serif;\n  margin: 0;\n  color: #1f2937;\n}\nheader {\n  background: #0f172a;\n  color: white;\n  padding: 1rem;\n}\nnav a {\n  color: white;\n  margin-right: 1rem;\n  text-decoration: none;\n}\n.hero {\n  padding: 4rem 1rem;\n  background: #e2e8f0;\n}\nmain {\n  max-width: 1100px;\n  margin: 0 auto;\n  padding: 2rem 1rem;\n}\nbutton {\n  padding: 0.75rem 1rem;\n  border: none;\n  border-radius: 8px;\n  background: #2563eb;\n  color: white;\n  cursor: pointer;\n}\n\nSCRIPT.JS\nconst ctaBtn = document.getElementById('ctaBtn');\nif (ctaBtn) {\n  ctaBtn.addEventListener('click', () => {\n    alert('Add your own call to action here.');\n  });\n}`
+        }
+      }
+    };
+
+    const packageFiles = {
+      personal: {
+        "index.html": `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -1146,73 +1114,142 @@
       <a href="index.html">Home</a>
       <a href="about.html">About</a>
       <a href="projects.html">Projects</a>
-      <a href="experience.html">Experience</a>
       <a href="contact.html">Contact</a>
     </nav>
   </header>
 
-  <main>
-    <section>
+  <main class="container">
+    <section class="hero">
       <h2>Welcome</h2>
       <p>Introduce yourself and explain what this website is about.</p>
+      <button id="themeBtn">Change Accent</button>
     </section>
   </main>
 
-  <footer>
-    <p>© 2026 Your Name</p>
-  </footer>
+  <script src="js/script.js"></script>
 </body>
-</html>`
-        },
-        nav: {
-          plan: 'Use a simple navigation menu across all 5 pages so your website feels consistent and easy to explore.',
-          code: `<nav class="main-nav">
-  <a href="index.html">Home</a>
-  <a href="about.html">About</a>
-  <a href="experience.html">Experience</a>
-  <a href="projects.html">Projects</a>
-  <a href="contact.html">Contact</a>
-</nav>`
-        },
-        cards: {
-          plan: 'A card layout works well for projects, interests, skills, or featured experiences on your personal site.',
-          code: `<section class="card-grid">
-  <article class="card">
-    <h3>Project One</h3>
-    <p>Brief description of the project or interest.</p>
-  </article>
-  <article class="card">
-    <h3>Project Two</h3>
-    <p>Brief description of the project or interest.</p>
-  </article>
-</section>`
-        },
-        contact: {
-          plan: 'Give visitors a clear way to connect with you. This is especially useful if you want the site to help with internships or jobs.',
-          code: `<section>
-  <h2>Contact</h2>
-  <p>Email: yourname@email.com</p>
-  <p>LinkedIn: add your profile link</p>
-  <p>GitHub: add your GitHub link</p>
-</section>`
-        },
-        checklist: {
-          plan: 'Use a checklist to make sure your personal site feels complete before you publish.',
-          code: `<section>
-  <h2>Before I Publish</h2>
-  <ul>
-    <li>All 5 pages are complete</li>
-    <li>Navigation works</li>
-    <li>Layout looks good on mobile</li>
-    <li>No broken links or missing images</li>
-  </ul>
-</section>`
-        }
+</html>`,
+        "about.html": `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Me</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header>
+    <h1>Your Name</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="projects.html">Projects</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+  <main class="container">
+    <section class="hero">
+      <h2>About Me</h2>
+      <p>Share your story, goals, background, or interests here.</p>
+    </section>
+  </main>
+</body>
+</html>`,
+        "projects.html": `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projects</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header>
+    <h1>Your Name</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="projects.html">Projects</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+  <main class="container">
+    <section class="hero">
+      <h2>Projects</h2>
+      <p>Highlight work, interests, or class projects here.</p>
+    </section>
+  </main>
+</body>
+</html>`,
+        "contact.html": `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header>
+    <h1>Your Name</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="projects.html">Projects</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+  <main class="container">
+    <section class="hero">
+      <h2>Contact</h2>
+      <p>Email: yourname@email.com</p>
+    </section>
+  </main>
+</body>
+</html>`,
+        "css/styles.css": `body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  color: #1f2937;
+  background: #f8fafc;
+}
+header {
+  background: #0f172a;
+  color: white;
+  padding: 1rem;
+}
+nav a {
+  color: white;
+  margin-right: 1rem;
+  text-decoration: none;
+}
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+.hero {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+}
+button {
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 8px;
+  background: #2563eb;
+  color: white;
+  cursor: pointer;
+}`,
+        "js/script.js": `const themeBtn = document.getElementById('themeBtn');
+if (themeBtn) {
+  themeBtn.addEventListener('click', () => {
+    document.body.style.background = '#e0f2fe';
+  });
+}`
       },
       redesign: {
-        structure: {
-          plan: 'For the redesign, rebuild the original site with stronger structure and clearer sections. Start with the homepage first.',
-          code: `<!DOCTYPE html>
+        "index.html": `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -1232,79 +1269,261 @@
   </header>
 
   <main>
-    <section>
+    <section class="hero">
       <h2>Welcome to Our Redesigned Site</h2>
-      <p>Explain the organization clearly and make the first impression stronger than the original site.</p>
+      <p>Explain the organization clearly and improve the first impression.</p>
+      <button id="ctaBtn">Learn More</button>
+    </section>
+  </main>
+
+  <script src="js/script.js"></script>
+</body>
+</html>`,
+        "about.html": `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header>
+    <h1>Organization Name</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="services.html">Services</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+  <main>
+    <section class="hero">
+      <h2>About</h2>
+      <p>Share a clearer overview of the organization here.</p>
     </section>
   </main>
 </body>
-</html>`
-        },
-        nav: {
-          plan: 'A better navigation structure is one of the easiest ways to improve a confusing original website.',
-          code: `<nav class="main-nav">
-  <a href="index.html">Home</a>
-  <a href="about.html">About</a>
-  <a href="services.html">Services</a>
-  <a href="gallery.html">Gallery</a>
-  <a href="contact.html">Contact</a>
-</nav>`
-        },
-        cards: {
-          plan: 'Card layouts are useful for services, team members, featured content, or reasons users should trust the organization.',
-          code: `<section class="card-grid">
-  <article class="card">
-    <h3>Service One</h3>
-    <p>Short, readable explanation of the service.</p>
-  </article>
-  <article class="card">
-    <h3>Service Two</h3>
-    <p>Short, readable explanation of the service.</p>
-  </article>
-</section>`
-        },
-        contact: {
-          plan: 'A clearer contact section improves usability and helps make the redesign feel more polished and real.',
-          code: `<section>
-  <h2>Contact Us</h2>
-  <p>Email: info@example.com</p>
-  <p>Phone: (123) 456-7890</p>
-  <p>Address: 123 Main Street</p>
-</section>`
-        },
-        checklist: {
-          plan: 'Use this to confirm that your redesign clearly improves the original website.',
-          code: `<section>
-  <h2>Redesign Improvement Check</h2>
-  <ul>
-    <li>Navigation is clearer</li>
-    <li>Typography is more readable</li>
-    <li>Spacing is more consistent</li>
-    <li>Mobile experience is improved</li>
-  </ul>
-</section>`
-        }
+</html>`,
+        "services.html": `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Services</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header>
+    <h1>Organization Name</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="services.html">Services</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+  <main>
+    <section class="hero">
+      <h2>Services</h2>
+      <p>Explain services or featured content more clearly here.</p>
+    </section>
+  </main>
+</body>
+</html>`,
+        "contact.html": `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header>
+    <h1>Organization Name</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="services.html">Services</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+  <main>
+    <section class="hero">
+      <h2>Contact</h2>
+      <p>Email: info@example.com</p>
+    </section>
+  </main>
+</body>
+</html>`,
+        "css/styles.css": `body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  color: #1f2937;
+}
+header {
+  background: #0f172a;
+  color: white;
+  padding: 1rem;
+}
+nav a {
+  color: white;
+  margin-right: 1rem;
+  text-decoration: none;
+}
+.hero {
+  padding: 4rem 1rem;
+  background: #e2e8f0;
+}
+main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+button {
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 8px;
+  background: #2563eb;
+  color: white;
+  cursor: pointer;
+}`,
+        "js/script.js": `const ctaBtn = document.getElementById('ctaBtn');
+if (ctaBtn) {
+  ctaBtn.addEventListener('click', () => {
+    alert('Add your own call to action here.');
+  });
+}`
       }
     };
+
+    let lastGeneratedText = '';
+    let lastGeneratedBuilder = 'personal';
+    let lastGeneratedType = 'structure';
+
+    function updateSelectedOptions() {
+      document.querySelectorAll('.option').forEach(label => {
+        const input = label.querySelector('input');
+        label.classList.toggle('selected', !!input.checked);
+      });
+    }
+
+    document.addEventListener('change', updateSelectedOptions);
+    updateSelectedOptions();
+
+    const scoreButton = document.getElementById('scoreQuiz');
+    const resetButton = document.getElementById('resetQuiz');
+    const quizResult = document.getElementById('quizResult');
+    const quizForm = document.getElementById('toolQuiz');
+
+    scoreButton.addEventListener('click', () => {
+      const answers = new FormData(quizForm);
+      const required = ['q1', 'q2', 'q3', 'q4', 'q5'];
+      const missing = required.filter(name => !answers.get(name));
+      if (missing.length) {
+        quizResult.innerHTML = `<strong>Please answer all five questions.</strong><p class="muted">You still have ${missing.length} question${missing.length === 1 ? '' : 's'} left before I can recommend a build path.</p>`;
+        return;
+      }
+      let codepen = 0;
+      let github = 0;
+      required.forEach(name => {
+        const value = answers.get(name);
+        if (value === 'codepen') codepen += 1;
+        if (value === 'github') github += 1;
+      });
+      if (github > codepen) {
+        quizResult.innerHTML = `<strong>Your best fit: GitHub Pages</strong><p class="muted">Your answers suggest you are building something that benefits from stronger file organization, a multi-page structure, or a more portfolio-ready workflow.</p><p><strong>Why this path fits:</strong> GitHub Pages is usually the better option when your final project is more complete than experimental.</p>`;
+      } else if (codepen > github) {
+        quizResult.innerHTML = `<strong>Your best fit: CodePen</strong><p class="muted">Your answers suggest that speed, lower setup, and a smaller front-end build matter most for your final project.</p><p><strong>Why this path fits:</strong> CodePen is often the strongest option when your project is compact and you want to focus on coding quickly.</p>`;
+      } else {
+        quizResult.innerHTML = `<strong>You could succeed with either path</strong><p class="muted">Your answers were balanced. Choose CodePen if you want the fastest route, or GitHub Pages if you want the more workforce-ready publishing experience.</p><p><strong>Good tie-breaker:</strong> If your site has multiple pages or folders, choose GitHub Pages.</p>`;
+      }
+    });
+
+    resetButton.addEventListener('click', () => {
+      setTimeout(() => {
+        quizResult.innerHTML = `<strong>Waiting for your answers...</strong><p class="muted">Tip: GitHub Pages is usually best for larger final websites. CodePen is often best for quick, one-page, lower-setup builds.</p>`;
+        updateSelectedOptions();
+      }, 0);
+    });
+
+    const generateSnippetBtn = document.getElementById('generateSnippet');
+    const starterPlan = document.getElementById('starterPlan');
+    const snippetOutput = document.getElementById('snippetOutput');
+    const copyOutputBtn = document.getElementById('copyOutputBtn');
+    const downloadPackageBtn = document.getElementById('downloadPackageBtn');
+    const copyStatus = document.getElementById('copyStatus');
+
+    function setStatus(message) {
+      copyStatus.textContent = message;
+    }
 
     generateSnippetBtn.addEventListener('click', () => {
       const builderType = document.querySelector('input[name="builderType"]:checked').value;
       const snippetType = document.querySelector('input[name="snippetType"]:checked').value;
       const platformType = document.querySelector('input[name="platformType"]:checked').value;
       const selected = snippets[builderType][snippetType];
-
-      let platformNote = '';
-      if (platformType === 'github') {
-        platformNote = 'Platform note: For GitHub Pages, save your main page as index.html and keep your file names clean and consistent.';
-      } else {
-        platformNote = 'Platform note: For CodePen, this snippet can help you plan your structure even if your editor layout looks different.';
-      }
-
-      starterPlan.innerHTML = `<strong>Starter plan</strong><p>${selected.plan}</p><p class="muted">${platformNote}</p>`;
+      const platformNote = platformType === 'github'
+        ? 'Platform note: For GitHub Pages, save your main page as index.html and keep your file names clean and consistent.'
+        : 'Platform note: For CodePen, this output can still help you plan your structure even if your editor layout looks different.';
+      starterPlan.innerHTML = `<strong>Starter plan</strong><p>${selected.plan}</p><p class="small" style="margin-top:0.6rem;">${platformNote}</p>`;
       snippetOutput.textContent = selected.code;
+      lastGeneratedText = selected.code;
+      lastGeneratedBuilder = builderType;
+      lastGeneratedType = snippetType;
+      if (snippetType === 'fullstarter') {
+        setStatus('Starter package ready. You can copy the full package text or download a ZIP-style package.');
+      } else {
+        setStatus('Output ready. Use Copy output to paste it into your project.');
+      }
     });
 
-    const tabButtons = document.querySelectorAll('.tab-btn');
+    copyOutputBtn.addEventListener('click', async () => {
+      const text = lastGeneratedText || snippetOutput.textContent.trim();
+      if (!text || text === 'Your output will appear here.') {
+        setStatus('Generate output first, then copy it.');
+        return;
+      }
+      try {
+        await navigator.clipboard.writeText(text);
+        setStatus('Copied to clipboard.');
+      } catch (error) {
+        setStatus('Clipboard access failed. You can still select and copy the output manually.');
+      }
+    });
+
+    function downloadTextFile(filename, content) {
+      const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function buildPackageText(builder) {
+      const files = packageFiles[builder];
+      const parts = Object.entries(files).map(([name, content]) => {
+        return `FILE: ${name}\n${'-'.repeat(60)}\n${content}\n`;
+      });
+      return parts.join('\n');
+    }
+
+    downloadPackageBtn.addEventListener('click', () => {
+      const builderType = document.querySelector('input[name="builderType"]:checked').value;
+      const packageText = buildPackageText(builderType);
+      const filename = builderType === 'personal'
+        ? 'personal-website-starter-package.txt'
+        : 'website-redesign-starter-package.txt';
+      downloadTextFile(filename, packageText);
+      setStatus('Starter package downloaded.');
+    });
+
+    const tabButtons = document.querySelectorAll('.tab-btn[data-tab]');
     const tabPanels = {
       github: document.getElementById('tab-github'),
       codepen: document.getElementById('tab-codepen'),
@@ -1335,6 +1554,22 @@
 
     checks.forEach(check => check.addEventListener('change', updateProgress));
     updateProgress();
+
+    const learnModeBtn = document.getElementById('learnModeBtn');
+    const buildModeBtn = document.getElementById('buildModeBtn');
+
+    learnModeBtn.addEventListener('click', () => {
+      document.body.classList.remove('mode-build');
+      learnModeBtn.classList.add('active');
+      buildModeBtn.classList.remove('active');
+    });
+
+    buildModeBtn.addEventListener('click', () => {
+      document.body.classList.add('mode-build');
+      buildModeBtn.classList.add('active');
+      learnModeBtn.classList.remove('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
   </script>
 </body>
 </html>
