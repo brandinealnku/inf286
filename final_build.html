@@ -4,261 +4,358 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>NKU Web Dev Launchpad</title>
-  <meta name="description" content="A polished student launchpad for NKU Introduction to Web Development final projects." />
+  <meta name="description" content="A research-informed launchpad for the NKU Intro to Web Development final project." />
   <style>
     :root {
-      --bg: #07111f;
-      --panel: rgba(255,255,255,0.07);
-      --border: rgba(255,255,255,0.10);
-      --text: #f8fafc;
-      --muted: #bfd1e6;
-      --muted-2: #8fa8c7;
-      --accent: #facc15;
-      --accent-2: #f59e0b;
-      --accent-3: #38bdf8;
-      --good: #34d399;
-      --shadow: 0 24px 70px rgba(0,0,0,0.35);
-      --shadow-soft: 0 10px 24px rgba(0,0,0,0.18);
-      --radius: 24px;
-      --radius-lg: 30px;
-      --max: 1220px;
-      --header-h: 78px;
+      --bg: #f5f7fb;
+      --surface: #ffffff;
+      --surface-soft: #f8fafc;
+      --text: #0f172a;
+      --muted: #475569;
+      --border: #dbe3ef;
+      --brand: #2563eb;
+      --brand-strong: #1d4ed8;
+      --success: #059669;
+      --warning: #ea580c;
+      --radius: 18px;
+      --shadow: 0 16px 35px rgba(15, 23, 42, 0.08);
+      --max: 1160px;
+      --header-h: 74px;
     }
+
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
       margin: 0;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       color: var(--text);
-      background:
-        radial-gradient(circle at 0% 0%, rgba(250,204,21,0.12), transparent 24%),
-        radial-gradient(circle at 100% 0%, rgba(56,189,248,0.12), transparent 20%),
-        radial-gradient(circle at 50% 100%, rgba(245,158,11,0.08), transparent 24%),
-        linear-gradient(180deg, #040814 0%, #081120 35%, #0b1728 100%);
-      min-height: 100vh;
+      background: radial-gradient(circle at top right, #dbeafe 0%, transparent 35%), var(--bg);
       line-height: 1.6;
     }
     a { color: inherit; text-decoration: none; }
     button, input { font: inherit; }
-    code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
     .container { width: min(var(--max), calc(100% - 2rem)); margin: 0 auto; }
+
+    .skip-link {
+      position: absolute;
+      top: -40px;
+      left: 0.75rem;
+      background: #111827;
+      color: white;
+      padding: 0.6rem 0.9rem;
+      border-radius: 10px;
+      z-index: 300;
+    }
+    .skip-link:focus { top: 0.75rem; }
+
     .site-header {
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(4, 8, 20, 0.78);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid rgba(255,255,255,0.06);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(8px);
+      background: rgba(245, 247, 251, 0.86);
+      border-bottom: 1px solid var(--border);
     }
     .nav {
       min-height: var(--header-h);
-      display: flex; align-items: center; justify-content: space-between;
-      gap: 1rem; padding: 0.85rem 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.6rem 0;
     }
-    .brand-wrap { display: flex; align-items: center; gap: 0.85rem; min-width: 0; }
+    .brand-wrap { display: flex; align-items: center; gap: 0.7rem; }
     .brand-mark {
-      width: 42px; height: 42px; display: grid; place-items: center;
-      border-radius: 14px;
-      background: linear-gradient(135deg, rgba(250,204,21,0.22), rgba(56,189,248,0.22));
-      border: 1px solid rgba(255,255,255,0.12);
-      box-shadow: var(--shadow-soft);
-      font-weight: 900; color: #fff7cc; flex: 0 0 auto;
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      color: white;
+      background: linear-gradient(145deg, var(--brand), #0ea5e9);
     }
-    .brand { font-weight: 800; letter-spacing: -0.03em; font-size: 1.05rem; line-height: 1.05; }
-    .brand span { color: var(--accent); }
-    .brand small {
-      display: block; color: var(--muted-2); font-weight: 600; font-size: 0.74rem;
-      letter-spacing: 0.02em; text-transform: uppercase; margin-top: 0.18rem;
-    }
-    .nav-right { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; justify-content: flex-end; }
+    .brand { font-size: 0.98rem; font-weight: 800; letter-spacing: -0.015em; }
+    .brand small { display: block; color: var(--muted); font-weight: 600; font-size: 0.78rem; }
+
+    .nav-right { display: flex; align-items: center; gap: 0.65rem; flex-wrap: wrap; justify-content: flex-end; }
     .mode-toggle {
-      display: inline-flex; gap: 0.35rem; padding: 0.22rem;
-      background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 999px;
+      display: inline-flex;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0.2rem;
+      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.06);
     }
     .mode-btn, .tab-btn {
       border: 1px solid var(--border);
-      background: rgba(255,255,255,0.05);
+      background: var(--surface);
       color: var(--text);
-      padding: 0.8rem 1rem; border-radius: 999px; font-weight: 800; cursor: pointer;
-      transition: 0.18s ease;
+      padding: 0.7rem 1rem;
+      border-radius: 999px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
     }
     .mode-btn {
-      border: 0; background: transparent; color: var(--muted); padding: 0.58rem 0.9rem; font-weight: 700;
+      border: 0;
+      padding: 0.5rem 0.85rem;
+      color: var(--muted);
+      background: transparent;
     }
-    .mode-btn.active, .mode-btn:hover, .tab-btn.active, .tab-btn:hover {
-      color: var(--text);
-      background: linear-gradient(135deg, rgba(250,204,21,0.18), rgba(245,158,11,0.18));
+    .mode-btn.active,
+    .tab-btn.active,
+    .mode-btn:hover,
+    .tab-btn:hover {
+      color: #ffffff;
+      background: var(--brand);
     }
-    .nav-links { display: flex; flex-wrap: wrap; gap: 0.45rem; align-items: center; }
+
+    .nav-links { display: flex; align-items: center; gap: 0.25rem; flex-wrap: wrap; }
     .nav-links a {
-      color: var(--muted); font-size: 0.93rem; padding: 0.58rem 0.85rem;
-      border-radius: 999px; transition: 0.18s ease;
+      font-size: 0.9rem;
+      color: var(--muted);
+      padding: 0.45rem 0.65rem;
+      border-radius: 999px;
     }
-    .nav-links a:hover, .nav-links a:focus-visible {
-      color: var(--text); background: rgba(255,255,255,0.08); outline: none;
-    }
+    .nav-links a:hover,
+    .nav-links a:focus-visible { background: #e2e8f0; color: var(--text); }
     .nav-cta {
-      background: linear-gradient(135deg, rgba(250,204,21,0.24), rgba(245,158,11,0.24));
-      border: 1px solid rgba(255,255,255,0.10); color: #fff7cc !important;
+      background: #dbeafe;
+      border: 1px solid #bfdbfe;
+      color: #1e3a8a !important;
+      font-weight: 700;
     }
-    section { padding: 1.1rem 0 1.4rem; scroll-margin-top: 92px; }
-    .hero { padding-top: 4rem; padding-bottom: 1.8rem; }
-    .hero-wrap, .quiz-wrap, .comparison, .grid-2, .grid-3, .two-col, .example-visuals, .fix-grid, .checklist-grid {
-      display: grid; gap: 1rem;
+
+    main { padding-bottom: 2.5rem; }
+    section { padding: 1rem 0 1.35rem; scroll-margin-top: 86px; }
+
+    .hero { padding-top: 2rem; }
+    .hero-wrap, .grid-2, .grid-3, .quiz-wrap, .comparison, .two-col, .checklist-grid, .fix-grid, .example-visuals {
+      display: grid;
+      gap: 1rem;
     }
-    .hero-wrap { grid-template-columns: 1.2fr 0.8fr; }
-    .quiz-wrap { grid-template-columns: 1fr 0.92fr; }
-    .comparison, .grid-2, .two-col, .fix-grid, .example-visuals { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .hero-wrap { grid-template-columns: 1.1fr 0.9fr; }
+    .quiz-wrap { grid-template-columns: 1fr 0.9fr; }
+    .grid-2, .comparison, .two-col, .checklist-grid, .fix-grid, .example-visuals { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .checklist-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .card, .hero-card, .glass {
-      background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.045));
+
+    .hero-card,
+    .card,
+    .section-shell {
       border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
+      border-radius: var(--radius);
+      background: var(--surface);
       box-shadow: var(--shadow);
     }
-    .card { padding: 1.25rem; overflow: hidden; transition: transform 0.2s ease, box-shadow 0.2s ease; }
-    .card:hover { transform: translateY(-3px); box-shadow: 0 26px 72px rgba(0,0,0,0.38); }
-    .hero-card { padding: 2rem; position: relative; overflow: hidden; }
-    .hero-side { padding: 1.25rem; display: grid; gap: 0.9rem; align-content: start; }
-    .mini-card { padding: 1rem 1.05rem; border-radius: 22px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); }
-    .mini-card strong { display: block; margin-bottom: 0.25rem; }
+    .section-shell { padding: 1.1rem; background: rgba(255,255,255,0.9); }
+    .hero-card { padding: 1.55rem; }
+    .card { padding: 1.1rem; }
+
+    h1, h2, h3, h4 { margin: 0; line-height: 1.15; letter-spacing: -0.02em; }
+    h1 { font-size: clamp(2rem, 4vw, 3.25rem); max-width: 13ch; }
+    h2.section-title { font-size: clamp(1.5rem, 3vw, 2.25rem); margin-bottom: 0.45rem; }
+    h3 { font-size: 1.15rem; }
+    h4 { margin-top: 0.85rem; margin-bottom: 0.45rem; font-size: 0.95rem; color: #0b3b83; }
+
     .eyebrow, .tag {
-      display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 999px; font-weight: 800; letter-spacing: 0.03em;
+      display: inline-flex;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
     }
-    .eyebrow {
-      padding: 0.42rem 0.9rem; background: rgba(250,204,21,0.12);
-      border: 1px solid rgba(250,204,21,0.24); color: #fde68a; font-size: 0.86rem;
-    }
-    .tag {
-      padding: 0.34rem 0.74rem; font-size: 0.78rem; margin-bottom: 0.72rem; text-transform: uppercase;
-    }
-    .tag-blue { background: rgba(250,204,21,0.12); color: #fde68a; }
-    .tag-purple { background: rgba(245,158,11,0.12); color: #fde68a; }
-    .tag-green { background: rgba(52,211,153,0.12); color: #bbf7d0; }
-    .tag-yellow { background: rgba(56,189,248,0.12); color: #bae6fd; }
-    h1, h2, h3, h4 { line-height: 1.08; letter-spacing: -0.03em; margin: 0; }
-    h1 { font-size: clamp(2.5rem, 5vw, 4.8rem); margin-top: 1rem; max-width: 11ch; }
-    h2.section-title { font-size: clamp(1.85rem, 3vw, 2.75rem); margin-bottom: 0.55rem; }
-    h3 { font-size: 1.22rem; }
-    h4 { margin-top: 1.1rem; margin-bottom: 0.4rem; font-size: 1rem; color: #fff4c5; }
-    p { margin: 0; }
-    .hero p, .section-intro, .muted { color: var(--muted); }
-    .hero p { margin-top: 1rem; font-size: 1.04rem; max-width: 62ch; }
-    .small { font-size: 0.92rem; color: var(--muted-2); }
-    .hero-metrics {
-      display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.8rem; margin-top: 1.4rem;
-    }
-    .metric, .question, .callout, .result-highlight, .check-item, .mockup {
-      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 18px;
-    }
-    .metric { padding: 0.95rem 1rem; }
-    .metric strong { display: block; font-size: 1.15rem; color: white; }
-    .metric span { color: var(--muted-2); font-size: 0.88rem; }
+    .eyebrow { padding: 0.32rem 0.7rem; background: #dbeafe; color: #1e3a8a; }
+    .tag { padding: 0.27rem 0.65rem; margin-bottom: 0.6rem; }
+    .tag-blue { background: #dbeafe; color: #1e3a8a; }
+    .tag-purple { background: #ede9fe; color: #5b21b6; }
+    .tag-green { background: #d1fae5; color: #065f46; }
+    .tag-yellow { background: #ffedd5; color: #9a3412; }
+
+    p { margin: 0; max-width: 70ch; }
+    .section-intro, .muted, .small { color: var(--muted); }
+    .small { font-size: 0.9rem; }
+    .hero p { margin-top: 0.8rem; }
+
     .hero-actions, .pill-row, .path-tabs, .output-actions {
-      display: flex; flex-wrap: wrap; gap: 0.75rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
     }
-    .hero-actions { margin-top: 1.5rem; }
-    .pill-row { margin-top: 1rem; }
-    .btn {
-      border: none; border-radius: 999px; padding: 0.95rem 1.2rem; font-weight: 800; cursor: pointer;
-      display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
-      transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
-      box-shadow: var(--shadow-soft);
-    }
-    .btn:hover, .btn:focus-visible { transform: translateY(-1px); outline: none; }
-    .btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #1c1917; }
-    .btn-secondary { background: rgba(255,255,255,0.07); color: var(--text); border: 1px solid var(--border); }
-    .btn-success { background: linear-gradient(135deg, rgba(52,211,153,0.95), rgba(56,189,248,0.9)); color: #052e1e; }
+    .hero-actions { margin-top: 1.2rem; }
+    .pill-row { margin-top: 0.95rem; }
     .pill {
-      padding: 0.56rem 0.84rem; border-radius: 999px; background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.08); color: var(--text); font-size: 0.93rem; font-weight: 600;
+      padding: 0.45rem 0.7rem;
+      border-radius: 999px;
+      background: #eef2ff;
+      border: 1px solid #e2e8f0;
+      font-size: 0.85rem;
+      color: #1e293b;
+      font-weight: 600;
     }
-    .section-shell {
-      padding: 1.25rem; border-radius: 30px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
-      border: 1px solid rgba(255,255,255,0.06);
+
+    .btn {
+      border: none;
+      border-radius: 999px;
+      padding: 0.82rem 1.05rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
     }
-    .section-intro { max-width: 74ch; margin-bottom: 1.4rem; font-size: 1rem; }
-    .pros-cons, .steps ol { padding-left: 1.15rem; margin: 0.72rem 0 0; }
-    .pros-cons li, .steps li { margin-bottom: 0.48rem; color: var(--muted); }
-    .question { margin-bottom: 1rem; padding: 1rem; border-radius: 20px; }
-    .question h3 { font-size: 1rem; margin-bottom: 0.8rem; }
-    .options { display: grid; gap: 0.65rem; }
+    .btn:hover,
+    .btn:focus-visible { transform: translateY(-1px); }
+    .btn-primary { background: var(--brand); color: white; }
+    .btn-primary:hover, .btn-primary:focus-visible { background: var(--brand-strong); }
+    .btn-secondary { background: var(--surface-soft); color: var(--text); border: 1px solid var(--border); }
+    .btn-success { background: var(--success); color: white; }
+
+    .hero-side { display: grid; gap: 0.75rem; align-content: start; }
+    .mini-card {
+      border: 1px solid var(--border);
+      background: var(--surface-soft);
+      border-radius: 14px;
+      padding: 0.85rem;
+    }
+    .mini-card strong { display: block; margin-bottom: 0.2rem; color: #0b3b83; }
+
+    .hero-metrics { display: grid; gap: 0.65rem; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 1rem; }
+    .metric,
+    .question,
+    .callout,
+    .result-highlight,
+    .check-item,
+    .mockup {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--surface-soft);
+    }
+    .metric { padding: 0.75rem; }
+    .metric strong { font-size: 1.05rem; display: block; }
+    .metric span { color: var(--muted); font-size: 0.86rem; }
+
+    .pros-cons, .steps ol { padding-left: 1.1rem; margin: 0.6rem 0 0; }
+    .pros-cons li, .steps li { margin-bottom: 0.4rem; color: #334155; }
+
+    .question { margin-bottom: 0.8rem; padding: 0.85rem; }
+    .question h3 { font-size: 0.98rem; margin-bottom: 0.6rem; }
+    .options { display: grid; gap: 0.55rem; }
     .option {
-      display: flex; align-items: center; gap: 0.7rem; border-radius: 16px; padding: 0.9rem 0.95rem;
-      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
-      cursor: pointer; transition: 0.18s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      border-radius: 12px;
+      padding: 0.7rem 0.75rem;
+      border: 1px solid var(--border);
+      background: #fff;
+      cursor: pointer;
     }
-    .option:hover { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.14); }
-    .option input { accent-color: var(--accent); }
-    .option.selected { background: rgba(250,204,21,0.12); border-color: rgba(250,204,21,0.35); }
-    .result-box { position: sticky; top: 94px; align-self: start; min-height: 240px; }
-    .result-highlight, .callout { padding: 1rem 1.05rem; }
-    .result-highlight {
-      margin-top: 1rem;
-      background: linear-gradient(135deg, rgba(250,204,21,0.14), rgba(56,189,248,0.10));
-    }
-    .callout strong { display: block; margin-bottom: 0.35rem; }
+    .option:hover { border-color: #b8c5da; }
+    .option.selected { border-color: #93c5fd; background: #eff6ff; }
+
+    .result-box { position: sticky; top: 90px; align-self: start; min-height: 240px; }
+    .result-highlight, .callout { padding: 0.9rem; }
+    .result-highlight { background: #eff6ff; }
+
     pre {
-      white-space: pre-wrap; overflow: auto; margin: 0; font-size: 0.9rem; color: #e2e8f0;
-      background: rgba(4,8,20,0.6); border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 18px; padding: 1rem; max-height: 360px;
+      white-space: pre-wrap;
+      overflow: auto;
+      margin: 0;
+      font-size: 0.88rem;
+      background: #0f172a;
+      color: #f8fafc;
+      border-radius: 12px;
+      padding: 0.85rem;
+      max-height: 360px;
     }
-    .check-item { padding: 1rem; }
-    .check-item input { margin-top: 0.25rem; accent-color: var(--good); transform: scale(1.1); }
+
     .progress {
-      margin-top: 1rem; background: rgba(255,255,255,0.07); border-radius: 999px; overflow: hidden;
-      height: 14px; border: 1px solid rgba(255,255,255,0.08);
+      margin-top: 0.85rem;
+      background: #e2e8f0;
+      border-radius: 999px;
+      overflow: hidden;
+      height: 12px;
     }
     .progress-bar {
-      height: 100%; width: 0%;
-      background: linear-gradient(90deg, var(--good), var(--accent), var(--accent-3));
-      transition: width 0.25s ease; box-shadow: 0 0 10px rgba(52,211,153,0.5);
+      height: 100%;
+      width: 0%;
+      transition: width 0.2s ease;
+      background: linear-gradient(90deg, var(--success), #0284c7);
     }
-    .mockup { padding: 1rem; margin-top: 0.9rem; background: #0c1422; }
-    .bar, .line, .block, .thumb { border-radius: 8px; background: #2a3448; }
-    .bar { height: 40px; margin-bottom: 0.7rem; }
-    .line { height: 16px; margin-bottom: 0.45rem; }
-    .block { height: 90px; margin-top: 0.9rem; }
-    .thumb { height: 84px; }
-    .mockup-strong .bar { background: linear-gradient(135deg, #facc15, #f59e0b); }
-    .mockup-strong .line { background: #dbe7f5; }
-    .mockup-strong .thumb { background: #31425f; }
-    .mockup-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 0.9rem; align-items: start; }
+    .check-item { padding: 0.8rem; }
+    .check-item input { accent-color: var(--success); }
+
+    .mockup { padding: 0.85rem; }
+    .bar, .line, .block, .thumb { border-radius: 7px; background: #cbd5e1; }
+    .bar { height: 36px; margin-bottom: 0.55rem; }
+    .line { height: 12px; margin-bottom: 0.4rem; }
+    .block { height: 78px; margin-top: 0.75rem; }
+    .thumb { height: 72px; }
+    .mockup-strong .bar { background: #1d4ed8; }
+    .mockup-strong .line { background: #94a3b8; }
+    .mockup-strong .thumb { background: #60a5fa; }
+    .mockup-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 0.8rem; }
+
     .builder-output { min-height: 200px; }
-    .copy-status { font-size: 0.92rem; color: var(--muted); min-height: 1.4rem; margin-top: 0.75rem; }
+    .copy-status { font-size: 0.9rem; color: var(--muted); min-height: 1.3rem; margin-top: 0.7rem; }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    .footer { color: var(--muted); text-align: center; padding: 1.7rem 0 2.3rem; }
+
     .mode-build [data-mode="learn"] { display: none !important; }
     .mode-build .hero p, .mode-build .hero-metrics, .mode-build .hero-side, .mode-build .pill-row { display: none; }
-    .mode-build .hero { padding-top: 2.2rem; }
-    .mode-build h1 { font-size: clamp(2rem, 4vw, 3rem); max-width: 16ch; }
-    .footer { padding: 2rem 0 3rem; color: var(--muted); text-align: center; }
+    .mode-build .hero { padding-top: 1.5rem; }
+    .mode-build h1 { font-size: clamp(1.75rem, 4vw, 2.55rem); max-width: 16ch; }
+
+    :focus-visible {
+      outline: 3px solid #60a5fa;
+      outline-offset: 2px;
+      border-radius: 10px;
+    }
+
     @media (max-width: 1080px) {
       .nav { align-items: flex-start; flex-direction: column; }
       .nav-right { width: 100%; justify-content: flex-start; }
       .result-box { position: static; }
     }
-    @media (max-width: 980px) {
-      .hero-wrap, .quiz-wrap, .grid-3, .grid-2, .comparison, .two-col, .checklist-grid, .hero-metrics, .example-visuals, .fix-grid, .mockup-grid {
-        grid-template-columns: 1fr;
-      }
+    @media (max-width: 960px) {
+      .hero-wrap,
+      .quiz-wrap,
+      .grid-3,
+      .grid-2,
+      .comparison,
+      .two-col,
+      .checklist-grid,
+      .hero-metrics,
+      .example-visuals,
+      .fix-grid,
+      .mockup-grid { grid-template-columns: 1fr; }
     }
-    @media (max-width: 680px) {
-      .hero { padding-top: 3rem; }
-      .hero-card, .hero-side, .card, .section-shell { padding: 1rem; }
+    @media (max-width: 660px) {
+      .section-shell, .hero-card, .card { padding: 0.9rem; }
       .nav-links { width: 100%; }
-      .nav-links a { padding-left: 0; padding-right: 0.55rem; }
-      h1 { max-width: 100%; }
-      .mode-toggle { width: 100%; justify-content: stretch; }
+      .mode-toggle { width: 100%; }
       .mode-btn { flex: 1; }
       .output-actions .btn { width: 100%; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      * { animation-duration: 0s !important; transition: none !important; scroll-behavior: auto !important; }
     }
   </style>
 </head>
 <body>
+  <a class="skip-link" href="#mainContent">Skip to content</a>
   <header class="site-header">
     <div class="container nav">
       <div class="brand-wrap">
         <div class="brand-mark">NK</div>
-        <div class="brand">NKU Web Dev <span>Launchpad</span><small>Final project guide + starter app</small></div>
+        <div class="brand">NKU Web Dev Launchpad<small>Research-based final project planner + starter app</small></div>
       </div>
       <div class="nav-right">
         <div class="mode-toggle" aria-label="Mode toggle">
@@ -267,11 +364,9 @@
         </div>
         <nav class="nav-links" aria-label="Main navigation">
           <a href="#requirements" data-mode="learn">Requirements</a>
-          <a href="#concepts" data-mode="learn">Concepts</a>
-          <a href="#tools" data-mode="learn">Tools</a>
-          <a href="#quiz" data-mode="learn">Quiz</a>
+          <a href="#concepts" data-mode="learn">UX Essentials</a>
+          <a href="#quiz" data-mode="learn">Path Quiz</a>
           <a href="#starterlab">Starter Help</a>
-          <a href="#examples" data-mode="learn">A-Level Examples</a>
           <a href="#paths">Publish Paths</a>
           <a href="#checklist" class="nav-cta">Launch Checklist</a>
         </nav>
@@ -279,34 +374,33 @@
     </div>
   </header>
 
-  <main>
+  <main id="mainContent">
     <section class="hero">
       <div class="container hero-wrap">
         <div class="hero-card">
-          <div class="eyebrow">NKU Introduction to Web Development Final Build</div>
-          <h1>Build your final website like a modern web developer.</h1>
-          <p>This app helps you understand the final project, choose the right tool, generate starter code, organize your files, and launch a website that feels polished, professional, and portfolio-ready.</p>
+          <div class="eyebrow">UX trends: clarity, speed, trust, accessibility</div>
+          <h1>Ship a final website that feels modern, credible, and easy to use.</h1>
+          <p>This updated launchpad follows current UX priorities: clear value proposition, scannable sections, strong visual hierarchy, mobile-first responsiveness, inclusive interaction states, and low-friction action paths.</p>
           <div class="hero-metrics">
-            <div class="metric"><strong>2</strong><span>Final project parts</span></div>
-            <div class="metric"><strong>5+</strong><span>Pages for personal site</span></div>
-            <div class="metric"><strong>1</strong><span>Live published link</span></div>
+            <div class="metric"><strong>3s</strong><span>First-impression window</span></div>
+            <div class="metric"><strong>44px+</strong><span>Touch-friendly controls</span></div>
+            <div class="metric"><strong>AA+</strong><span>Contrast-oriented palette</span></div>
           </div>
           <div class="hero-actions">
             <a class="btn btn-primary" href="#starterlab">Generate Starter Help</a>
-            <a class="btn btn-secondary" href="#requirements" data-mode="learn">See Final Project Details</a>
+            <a class="btn btn-secondary" href="#requirements" data-mode="learn">See Project Requirements</a>
           </div>
           <div class="pill-row">
-            <span class="pill">HTML + CSS + JavaScript</span>
-            <span class="pill">Responsive Design</span>
-            <span class="pill">Accessibility</span>
-            <span class="pill">Publishing</span>
-            <span class="pill">Portfolio Thinking</span>
+            <span class="pill">Scannable layout</span>
+            <span class="pill">Action-first design</span>
+            <span class="pill">Accessibility defaults</span>
+            <span class="pill">Portfolio-ready content</span>
           </div>
         </div>
-        <aside class="glass hero-side" aria-label="Key takeaways">
-          <div class="mini-card"><strong>Start here</strong>Read the final project section first, then use the starter helper to generate your first structure, folder plan, or navigation.</div>
-          <div class="mini-card"><strong>Best use of this app</strong>Keep it open while you build so you can make decisions, grab starter code, and double-check your requirements.</div>
-          <div class="mini-card"><strong>Big idea</strong>Your final website should feel like something you would actually want to show to an employer, internship site, client, or collaborator.</div>
+        <aside class="hero-side" aria-label="Key outcomes">
+          <div class="mini-card"><strong>What changed</strong>The page now prioritizes shorter blocks, cleaner spacing, stronger contrast, and fewer competing choices.</div>
+          <div class="mini-card"><strong>How to use</strong>Use Learn Mode for context, then switch to Build Mode for focused output and faster execution.</div>
+          <div class="mini-card"><strong>Market-ready result</strong>Show employers you can build pages that are usable, fast to scan, and conversion-oriented.</div>
         </aside>
       </div>
     </section>
@@ -314,34 +408,32 @@
     <section id="requirements" data-mode="learn">
       <div class="container section-shell">
         <h2 class="section-title">Final project: two-part build</h2>
-        <p class="section-intro">Your final project has <strong>two parts</strong>: a <strong>group website redesign</strong> that continues your midterm work, and an <strong>individual personal website</strong> you can use beyond this class. Both must be <strong>live and published</strong>.</p>
+        <p class="section-intro">Your submission still includes a <strong>group redesign</strong> and an <strong>individual site</strong>. The difference now: you will execute both with current UX best practices so the experience feels intentional, not just complete.</p>
         <div class="grid-2">
           <article class="card">
-            <div class="tag tag-purple">Group Project</div>
+            <div class="tag tag-purple">Group project</div>
             <h3>Website Redesign</h3>
-            <p class="muted">In groups of up to 4, redesign the same website your group evaluated for the midterm. Your goal is to deliver a clearly improved, professional version.</p>
-            <h4>Core requirements</h4>
+            <p class="muted">Redesign the same approved website from your midterm analysis and demonstrate measurable usability improvements.</p>
+            <h4>Execution priorities</h4>
             <ul class="pros-cons">
-              <li>Use the same approved website from your midterm</li>
-              <li>No commercial templates. Bootstrap is allowed.</li>
-              <li>Use valid HTML and CSS with readable, organized code</li>
-              <li>Design must be responsive with no horizontal scrolling</li>
-              <li>Use clean file names and organized folders</li>
-              <li>Publish live using GitHub Pages or CodePen multi-page format</li>
+              <li>Keep navigation predictable and label links clearly</li>
+              <li>Use responsive layout patterns with no horizontal scroll</li>
+              <li>Improve readability (contrast, spacing, chunked content)</li>
+              <li>Use semantic HTML and valid CSS</li>
+              <li>Publish live on GitHub Pages or CodePen multi-page setup</li>
             </ul>
           </article>
           <article class="card">
-            <div class="tag tag-blue">Individual Project</div>
+            <div class="tag tag-blue">Individual project</div>
             <h3>Personal Website</h3>
-            <p class="muted">Build a personal website you can use for internships, jobs, or showcasing your work and interests.</p>
-            <h4>Core requirements</h4>
+            <p class="muted">Build a personal site with clear positioning, project proof, and calls to action for internships/jobs.</p>
+            <h4>Execution priorities</h4>
             <ul class="pros-cons">
-              <li>Build with HTML and CSS. Bootstrap is allowed.</li>
-              <li>No commercial templates</li>
-              <li>Include at least 5 pages with different layouts</li>
-              <li>Site must be responsive with no horizontal scrolling</li>
-              <li>Use organized folders and clean file names</li>
-              <li>Publish live using GitHub Pages or CodePen multi-page format</li>
+              <li>At least 5 pages with different layout intent</li>
+              <li>Consistent visual hierarchy on every page</li>
+              <li>Meaningful content blocks (not filler text)</li>
+              <li>Accessible interactions and focus states</li>
+              <li>Live published URL + clean organization</li>
             </ul>
           </article>
         </div>
@@ -350,12 +442,12 @@
 
     <section id="concepts" data-mode="learn">
       <div class="container section-shell">
-        <h2 class="section-title">What matters most in modern web development?</h2>
-        <p class="section-intro">Modern web development is more than getting code to work. It means building websites that are readable, responsive, interactive, accessible, organized, and ready to publish.</p>
+        <h2 class="section-title">What matters most in current web UX?</h2>
+        <p class="section-intro">Today’s successful pages tend to follow the same patterns: clear structure, reduced cognitive load, visible trust signals, and fast action paths on mobile and desktop.</p>
         <div class="grid-3">
-          <article class="card"><div class="tag tag-blue">Foundation</div><h3>Semantic HTML</h3><p class="muted">Use meaningful elements like header, nav, main, section, and footer so your content has structure and purpose.</p></article>
-          <article class="card"><div class="tag tag-purple">Design</div><h3>Responsive Layouts</h3><p class="muted">Your site should work on phones, tablets, and desktops instead of only looking right on your own screen.</p></article>
-          <article class="card"><div class="tag tag-green">Layout</div><h3>Flexbox and Grid</h3><p class="muted">Use modern CSS layout tools to create clean, adaptable page structures.</p></article>
+          <article class="card"><div class="tag tag-blue">Clarity</div><h3>Strong information hierarchy</h3><p class="muted">Headings, spacing, and progressive disclosure help users decide what to read next in seconds.</p></article>
+          <article class="card"><div class="tag tag-purple">Confidence</div><h3>Credibility + transparency</h3><p class="muted">Users convert more when pages show clear purpose, ownership, and trustworthy detail.</p></article>
+          <article class="card"><div class="tag tag-green">Inclusion</div><h3>Accessible interactions by default</h3><p class="muted">Visible focus, keyboard support, and adequate contrast improve outcomes for everyone.</p></article>
         </div>
       </div>
     </section>
@@ -363,28 +455,28 @@
     <section id="tools" data-mode="learn">
       <div class="container section-shell">
         <h2 class="section-title">CodePen vs. GitHub Pages</h2>
-        <p class="section-intro">Both can work. The best choice depends on whether you want the fastest route or the more portfolio-ready workflow.</p>
+        <p class="section-intro">Choose the platform based on outcome: speed for short demos, structure for portfolio-ready builds.</p>
         <div class="comparison">
-          <article class="card"><div class="tag tag-blue">Low friction</div><h3>CodePen</h3><ul class="pros-cons"><li>Very easy to start</li><li>Live preview updates quickly</li><li>Helpful for one-page builds or demos</li></ul></article>
-          <article class="card"><div class="tag tag-purple">Portfolio-ready</div><h3>GitHub Pages</h3><ul class="pros-cons"><li>Great for static final websites</li><li>Stronger file organization</li><li>Easy to share as a live project URL</li></ul></article>
+          <article class="card"><div class="tag tag-blue">Low friction</div><h3>CodePen</h3><ul class="pros-cons"><li>Fast setup for experimentation</li><li>Great immediate preview feedback</li><li>Best for single-page demos</li></ul></article>
+          <article class="card"><div class="tag tag-purple">Long-term value</div><h3>GitHub Pages</h3><ul class="pros-cons"><li>Better multi-page organization</li><li>Closer to real-world workflow</li><li>Stronger showcase for portfolios</li></ul></article>
         </div>
       </div>
     </section>
 
     <section id="quiz" data-mode="learn">
       <div class="container section-shell">
-        <h2 class="section-title">Which build path fits you best?</h2>
-        <p class="section-intro">Answer the questions below. The app will recommend either CodePen or GitHub Pages based on the kind of final project you want to build.</p>
+        <h2 class="section-title">Which build path fits your final?</h2>
+        <p class="section-intro">Answer these three questions to get a recommendation aligned to your project complexity and goals.</p>
         <div class="quiz-wrap">
           <div class="card">
             <form id="toolQuiz">
-              <div class="question"><h3>1. I want the easiest possible setup so I can focus on coding quickly.</h3><div class="options"><label class="option"><input type="radio" name="q1" value="codepen"> Yes, I want the fastest route</label><label class="option"><input type="radio" name="q1" value="github"> I can handle a little setup for a stronger workflow</label></div></div>
-              <div class="question"><h3>2. My final project will probably have multiple pages, folders, or lots of images.</h3><div class="options"><label class="option"><input type="radio" name="q2" value="github"> Yes, it is more like a complete website</label><label class="option"><input type="radio" name="q2" value="codepen"> No, it is more like a small front-end build</label></div></div>
-              <div class="question"><h3>3. I want practice with a workflow that feels more professional and portfolio-ready.</h3><div class="options"><label class="option"><input type="radio" name="q3" value="github"> Yes, that matters to me</label><label class="option"><input type="radio" name="q3" value="codepen"> Not as much, I mostly want a smooth finish</label></div></div>
+              <div class="question"><h3>1. I want the easiest setup so I can ship quickly.</h3><div class="options"><label class="option"><input type="radio" name="q1" value="codepen"> Yes, speed is top priority</label><label class="option"><input type="radio" name="q1" value="github"> I can do a little setup for better structure</label></div></div>
+              <div class="question"><h3>2. My final project needs multiple pages, assets, and folders.</h3><div class="options"><label class="option"><input type="radio" name="q2" value="github"> Yes, this is a full website</label><label class="option"><input type="radio" name="q2" value="codepen"> No, this is a lighter build</label></div></div>
+              <div class="question"><h3>3. I want a workflow that looks professional in my portfolio.</h3><div class="options"><label class="option"><input type="radio" name="q3" value="github"> Yes, that matters</label><label class="option"><input type="radio" name="q3" value="codepen"> Not right now</label></div></div>
               <div class="hero-actions"><button type="button" class="btn btn-primary" id="scoreQuiz">Get My Recommendation</button><button type="reset" class="btn btn-secondary" id="resetQuiz">Reset</button></div>
             </form>
           </div>
-          <aside class="card result-box" aria-live="polite"><div class="tag tag-green">Live recommendation</div><h3>Your best fit will appear here</h3><div class="result-highlight" id="quizResult"><strong>Waiting for your answers...</strong><p class="muted">Complete the questions, then click the button to see your recommendation.</p></div></aside>
+          <aside class="card result-box" aria-live="polite"><div class="tag tag-green">Live recommendation</div><h3>Your best fit will appear here</h3><div class="result-highlight" id="quizResult"><strong>Waiting for your answers...</strong><p class="muted">Complete all questions and score your path.</p></div></aside>
         </div>
       </div>
     </section>
@@ -392,7 +484,7 @@
     <section id="starterlab">
       <div class="container section-shell">
         <h2 class="section-title">Get unstuck: starter helper</h2>
-        <p class="section-intro">Use these choices to generate a starting plan, code snippet, folder structure, starter CSS, a quick layout fix, or a full starter package you can copy or download.</p>
+        <p class="section-intro">Generate practical starter output with less friction, then personalize it for your final build.</p>
         <div class="grid-2">
           <div class="card">
             <div class="tag tag-green">Step 1</div>
@@ -404,11 +496,11 @@
           </div>
           <div class="card builder-output">
             <div class="tag tag-blue">Generated for you</div>
-            <div class="small" style="margin-bottom:0.8rem;">Answer a few questions, then copy the output into your own project and customize it.</div>
+            <div class="small" style="margin-bottom:0.7rem;">Choose your options, generate output, then adapt it to your own project voice and goals.</div>
             <h3>Starter plan + output</h3>
-            <p class="muted">This gives you something practical to start with.</p>
-            <div class="callout" id="starterPlan" style="margin-top: 1rem;"><strong>Starter plan</strong><p>Choose your options, then generate a suggested starting point.</p></div>
-            <div class="callout" style="margin-top: 1rem;"><strong>Copy-ready output</strong><pre id="snippetOutput">Your output will appear here.</pre></div>
+            <p class="muted">A practical baseline you can build from quickly.</p>
+            <div class="callout" id="starterPlan" style="margin-top: 0.8rem;"><strong>Starter plan</strong><p>Choose your options, then generate a suggested starting point.</p></div>
+            <div class="callout" style="margin-top: 0.8rem;"><strong>Copy-ready output</strong><pre id="snippetOutput">Your output will appear here.</pre></div>
             <div class="output-actions">
               <button type="button" class="btn btn-secondary" id="copyOutputBtn">Copy output</button>
               <button type="button" class="btn btn-success" id="downloadPackageBtn">Download starter package</button>
@@ -416,9 +508,10 @@
             <div class="copy-status" id="copyStatus">Choose an option and generate output first.</div>
           </div>
         </div>
+
         <div class="fix-grid">
-          <div class="card"><div class="tag tag-yellow">New to GitHub?</div><h3>Beginner-friendly GitHub Pages help</h3><ol class="pros-cons"><li>Create a new repository</li><li>Upload index.html, CSS, JS, and images</li><li>Commit your files</li><li>Open Settings → Pages</li><li>Select the source</li><li>Test the live link</li></ol></div>
-          <div class="card"><div class="tag tag-purple">Helpful starting resources</div><h3>Use these when you need a push</h3><ul class="pros-cons"><li><a href="https://docs.github.com/pages/quickstart" target="_blank" rel="noopener noreferrer">GitHub Pages quickstart</a></li><li><a href="https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site" target="_blank" rel="noopener noreferrer">Create a GitHub Pages site</a></li><li><a href="https://blog.codepen.io/docs/pens/" target="_blank" rel="noopener noreferrer">What a CodePen Pen is</a></li><li><a href="https://blog.codepen.io/documentation/exporting-pens/" target="_blank" rel="noopener noreferrer">How to export code from CodePen</a></li></ul></div>
+          <div class="card"><div class="tag tag-yellow">New to GitHub?</div><h3>Beginner-friendly GitHub Pages path</h3><ol class="pros-cons"><li>Create repository</li><li>Upload index.html, CSS, JS, images</li><li>Commit your files</li><li>Enable Pages in Settings</li><li>Choose branch/source</li><li>Validate the live link on phone + desktop</li></ol></div>
+          <div class="card"><div class="tag tag-purple">Helpful resources</div><h3>Official docs</h3><ul class="pros-cons"><li><a href="https://docs.github.com/pages/quickstart" target="_blank" rel="noopener noreferrer">GitHub Pages quickstart</a></li><li><a href="https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site" target="_blank" rel="noopener noreferrer">Create a GitHub Pages site</a></li><li><a href="https://blog.codepen.io/docs/pens/" target="_blank" rel="noopener noreferrer">CodePen Pen docs</a></li><li><a href="https://blog.codepen.io/documentation/exporting-pens/" target="_blank" rel="noopener noreferrer">Export from CodePen</a></li></ul></div>
         </div>
       </div>
     </section>
@@ -426,14 +519,14 @@
     <section id="examples" data-mode="learn">
       <div class="container section-shell">
         <h2 class="section-title">What an A-level project looks like</h2>
-        <p class="section-intro">Use this section to compare your work against a stronger final project standard.</p>
+        <p class="section-intro">Use this to benchmark your final against quality expectations and current UX norms.</p>
         <div class="grid-2">
-          <article class="card"><div class="tag tag-yellow">Needs work</div><h3>Lower-quality final project</h3><ul class="pros-cons"><li>Looks unfinished or rushed</li><li>Weak spacing or inconsistent styling</li><li>Navigation is confusing</li><li>Pages feel empty or thin on content</li></ul></article>
-          <article class="card"><div class="tag tag-green">A-level target</div><h3>Higher-quality final project</h3><ul class="pros-cons"><li>Clear purpose and audience</li><li>Strong visual hierarchy</li><li>Navigation is simple and complete</li><li>Content feels thoughtful and well structured</li></ul></article>
+          <article class="card"><div class="tag tag-yellow">Needs work</div><h3>Lower-quality final project</h3><ul class="pros-cons"><li>Unclear purpose above the fold</li><li>Dense paragraphs and weak scannability</li><li>Inconsistent button/spacing patterns</li><li>Mobile layout breaks or overlap</li></ul></article>
+          <article class="card"><div class="tag tag-green">A-level target</div><h3>Higher-quality final project</h3><ul class="pros-cons"><li>Clear value message in first screen</li><li>Consistent hierarchy and reusable components</li><li>Accessible interactions (focus, contrast, labels)</li><li>Simple next-step calls to action</li></ul></article>
         </div>
-        <div class="example-visuals" style="margin-top: 1.5rem;">
-          <div class="card"><div class="tag tag-yellow">Weak layout example</div><h3>Messy / low-quality design</h3><div class="mockup"><div class="bar"></div><div class="line" style="width:60%;"></div><div class="line" style="width:92%;"></div><div class="line" style="width:44%;"></div><div class="block"></div></div></div>
-          <div class="card"><div class="tag tag-green">Strong layout example</div><h3>Clean / A-level design</h3><div class="mockup mockup-strong"><div class="bar"></div><div class="mockup-grid"><div><div class="line" style="width:72%;"></div><div class="line" style="width:95%;"></div><div class="line" style="width:65%;"></div></div><div class="thumb"></div></div></div></div>
+        <div class="example-visuals" style="margin-top: 1rem;">
+          <div class="card"><div class="tag tag-yellow">Weak layout example</div><h3>Messy and hard to scan</h3><div class="mockup"><div class="bar"></div><div class="line" style="width:57%;"></div><div class="line" style="width:93%;"></div><div class="line" style="width:42%;"></div><div class="block"></div></div></div>
+          <div class="card"><div class="tag tag-green">Strong layout example</div><h3>Clear and confidence-building</h3><div class="mockup mockup-strong"><div class="bar"></div><div class="mockup-grid"><div><div class="line" style="width:76%;"></div><div class="line" style="width:95%;"></div><div class="line" style="width:67%;"></div></div><div class="thumb"></div></div></div></div>
         </div>
       </div>
     </section>
@@ -441,40 +534,40 @@
     <section id="paths">
       <div class="container section-shell">
         <h2 class="section-title">Step-by-step publish paths</h2>
-        <p class="section-intro">Pick the path that matches your recommendation or your comfort level.</p>
+        <p class="section-intro">Pick the path that best matches your recommendation and timeline.</p>
         <div class="path-tabs" role="tablist" aria-label="Build path tabs">
           <button class="tab-btn active" data-tab="github" type="button">GitHub Pages Path</button>
           <button class="tab-btn" data-tab="codepen" type="button">CodePen Path</button>
           <button class="tab-btn" data-tab="other" type="button">Other Modern Options</button>
         </div>
-        <div class="tab-panel active" id="tab-github"><div class="card steps"><div class="tag tag-purple">Best for multi-page and portfolio-ready sites</div><h3>GitHub Pages walkthrough</h3><div class="two-col"><div><ol><li>Create a GitHub account</li><li>Create a repository</li><li>Add index.html, CSS, JS, and images</li><li>Commit your changes</li><li>Open Settings and turn on GitHub Pages</li><li>Choose the publishing source</li><li>Test the live link on desktop and mobile</li></ol></div><div><div class="callout"><strong>Common mistakes</strong><p>Missing index.html, broken paths, wrong capitalization, and forgetting to republish after changes.</p></div></div></div></div></div>
-        <div class="tab-panel" id="tab-codepen"><div class="card steps"><div class="tag tag-blue">Best for fast and simple front-end builds</div><h3>CodePen walkthrough</h3><div class="two-col"><div><ol><li>Create a CodePen account</li><li>Start a new Pen</li><li>Build and preview as you go</li><li>Keep your code clean</li><li>Test responsiveness and readability</li><li>Save and share the link</li></ol></div><div><div class="callout"><strong>Best use case</strong><p>A one-page site, front-end demo, creative interaction, or smaller project where speed matters most.</p></div></div></div></div></div>
-        <div class="tab-panel" id="tab-other"><div class="card"><div class="tag tag-yellow">Worth knowing</div><h3>Other modern publishing options</h3><p class="muted">You may also hear about tools like Netlify and Vercel. They are useful, but GitHub Pages and CodePen are the most straightforward options for this class.</p></div></div>
+        <div class="tab-panel active" id="tab-github"><div class="card steps"><div class="tag tag-purple">Best for multi-page portfolio-ready sites</div><h3>GitHub Pages walkthrough</h3><div class="two-col"><div><ol><li>Create GitHub account and repository</li><li>Add organized project files</li><li>Commit with clear messages</li><li>Enable GitHub Pages in Settings</li><li>Select source branch and folder</li><li>Verify all links/images on mobile + desktop</li></ol></div><div><div class="callout"><strong>Common mistakes</strong><p>Missing index.html, broken relative paths, capitalization mismatches, and not waiting for publish refresh.</p></div></div></div></div></div>
+        <div class="tab-panel" id="tab-codepen"><div class="card steps"><div class="tag tag-blue">Best for rapid prototypes and demos</div><h3>CodePen walkthrough</h3><div class="two-col"><div><ol><li>Create account and new Pen</li><li>Build in HTML/CSS/JS panels</li><li>Keep structure semantic and readable</li><li>Test at mobile widths</li><li>Save and publish shareable link</li></ol></div><div><div class="callout"><strong>Best use case</strong><p>One-page experiences, interactions, or light front-end projects where setup speed matters.</p></div></div></div></div></div>
+        <div class="tab-panel" id="tab-other"><div class="card"><div class="tag tag-yellow">Worth knowing</div><h3>Other modern hosting options</h3><p class="muted">Netlify and Vercel are common in industry, but GitHub Pages + CodePen remain the most straightforward options for this course workflow.</p></div></div>
       </div>
     </section>
 
     <section id="checklist">
       <div class="container section-shell">
         <h2 class="section-title">Final project launch checklist</h2>
-        <p class="section-intro">Use this as your final review before submitting your live project link.</p>
+        <p class="section-intro">Use this quality gate before submitting your live URL.</p>
         <div class="card">
           <div class="checklist-grid" id="checklistGrid">
-            <label class="check-item"><input type="checkbox"> <span>My site has a clear audience and purpose</span></label>
-            <label class="check-item"><input type="checkbox"> <span>My navigation is easy to use</span></label>
-            <label class="check-item"><input type="checkbox"> <span>My layout works on smaller screens</span></label>
-            <label class="check-item"><input type="checkbox"> <span>I used modern CSS layout techniques</span></label>
-            <label class="check-item"><input type="checkbox"> <span>I included at least one JavaScript feature</span></label>
-            <label class="check-item"><input type="checkbox"> <span>I checked for broken links and missing images</span></label>
+            <label class="check-item"><input type="checkbox"> <span>My homepage clearly states audience + purpose</span></label>
+            <label class="check-item"><input type="checkbox"> <span>Primary navigation is consistent across pages</span></label>
+            <label class="check-item"><input type="checkbox"> <span>Mobile layout works without horizontal scrolling</span></label>
+            <label class="check-item"><input type="checkbox"> <span>I used semantic sections and accessible headings</span></label>
+            <label class="check-item"><input type="checkbox"> <span>Buttons/links are obvious and touch-friendly</span></label>
+            <label class="check-item"><input type="checkbox"> <span>I checked all links, images, and final deployment URL</span></label>
           </div>
           <div class="progress" aria-hidden="true"><div class="progress-bar" id="progressBar"></div></div>
-          <p class="muted" id="progressText" style="margin-top:0.6rem;">0 of 6 completed</p>
+          <p class="muted" id="progressText" style="margin-top:0.55rem;">0 of 6 completed</p>
         </div>
       </div>
     </section>
   </main>
 
   <footer class="footer">
-    <div class="container">Built as a polished student launchpad for NKU web development final projects.</div>
+    <div class="container">Built for NKU web development students to plan, build, and launch stronger final projects.</div>
   </footer>
 
   <script>
