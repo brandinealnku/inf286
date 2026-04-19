@@ -1,0 +1,1371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  />
+  <title>Instructor Launch Console | Final Project</title>
+  <meta
+    name="description"
+    content="Instructor control page to launch and hype up final projects in Intro to Web Development."
+  />
+
+  <style>
+    :root{
+      --gold:#f7b718;
+      --pink:#ff66c4;
+      --cyan:#67e8f9;
+      --green:#39d98a;
+      --danger:#ff7b7b;
+      --bg1:#0f1021;
+      --bg2:#1b1d3a;
+      --bg3:#101327;
+      --panel:rgba(255,255,255,.08);
+      --panel-strong:rgba(255,255,255,.12);
+      --border:rgba(255,255,255,.15);
+      --text:#f8f8fb;
+      --muted:#c9ccda;
+      --shadow:0 18px 48px rgba(0,0,0,.28);
+      --radius:24px;
+      --radius-sm:18px;
+      --max:1500px;
+    }
+
+    *{
+      box-sizing:border-box;
+      -webkit-tap-highlight-color:transparent;
+    }
+
+    html{
+      scroll-behavior:smooth;
+    }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(247,183,24,.16), transparent 24%),
+        radial-gradient(circle at bottom right, rgba(255,102,196,.14), transparent 22%),
+        radial-gradient(circle at 80% 10%, rgba(103,232,249,.10), transparent 16%),
+        linear-gradient(135deg, var(--bg1), var(--bg2) 58%, var(--bg3));
+      padding:22px;
+      overflow-x:hidden;
+    }
+
+    .ambient{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      overflow:hidden;
+      z-index:0;
+    }
+
+    .orb{
+      position:absolute;
+      border-radius:50%;
+      filter:blur(36px);
+      opacity:.22;
+      animation:floaty 10s ease-in-out infinite alternate;
+    }
+
+    .orb.one{
+      width:280px;
+      height:280px;
+      background:var(--gold);
+      top:-50px;
+      left:-60px;
+    }
+
+    .orb.two{
+      width:260px;
+      height:260px;
+      background:var(--pink);
+      right:-70px;
+      top:20%;
+      animation-duration:13s;
+    }
+
+    .orb.three{
+      width:220px;
+      height:220px;
+      background:var(--cyan);
+      left:12%;
+      bottom:-60px;
+      animation-duration:11s;
+    }
+
+    .shell{
+      position:relative;
+      z-index:1;
+      max-width:var(--max);
+      margin:0 auto;
+      display:grid;
+      grid-template-columns:430px 1fr;
+      gap:22px;
+    }
+
+    .panel{
+      background:var(--panel);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(18px);
+    }
+
+    .sidebar,
+    .stage{
+      padding:22px;
+    }
+
+    .brand{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      margin-bottom:14px;
+    }
+
+    .brand-badge{
+      width:50px;
+      height:50px;
+      border-radius:18px;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(135deg, var(--gold), #ffd86e);
+      color:#111;
+      font-weight:900;
+      box-shadow:var(--shadow);
+    }
+
+    .brand h1{
+      margin:0;
+      font-size:1.45rem;
+      line-height:1;
+      letter-spacing:-.03em;
+    }
+
+    .brand p{
+      margin:4px 0 0;
+      color:var(--muted);
+      font-size:.93rem;
+      line-height:1.45;
+    }
+
+    .status-pill{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 14px;
+      border-radius:999px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.14);
+      font-weight:800;
+      margin:4px 0 18px;
+    }
+
+    .dot{
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background:var(--green);
+      box-shadow:0 0 0 6px rgba(57,217,138,.14);
+    }
+
+    .field{
+      margin-bottom:14px;
+    }
+
+    .field label{
+      display:block;
+      margin-bottom:8px;
+      font-weight:800;
+      font-size:.92rem;
+    }
+
+    .field input,
+    .field textarea,
+    .field select{
+      width:100%;
+      border-radius:15px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.08);
+      color:var(--text);
+      padding:13px 14px;
+      font-size:.97rem;
+      outline:none;
+      font:inherit;
+    }
+
+    .field textarea{
+      min-height:88px;
+      resize:vertical;
+    }
+
+    .field input::placeholder,
+    .field textarea::placeholder{
+      color:rgba(255,255,255,.48);
+    }
+
+    .grid-2,
+    .grid-3{
+      display:grid;
+      gap:12px;
+    }
+
+    .grid-2{ grid-template-columns:1fr 1fr; }
+    .grid-3{ grid-template-columns:1fr 1fr 1fr; }
+
+    .small-note,
+    .subtle,
+    .footer-note{
+      color:var(--muted);
+      font-size:.86rem;
+      line-height:1.45;
+    }
+
+    .button-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:10px;
+      margin-bottom:18px;
+    }
+
+    button{
+      appearance:none;
+      border:0;
+      border-radius:15px;
+      padding:12px 16px;
+      font-weight:800;
+      font-size:.95rem;
+      cursor:pointer;
+      transition:transform .18s ease, filter .18s ease, box-shadow .18s ease;
+    }
+
+    button:hover{
+      transform:translateY(-1px);
+      filter:brightness(1.04);
+    }
+
+    button:focus-visible{
+      outline:3px solid rgba(103,232,249,.4);
+      outline-offset:2px;
+    }
+
+    .primary{
+      background:linear-gradient(135deg, var(--gold), #ffd86e);
+      color:#111;
+      box-shadow:0 14px 32px rgba(247,183,24,.22);
+    }
+
+    .secondary{
+      background:rgba(255,255,255,.10);
+      color:var(--text);
+      border:1px solid rgba(255,255,255,.14);
+    }
+
+    .pink{
+      background:linear-gradient(135deg, var(--pink), #ff93d7);
+      color:#150b15;
+      box-shadow:0 14px 30px rgba(255,102,196,.18);
+    }
+
+    .danger{
+      background:rgba(255,123,123,.14);
+      color:#ffd7d7;
+      border:1px solid rgba(255,123,123,.24);
+    }
+
+    .card{
+      display:grid;
+      gap:14px;
+      padding:16px;
+      border-radius:20px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.11);
+      margin-bottom:18px;
+    }
+
+    .card h3{
+      margin:0;
+      font-size:1.02rem;
+      letter-spacing:-.02em;
+    }
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:14px;
+      margin-bottom:18px;
+    }
+
+    .stat{
+      padding:16px;
+      border-radius:20px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.11);
+    }
+
+    .stat .label{
+      color:var(--muted);
+      font-size:.84rem;
+      margin-bottom:8px;
+    }
+
+    .stat .value{
+      font-size:1.6rem;
+      font-weight:900;
+      letter-spacing:-.04em;
+    }
+
+    .preview-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:16px;
+      margin-bottom:16px;
+    }
+
+    .preview-header h2{
+      margin:0;
+      font-size:1.2rem;
+      letter-spacing:-.03em;
+    }
+
+    .hero-stage{
+      position:relative;
+      width:min(100%, 1040px);
+      min-height:440px;
+      margin:0 auto 18px;
+      padding:28px;
+      border-radius:28px;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at top left, rgba(247,183,24,.18), transparent 20%),
+        radial-gradient(circle at bottom right, rgba(255,102,196,.16), transparent 24%),
+        linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.05));
+      border:1px solid rgba(255,255,255,.14);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      gap:20px;
+    }
+
+    .stage-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:8px 14px;
+      border-radius:999px;
+      background:rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.12);
+      font-weight:800;
+      font-size:.88rem;
+      width:max-content;
+    }
+
+    .hero-title{
+      margin:0;
+      font-size:clamp(2.4rem, 5vw, 4.8rem);
+      line-height:.95;
+      letter-spacing:-.05em;
+      font-weight:900;
+      max-width:12ch;
+    }
+
+    .hero-title .accent{
+      background:linear-gradient(135deg, #fff, #ffd86e 42%, #ff9ad9 74%, #9cf3ff);
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+    }
+
+    .hero-sub{
+      max-width:62ch;
+      color:var(--muted);
+      line-height:1.65;
+      font-size:1.05rem;
+    }
+
+    .hero-row{
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      gap:18px;
+      align-items:end;
+    }
+
+    .launch-box{
+      padding:18px;
+      border-radius:22px;
+      background:rgba(255,255,255,.07);
+      border:1px solid rgba(255,255,255,.10);
+    }
+
+    .launch-box h4{
+      margin:0 0 8px;
+      font-size:1rem;
+      letter-spacing:-.02em;
+    }
+
+    .countdown-big{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:12px;
+      margin-top:12px;
+    }
+
+    .time-box{
+      padding:16px 10px;
+      text-align:center;
+      border-radius:20px;
+      background:linear-gradient(180deg, rgba(255,255,255,.13), rgba(255,255,255,.06));
+      border:1px solid rgba(255,255,255,.12);
+    }
+
+    .time-number{
+      font-size:clamp(1.4rem, 3vw, 2.5rem);
+      line-height:1;
+      font-weight:900;
+      letter-spacing:-.05em;
+      margin-bottom:8px;
+    }
+
+    .time-label{
+      font-size:.78rem;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      color:var(--muted);
+      font-weight:800;
+    }
+
+    .hype-preview{
+      display:grid;
+      gap:12px;
+    }
+
+    .quote-box{
+      padding:18px;
+      border-radius:22px;
+      background:rgba(255,255,255,.07);
+      border:1px solid rgba(255,255,255,.10);
+      min-height:152px;
+    }
+
+    .quote-tag{
+      display:inline-flex;
+      padding:8px 12px;
+      border-radius:999px;
+      background:rgba(247,183,24,.18);
+      border:1px solid rgba(247,183,24,.22);
+      font-size:.78rem;
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:#ffe8a0;
+      margin-bottom:12px;
+    }
+
+    .quote-text{
+      font-size:clamp(1.2rem, 2.6vw, 2rem);
+      line-height:1.18;
+      letter-spacing:-.04em;
+      font-weight:900;
+      margin-bottom:10px;
+    }
+
+    .quote-sub{
+      color:var(--muted);
+      line-height:1.55;
+      font-size:.97rem;
+    }
+
+    .section-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:18px;
+      margin-top:18px;
+    }
+
+    .list{
+      display:grid;
+      gap:10px;
+    }
+
+    .list-item{
+      display:grid;
+      grid-template-columns:auto 1fr;
+      gap:12px;
+      align-items:start;
+      padding:14px;
+      border-radius:16px;
+      background:rgba(255,255,255,.07);
+      border:1px solid rgba(255,255,255,.09);
+    }
+
+    .list-badge{
+      width:28px;
+      height:28px;
+      border-radius:999px;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(135deg, var(--gold), #ffd86e);
+      color:#111;
+      font-weight:900;
+      font-size:.85rem;
+      margin-top:2px;
+    }
+
+    .list-item strong{
+      display:block;
+      margin-bottom:4px;
+    }
+
+    .list-item span{
+      color:var(--muted);
+      line-height:1.55;
+      font-size:.95rem;
+    }
+
+    .callout{
+      padding:18px;
+      border-radius:20px;
+      background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.05));
+      border:1px solid rgba(255,255,255,.11);
+    }
+
+    .callout h3{
+      margin:0 0 10px;
+      font-size:1.08rem;
+      letter-spacing:-.02em;
+    }
+
+    .callout p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.6;
+      font-size:.96rem;
+    }
+
+    .project-prompt{
+      padding:18px;
+      border-radius:20px;
+      background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+      border:1px solid rgba(255,255,255,.12);
+      min-height:140px;
+    }
+
+    .prompt-label{
+      display:inline-flex;
+      padding:8px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.10);
+      font-size:.8rem;
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:#fff2c4;
+      margin-bottom:12px;
+    }
+
+    .prompt-title{
+      font-size:1.15rem;
+      font-weight:900;
+      letter-spacing:-.03em;
+      margin-bottom:8px;
+    }
+
+    .prompt-body{
+      color:var(--muted);
+      line-height:1.6;
+    }
+
+    .timeline{
+      display:grid;
+      gap:12px;
+    }
+
+    .timeline-item{
+      padding:16px;
+      border-radius:18px;
+      background:rgba(255,255,255,.07);
+      border:1px solid rgba(255,255,255,.09);
+    }
+
+    .timeline-item strong{
+      display:block;
+      margin-bottom:6px;
+    }
+
+    .timeline-item span{
+      color:var(--muted);
+      line-height:1.55;
+      font-size:.95rem;
+    }
+
+    .sticky-note{
+      display:inline-flex;
+      padding:8px 12px;
+      border-radius:999px;
+      background:rgba(103,232,249,.14);
+      border:1px solid rgba(103,232,249,.20);
+      color:#d7fbff;
+      font-size:.82rem;
+      font-weight:800;
+    }
+
+    .footer-note{
+      margin-top:6px;
+    }
+
+    .toast{
+      position:fixed;
+      right:16px;
+      bottom:16px;
+      z-index:100;
+      max-width:min(92vw, 340px);
+      padding:14px 16px;
+      border-radius:18px;
+      background:rgba(15,18,38,.94);
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow:var(--shadow);
+      color:var(--text);
+      opacity:0;
+      pointer-events:none;
+      transform:translateY(16px);
+      transition:opacity .22s ease, transform .22s ease;
+    }
+
+    .toast.show{
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    .confetti{
+      position:fixed;
+      top:-20px;
+      width:12px;
+      height:18px;
+      border-radius:4px;
+      opacity:.95;
+      pointer-events:none;
+      z-index:120;
+      animation:fall linear forwards;
+    }
+
+    @keyframes floaty{
+      from{transform:translateY(-10px) translateX(-10px)}
+      to{transform:translateY(14px) translateX(12px)}
+    }
+
+    @keyframes fall{
+      to{
+        transform:translateY(110vh) rotate(720deg);
+        opacity:.98;
+      }
+    }
+
+    @media (max-width:1180px){
+      .shell{
+        grid-template-columns:1fr;
+      }
+
+      .stats{
+        grid-template-columns:repeat(2,1fr);
+      }
+
+      .section-grid,
+      .hero-row{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media (max-width:760px){
+      body{
+        padding:14px;
+      }
+
+      .grid-2,
+      .grid-3,
+      .stats,
+      .countdown-big,
+      .section-grid{
+        grid-template-columns:1fr;
+      }
+
+      .sidebar,
+      .stage{
+        padding:18px;
+      }
+
+      .hero-stage{
+        padding:20px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      html{scroll-behavior:auto}
+      *, *::before, *::after{
+        animation:none !important;
+        transition:none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient" aria-hidden="true">
+    <div class="orb one"></div>
+    <div class="orb two"></div>
+    <div class="orb three"></div>
+  </div>
+
+  <div class="shell">
+    <section class="panel sidebar">
+      <div class="brand">
+        <div class="brand-badge">🎓</div>
+        <div>
+          <h1>Instructor Launch Console</h1>
+          <p>Final project hype + wrap-up control page</p>
+        </div>
+      </div>
+
+      <div class="status-pill">
+        <span class="dot"></span>
+        <span id="statusText">Ready to launch class energy</span>
+      </div>
+
+      <div class="field">
+        <label for="courseTitle">Course title</label>
+        <input id="courseTitle" value="Intro to Web Development" />
+      </div>
+
+      <div class="field">
+        <label for="heroMessage">Main launch message</label>
+        <textarea id="heroMessage">This is your chance to build something real, polished, and portfolio-worthy.</textarea>
+      </div>
+
+      <div class="grid-2">
+        <div class="field">
+          <label for="deadlineInput">Final project due date</label>
+          <input id="deadlineInput" type="datetime-local" value="2026-05-05T23:59" />
+        </div>
+        <div class="field">
+          <label for="classFocus">Today’s focus</label>
+          <select id="classFocus">
+            <option value="launch" selected>Project launch day</option>
+            <option value="build">Build / work day</option>
+            <option value="polish">Polish / feedback day</option>
+            <option value="wrap">Final wrap-up day</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Hype controls</h3>
+        <div class="small-note">Use these to switch the projected message while you talk through the final project.</div>
+        <div class="button-row" style="margin-bottom:0;">
+          <button class="primary" id="nextHypeBtn" type="button">Next hype line</button>
+          <button class="secondary" id="focusModeBtn" type="button">Focus mode</button>
+          <button class="pink" id="celebrateBtn" type="button">Celebrate</button>
+          <button class="danger" id="resetViewBtn" type="button">Reset view</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Project prompt builder</h3>
+        <div class="grid-2">
+          <div class="field" style="margin-bottom:0;">
+            <label for="promptType">Prompt type</label>
+            <select id="promptType">
+              <option value="redesign">Website redesign</option>
+              <option value="portfolio">Portfolio / personal site</option>
+              <option value="promo">Promo / landing page</option>
+              <option value="interest">Interest-based concept</option>
+            </select>
+          </div>
+          <div class="field" style="margin-bottom:0;">
+            <label for="promptAudience">Audience</label>
+            <select id="promptAudience">
+              <option value="college students">College students</option>
+              <option value="young professionals">Young professionals</option>
+              <option value="fans">Fans / followers</option>
+              <option value="community members">Community members</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field" style="margin-bottom:10px;">
+          <label for="promptTopic">Topic</label>
+          <input id="promptTopic" placeholder="coffee shop, artist, sports team, event, portfolio..." />
+        </div>
+
+        <div class="button-row" style="margin-bottom:0;">
+          <button class="primary" id="generatePromptBtn" type="button">Generate prompt</button>
+          <button class="secondary" id="surprisePromptBtn" type="button">Surprise me</button>
+          <button class="secondary" id="copyPromptBtn" type="button">Copy prompt</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Instructor quick actions</h3>
+        <div class="button-row" style="margin-bottom:0;">
+          <button class="secondary" id="copyTalkingPointBtn" type="button">Copy talking points</button>
+          <button class="secondary" id="copyChecklistBtn" type="button">Copy student checklist</button>
+          <button class="secondary" id="copyWarmupBtn" type="button">Copy warm-up question</button>
+        </div>
+      </div>
+
+      <div class="footer-note">
+        This version is designed for projecting in class or keeping open while you introduce the final project and guide work time.
+      </div>
+    </section>
+
+    <section class="panel stage">
+      <div class="stats">
+        <div class="stat">
+          <div class="label">Mode</div>
+          <div class="value" id="modeValue">LAUNCH</div>
+        </div>
+        <div class="stat">
+          <div class="label">Energy level</div>
+          <div class="value" id="energyValue">HIGH</div>
+        </div>
+        <div class="stat">
+          <div class="label">Countdown status</div>
+          <div class="value" id="countdownStatus">LIVE</div>
+        </div>
+        <div class="stat">
+          <div class="label">Class message</div>
+          <div class="value" id="messageValue" style="font-size:1.08rem;">BUILD SOMETHING REAL</div>
+        </div>
+      </div>
+
+      <div class="preview-header">
+        <div>
+          <h2>Projected instructor view</h2>
+          <div class="subtle">Use this on the classroom screen while introducing the final project.</div>
+        </div>
+        <div class="sticky-note" id="stageTag">Project launch day</div>
+      </div>
+
+      <div class="hero-stage">
+        <div class="stage-badge">
+          <span class="dot"></span>
+          <span id="badgeText">Final project launch</span>
+        </div>
+
+        <div class="hero-row">
+          <div>
+            <h1 class="hero-title" id="heroTitle">
+              This is your <span class="accent">build something real</span> moment.
+            </h1>
+            <div class="hero-sub" id="heroSub">
+              This is your chance to build something real, polished, and portfolio-worthy.
+            </div>
+          </div>
+
+          <div class="launch-box">
+            <h4 id="countdownHeading">Countdown to launch</h4>
+            <div class="countdown-big" aria-live="polite">
+              <div class="time-box">
+                <div class="time-number" id="days">00</div>
+                <div class="time-label">Days</div>
+              </div>
+              <div class="time-box">
+                <div class="time-number" id="hours">00</div>
+                <div class="time-label">Hours</div>
+              </div>
+              <div class="time-box">
+                <div class="time-number" id="minutes">00</div>
+                <div class="time-label">Minutes</div>
+              </div>
+              <div class="time-box">
+                <div class="time-number" id="seconds">00</div>
+                <div class="time-label">Seconds</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hype-preview">
+          <div class="quote-box">
+            <div class="quote-tag" id="quoteTag">Portfolio energy</div>
+            <div class="quote-text" id="quoteText">Build something that makes people say, “Wait… you made that?”</div>
+            <div class="quote-sub" id="quoteSub">This is your chance to turn course skills into something polished, personal, and real.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-grid">
+        <div class="callout">
+          <h3>Instructor talking points</h3>
+          <div class="list" id="talkingPointsList">
+            <div class="list-item">
+              <div class="list-badge">1</div>
+              <div>
+                <strong>Frame the final as more than a grade</strong>
+                <span>Remind students this can become a portfolio piece, confidence boost, and proof of skill.</span>
+              </div>
+            </div>
+            <div class="list-item">
+              <div class="list-badge">2</div>
+              <div>
+                <strong>Push them beyond basic</strong>
+                <span>Encourage stronger spacing, visual polish, mobile testing, and better user experience choices.</span>
+              </div>
+            </div>
+            <div class="list-item">
+              <div class="list-badge">3</div>
+              <div>
+                <strong>Keep the project manageable</strong>
+                <span>Students do better when they clearly define purpose, audience, pages, and priorities.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-prompt" id="projectPromptBox">
+          <div class="prompt-label">Generated prompt</div>
+          <div class="prompt-title" id="promptTitle">Make the project feel real.</div>
+          <div class="prompt-body" id="promptBody">
+            Help students choose a topic they actually care about, then challenge them to build a polished, easy-to-use site that reflects real design decisions.
+          </div>
+        </div>
+      </div>
+
+      <div class="section-grid">
+        <div class="callout">
+          <h3>Strong final project reminders</h3>
+          <div class="timeline">
+            <div class="timeline-item">
+              <strong>Clarity first</strong>
+              <span>The site should quickly make sense to a first-time visitor.</span>
+            </div>
+            <div class="timeline-item">
+              <strong>Design with intention</strong>
+              <span>Spacing, alignment, contrast, and hierarchy should feel deliberate.</span>
+            </div>
+            <div class="timeline-item">
+              <strong>Polish matters</strong>
+              <span>Clean up awkward sections, broken links, inconsistent buttons, and mobile issues.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout">
+          <h3>Suggested class flow</h3>
+          <div class="timeline" id="classFlowList">
+            <div class="timeline-item">
+              <strong>Launch the project</strong>
+              <span>Build excitement and show students why this work matters beyond the course.</span>
+            </div>
+            <div class="timeline-item">
+              <strong>Have students choose a direction</strong>
+              <span>Website redesign, portfolio, promo page, or something based on personal interests.</span>
+            </div>
+            <div class="timeline-item">
+              <strong>Move into build time</strong>
+              <span>Circulate, coach, and push students toward stronger layout and visual decisions.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const hypeLines = [
+      {
+        tag: "Portfolio energy",
+        quote: "Build something that makes people say, “Wait… you made that?”",
+        sub: "This is your chance to turn course skills into something polished, personal, and real."
+      },
+      {
+        tag: "Final stretch mindset",
+        quote: "Do not aim for just enough. Aim for something you are proud to show off.",
+        sub: "A little extra effort in design, spacing, hierarchy, and polish can completely change how your project feels."
+      },
+      {
+        tag: "Career-ready skills",
+        quote: "Your final project is proof that you can turn an idea into an experience.",
+        sub: "That matters in class, in interviews, and anywhere you want to show what you can create."
+      },
+      {
+        tag: "Launch mode",
+        quote: "This is not just a submission. It is a launch.",
+        sub: "Treat the final like something worth sharing, remembering, and being proud of."
+      },
+      {
+        tag: "Design push",
+        quote: "Good design gets attention. Great execution keeps it.",
+        sub: "Help users understand your site quickly, then reward them with strong visual choices and smooth structure."
+      }
+    ];
+
+    const promptTemplates = {
+      redesign: [
+        "Redesign a {topic} website so it feels more polished, modern, and easier for {audience} to use.",
+        "Take an existing {topic} site and rebuild it with stronger hierarchy, cleaner navigation, and better visual design for {audience}.",
+        "Create a redesign concept for {topic} that improves usability, readability, and overall user experience for {audience}."
+      ],
+      portfolio: [
+        "Create a personal portfolio focused on {topic} that helps {audience} quickly understand the creator’s style, strengths, and goals.",
+        "Build a portfolio-style website around {topic} that feels polished, memorable, and intentionally designed for {audience}.",
+        "Design a personal brand website connected to {topic} that shows off projects, personality, and growth to {audience}."
+      ],
+      promo: [
+        "Build a landing page for {topic} that gets {audience} excited to sign up, attend, buy, or learn more.",
+        "Create a promo website for {topic} with a bold hero section, strong calls to action, and a visual style that appeals to {audience}.",
+        "Design a campaign page for {topic} that feels exciting, clear, and persuasive for {audience}."
+      ],
+      interest: [
+        "Create a passion project website about {topic} that gives {audience} an engaging, immersive experience.",
+        "Build a visually strong interest-based site centered on {topic}, designed to hook {audience} right away.",
+        "Design a website around {topic} that combines content, personality, and strong design choices for {audience}."
+      ]
+    };
+
+    const surpriseTopics = [
+      "a coffee shop brand",
+      "a gaming community",
+      "a student organization",
+      "a music artist",
+      "a local event",
+      "a fashion concept",
+      "a sports team fan page",
+      "a travel guide",
+      "a food truck",
+      "a personal portfolio"
+    ];
+
+    const els = {
+      courseTitle: document.getElementById("courseTitle"),
+      heroMessage: document.getElementById("heroMessage"),
+      deadlineInput: document.getElementById("deadlineInput"),
+      classFocus: document.getElementById("classFocus"),
+      nextHypeBtn: document.getElementById("nextHypeBtn"),
+      focusModeBtn: document.getElementById("focusModeBtn"),
+      celebrateBtn: document.getElementById("celebrateBtn"),
+      resetViewBtn: document.getElementById("resetViewBtn"),
+      promptType: document.getElementById("promptType"),
+      promptAudience: document.getElementById("promptAudience"),
+      promptTopic: document.getElementById("promptTopic"),
+      generatePromptBtn: document.getElementById("generatePromptBtn"),
+      surprisePromptBtn: document.getElementById("surprisePromptBtn"),
+      copyPromptBtn: document.getElementById("copyPromptBtn"),
+      copyTalkingPointBtn: document.getElementById("copyTalkingPointBtn"),
+      copyChecklistBtn: document.getElementById("copyChecklistBtn"),
+      copyWarmupBtn: document.getElementById("copyWarmupBtn"),
+      statusText: document.getElementById("statusText"),
+      modeValue: document.getElementById("modeValue"),
+      energyValue: document.getElementById("energyValue"),
+      countdownStatus: document.getElementById("countdownStatus"),
+      messageValue: document.getElementById("messageValue"),
+      stageTag: document.getElementById("stageTag"),
+      badgeText: document.getElementById("badgeText"),
+      heroTitle: document.getElementById("heroTitle"),
+      heroSub: document.getElementById("heroSub"),
+      countdownHeading: document.getElementById("countdownHeading"),
+      days: document.getElementById("days"),
+      hours: document.getElementById("hours"),
+      minutes: document.getElementById("minutes"),
+      seconds: document.getElementById("seconds"),
+      quoteTag: document.getElementById("quoteTag"),
+      quoteText: document.getElementById("quoteText"),
+      quoteSub: document.getElementById("quoteSub"),
+      promptTitle: document.getElementById("promptTitle"),
+      promptBody: document.getElementById("promptBody"),
+      toast: document.getElementById("toast")
+    };
+
+    let quoteIndex = 0;
+    let focusModeEnabled = false;
+
+    function pad(value){
+      return String(value).padStart(2, "0");
+    }
+
+    function showToast(message){
+      els.toast.textContent = message;
+      els.toast.classList.add("show");
+      clearTimeout(showToast._timer);
+      showToast._timer = setTimeout(() => {
+        els.toast.classList.remove("show");
+      }, 2200);
+    }
+
+    async function copyText(text, successMessage){
+      try{
+        await navigator.clipboard.writeText(text);
+        showToast(successMessage);
+      }catch(error){
+        showToast("Copy failed on this browser.");
+      }
+    }
+
+    function renderQuote(){
+      const item = hypeLines[quoteIndex];
+      els.quoteTag.textContent = item.tag;
+      els.quoteText.textContent = item.quote;
+      els.quoteSub.textContent = item.sub;
+      els.messageValue.textContent = item.quote.toUpperCase().slice(0, 26);
+    }
+
+    function nextQuote(){
+      quoteIndex = (quoteIndex + 1) % hypeLines.length;
+      renderQuote();
+    }
+
+    function updateHero(){
+      const course = els.courseTitle.value.trim() || "Intro to Web Development";
+      const message = els.heroMessage.value.trim() || "This is your chance to build something real, polished, and portfolio-worthy.";
+      els.heroTitle.innerHTML = `This is your <span class="accent">build something real</span> moment.`;
+      els.heroSub.textContent = message;
+      els.statusText.textContent = `${course} instructor view ready`;
+    }
+
+    function updateFocusMode(){
+      const focus = els.classFocus.value;
+      const map = {
+        launch: {
+          mode: "LAUNCH",
+          stageTag: "Project launch day",
+          badge: "Final project launch",
+          heading: "Countdown to launch",
+          energy: "HIGH"
+        },
+        build: {
+          mode: "BUILD",
+          stageTag: "Build / work day",
+          badge: "Project work session",
+          heading: "Countdown to deadline",
+          energy: "FOCUSED"
+        },
+        polish: {
+          mode: "POLISH",
+          stageTag: "Polish / feedback day",
+          badge: "Refine and improve",
+          heading: "Countdown to submission",
+          energy: "LOCKED IN"
+        },
+        wrap: {
+          mode: "WRAP-UP",
+          stageTag: "Final wrap-up day",
+          badge: "Finish strong",
+          heading: "Final countdown",
+          energy: "PROUD"
+        }
+      };
+
+      const current = map[focus] || map.launch;
+      els.modeValue.textContent = current.mode;
+      els.stageTag.textContent = current.stageTag;
+      els.badgeText.textContent = current.badge;
+      els.countdownHeading.textContent = current.heading;
+      els.energyValue.textContent = current.energy;
+    }
+
+    function updateCountdown(){
+      const value = els.deadlineInput.value;
+      const target = new Date(value).getTime();
+      const now = new Date().getTime();
+
+      if (!value || Number.isNaN(target)){
+        els.countdownStatus.textContent = "SET DATE";
+        els.days.textContent = "00";
+        els.hours.textContent = "00";
+        els.minutes.textContent = "00";
+        els.seconds.textContent = "00";
+        return;
+      }
+
+      const diff = target - now;
+
+      if (diff <= 0){
+        els.countdownStatus.textContent = "DUE";
+        els.days.textContent = "00";
+        els.hours.textContent = "00";
+        els.minutes.textContent = "00";
+        els.seconds.textContent = "00";
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+
+      els.days.textContent = pad(days);
+      els.hours.textContent = pad(hours);
+      els.minutes.textContent = pad(minutes);
+      els.seconds.textContent = pad(seconds);
+
+      if (days >= 7){
+        els.countdownStatus.textContent = "EARLY";
+      } else if (days >= 2){
+        els.countdownStatus.textContent = "ACTIVE";
+      } else if (days >= 1){
+        els.countdownStatus.textContent = "CLOSE";
+      } else {
+        els.countdownStatus.textContent = "TODAY";
+      }
+    }
+
+    function generatePrompt(type, audience, topic){
+      const safeTopic = topic && topic.trim() ? topic.trim() : "a topic students care about";
+      const safeAudience = audience || "college students";
+      const pool = promptTemplates[type] || promptTemplates.redesign;
+      const template = pool[Math.floor(Math.random() * pool.length)];
+
+      const titleMap = {
+        redesign: "Website redesign concept",
+        portfolio: "Portfolio concept",
+        promo: "Promo page concept",
+        interest: "Interest-based concept"
+      };
+
+      return {
+        title: titleMap[type] || "Project concept",
+        body: template.replaceAll("{topic}", safeTopic).replaceAll("{audience}", safeAudience)
+      };
+    }
+
+    function renderPrompt(prompt){
+      els.promptTitle.textContent = prompt.title;
+      els.promptBody.textContent = prompt.body;
+    }
+
+    function surprisePrompt(){
+      const types = ["redesign", "portfolio", "promo", "interest"];
+      const audiences = ["college students", "young professionals", "fans", "community members"];
+      const type = types[Math.floor(Math.random() * types.length)];
+      const audience = audiences[Math.floor(Math.random() * audiences.length)];
+      const topic = surpriseTopics[Math.floor(Math.random() * surpriseTopics.length)];
+
+      els.promptType.value = type;
+      els.promptAudience.value = audience;
+      els.promptTopic.value = topic;
+
+      renderPrompt(generatePrompt(type, audience, topic));
+    }
+
+    function toggleFocusMode(){
+      focusModeEnabled = !focusModeEnabled;
+      document.body.style.filter = focusModeEnabled ? "contrast(1.02) saturate(1.02)" : "";
+      els.focusModeBtn.textContent = focusModeEnabled ? "Exit focus mode" : "Focus mode";
+      showToast(focusModeEnabled ? "Focus mode on." : "Focus mode off.");
+    }
+
+    function createConfettiBurst(count = 90){
+      const colors = ["#f7b718", "#ff66c4", "#67e8f9", "#ffffff", "#39d98a"];
+      for(let i = 0; i < count; i++){
+        const piece = document.createElement("div");
+        piece.className = "confetti";
+        piece.style.left = `${Math.random() * 100}vw`;
+        piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+        piece.style.animationDuration = `${3 + Math.random() * 2.4}s`;
+        piece.style.transform = `translateY(0) rotate(${Math.random() * 180}deg)`;
+        document.body.appendChild(piece);
+
+        setTimeout(() => {
+          piece.remove();
+        }, 5600);
+      }
+    }
+
+    function resetView(){
+      quoteIndex = 0;
+      renderQuote();
+      updateHero();
+      updateFocusMode();
+      showToast("Instructor view reset.");
+    }
+
+    function init(){
+      updateHero();
+      updateFocusMode();
+      renderQuote();
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
+
+      els.courseTitle.addEventListener("input", updateHero);
+      els.heroMessage.addEventListener("input", updateHero);
+      els.classFocus.addEventListener("change", updateFocusMode);
+      els.deadlineInput.addEventListener("change", updateCountdown);
+      els.deadlineInput.addEventListener("input", updateCountdown);
+
+      els.nextHypeBtn.addEventListener("click", () => {
+        nextQuote();
+        showToast("New hype line ready.");
+      });
+
+      els.focusModeBtn.addEventListener("click", toggleFocusMode);
+
+      els.celebrateBtn.addEventListener("click", () => {
+        createConfettiBurst(110);
+        showToast("Celebration mode 🎉");
+      });
+
+      els.resetViewBtn.addEventListener("click", resetView);
+
+      els.generatePromptBtn.addEventListener("click", () => {
+        const prompt = generatePrompt(
+          els.promptType.value,
+          els.promptAudience.value,
+          els.promptTopic.value
+        );
+        renderPrompt(prompt);
+        showToast("Project prompt generated.");
+      });
+
+      els.surprisePromptBtn.addEventListener("click", () => {
+        surprisePrompt();
+        showToast("Surprise prompt ready.");
+      });
+
+      els.copyPromptBtn.addEventListener("click", () => {
+        const text = `${els.promptTitle.textContent}\n${els.promptBody.textContent}`;
+        copyText(text, "Prompt copied.");
+      });
+
+      els.copyTalkingPointBtn.addEventListener("click", () => {
+        const text = [
+          "Instructor Talking Points:",
+          "1. This final project is more than a grade.",
+          "2. Build something real, polished, and worth showing off.",
+          "3. Strong projects are clear, intentional, and easy to use.",
+          "4. Push past basic by improving spacing, hierarchy, and mobile experience.",
+          "5. The goal is to finish with something students feel proud of."
+        ].join("\n");
+        copyText(text, "Talking points copied.");
+      });
+
+      els.copyChecklistBtn.addEventListener("click", () => {
+        const text = [
+          "Student Final Project Checklist:",
+          "- I know my site topic, purpose, and audience.",
+          "- I planned the pages and structure.",
+          "- My design feels consistent.",
+          "- I tested on smaller screens.",
+          "- I fixed awkward alignment and readability issues.",
+          "- I would feel good showing this project to someone outside class."
+        ].join("\n");
+        copyText(text, "Checklist copied.");
+      });
+
+      els.copyWarmupBtn.addEventListener("click", () => {
+        const text = "Warm-up question: What kind of website would you actually be excited to show to someone when this class is over?";
+        copyText(text, "Warm-up question copied.");
+      });
+    }
+
+    init();
+  </script>
+</body>
+</html>
