@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Final Project Team Hub | Shared Collaboration Workspace</title>
+  <title>Website Redesign Team Hub</title>
   <style>
     :root {
-      --bg: #0b1020;
-      --bg-soft: #131a2e;
-      --panel: rgba(255, 255, 255, 0.08);
-      --panel-strong: rgba(255, 255, 255, 0.12);
-      --border: rgba(255, 255, 255, 0.14);
+      --bg: #0f172a;
+      --bg-2: #111827;
+      --panel: rgba(255,255,255,0.08);
+      --panel-strong: rgba(255,255,255,0.12);
+      --border: rgba(255,255,255,0.12);
       --text: #f8fafc;
       --muted: #cbd5e1;
       --accent: #7c3aed;
@@ -18,10 +18,26 @@
       --success: #22c55e;
       --warning: #f59e0b;
       --danger: #ef4444;
-      --shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+      --shadow: 0 18px 40px rgba(0,0,0,0.24);
       --radius: 22px;
       --radius-sm: 14px;
-      --max: 1280px;
+      --max-width: 1280px;
+    }
+
+    body.light-mode {
+      --bg: #eef4ff;
+      --bg-2: #f8fbff;
+      --panel: rgba(255,255,255,0.92);
+      --panel-strong: rgba(255,255,255,0.98);
+      --border: rgba(15,23,42,0.10);
+      --text: #0f172a;
+      --muted: #475569;
+      --accent: #6d28d9;
+      --accent-2: #0891b2;
+      --success: #15803d;
+      --warning: #b45309;
+      --danger: #b91c1c;
+      --shadow: 0 18px 36px rgba(15,23,42,0.10);
     }
 
     * { box-sizing: border-box; }
@@ -30,30 +46,44 @@
     body {
       margin: 0;
       font-family: Inter, Arial, Helvetica, sans-serif;
-      background:
-        radial-gradient(circle at top left, rgba(124, 58, 237, 0.35), transparent 30%),
-        radial-gradient(circle at top right, rgba(6, 182, 212, 0.25), transparent 28%),
-        linear-gradient(180deg, #0b1020 0%, #0f172a 42%, #111827 100%);
       color: var(--text);
-      min-height: 100vh;
+      background:
+        radial-gradient(circle at top left, rgba(124,58,237,0.34), transparent 26%),
+        radial-gradient(circle at top right, rgba(6,182,212,0.22), transparent 24%),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
       line-height: 1.55;
+      transition: background 0.25s ease, color 0.25s ease;
+      min-height: 100vh;
+    }
+
+    body.light-mode {
+      background:
+        radial-gradient(circle at top left, rgba(124,58,237,0.12), transparent 25%),
+        radial-gradient(circle at top right, rgba(6,182,212,0.10), transparent 24%),
+        linear-gradient(180deg, var(--bg-2) 0%, var(--bg) 100%);
     }
 
     a { color: inherit; text-decoration: none; }
-    img { max-width: 100%; display: block; }
+    button, input, select, textarea { font: inherit; }
 
     .container {
-      width: min(100% - 2rem, var(--max));
+      width: min(calc(100% - 2rem), var(--max-width));
       margin: 0 auto;
     }
 
     .topbar {
       position: sticky;
       top: 0;
-      z-index: 1000;
+      z-index: 50;
       backdrop-filter: blur(18px);
-      background: rgba(11, 16, 32, 0.72);
+      background: rgba(15,23,42,0.72);
       border-bottom: 1px solid rgba(255,255,255,0.08);
+      transition: background 0.25s ease, border-color 0.25s ease;
+    }
+
+    body.light-mode .topbar {
+      background: rgba(248,251,255,0.90);
+      border-bottom-color: rgba(15,23,42,0.08);
     }
 
     .topbar-inner {
@@ -62,71 +92,94 @@
       justify-content: space-between;
       gap: 1rem;
       padding: 0.85rem 0;
+      flex-wrap: wrap;
     }
 
     .brand {
       display: flex;
       align-items: center;
-      gap: 0.85rem;
-      min-width: 0;
+      gap: 0.8rem;
     }
 
-    .brand-badge {
-      width: 46px;
-      height: 46px;
+    .logo {
+      width: 48px;
+      height: 48px;
       border-radius: 16px;
       display: grid;
       place-items: center;
       font-weight: 800;
-      letter-spacing: 0.04em;
       background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: white;
       box-shadow: var(--shadow);
       flex-shrink: 0;
     }
 
-    .brand-text h1 {
+    .brand h1 {
       margin: 0;
       font-size: 1rem;
-      line-height: 1.2;
     }
 
-    .brand-text p {
+    .brand p {
       margin: 0.15rem 0 0;
       color: var(--muted);
-      font-size: 0.86rem;
+      font-size: 0.9rem;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
     }
 
     .nav {
       display: flex;
-      gap: 0.75rem;
+      gap: 0.35rem;
       flex-wrap: wrap;
-      justify-content: flex-end;
     }
 
-    .nav a {
-      padding: 0.65rem 0.9rem;
-      border-radius: 999px;
+    .nav a,
+    .ghost-btn,
+    .tiny-btn {
+      border: 1px solid transparent;
+      background: transparent;
       color: var(--muted);
-      transition: 0.25s ease;
-      font-size: 0.95rem;
+      padding: 0.7rem 0.9rem;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: 0.2s ease;
     }
 
     .nav a:hover,
-    .nav a:focus-visible {
+    .ghost-btn:hover,
+    .tiny-btn:hover,
+    .nav a:focus-visible,
+    .ghost-btn:focus-visible,
+    .tiny-btn:focus-visible {
       background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.08);
       color: var(--text);
       outline: none;
     }
 
+    body.light-mode .nav a:hover,
+    body.light-mode .ghost-btn:hover,
+    body.light-mode .tiny-btn:hover,
+    body.light-mode .nav a:focus-visible,
+    body.light-mode .ghost-btn:focus-visible,
+    body.light-mode .tiny-btn:focus-visible {
+      background: rgba(15,23,42,0.05);
+      border-color: rgba(15,23,42,0.08);
+    }
+
     .hero {
-      padding: 3.2rem 0 1.6rem;
+      padding: 2.5rem 0 1.2rem;
     }
 
     .hero-grid {
       display: grid;
-      grid-template-columns: 1.35fr 0.95fr;
-      gap: 1.5rem;
-      align-items: stretch;
+      grid-template-columns: 1.4fr 0.95fr;
+      gap: 1.2rem;
     }
 
     .card {
@@ -135,6 +188,7 @@
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       backdrop-filter: blur(18px);
+      transition: background 0.25s ease, border-color 0.25s ease;
     }
 
     .hero-card {
@@ -143,61 +197,54 @@
       overflow: hidden;
     }
 
-    .hero-card::before {
-      content: "";
-      position: absolute;
-      inset: auto -60px -70px auto;
-      width: 220px;
-      height: 220px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(124,58,237,0.45), transparent 70%);
-      pointer-events: none;
-    }
-
     .eyebrow {
       display: inline-flex;
       align-items: center;
       gap: 0.45rem;
-      padding: 0.45rem 0.75rem;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.09);
+      padding: 0.45rem 0.8rem;
       border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.1);
       color: #e9d5ff;
-      font-size: 0.85rem;
       font-weight: 700;
-      letter-spacing: 0.02em;
+      font-size: 0.85rem;
       margin-bottom: 1rem;
+    }
+
+    body.light-mode .eyebrow {
+      background: rgba(109,40,217,0.08);
+      border-color: rgba(109,40,217,0.12);
+      color: #6d28d9;
     }
 
     .hero h2 {
       margin: 0;
-      font-size: clamp(2rem, 4vw, 3.5rem);
-      line-height: 1.05;
+      font-size: clamp(2rem, 4vw, 3.4rem);
+      line-height: 1.04;
       max-width: 12ch;
     }
 
-    .hero p.lead {
+    .lead {
       color: var(--muted);
-      font-size: 1.06rem;
-      max-width: 64ch;
+      font-size: 1.05rem;
+      max-width: 62ch;
       margin: 1rem 0 1.5rem;
     }
 
     .hero-actions {
       display: flex;
-      flex-wrap: wrap;
       gap: 0.85rem;
-      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.3rem;
     }
 
     .btn {
       border: none;
       border-radius: 999px;
       padding: 0.95rem 1.2rem;
-      font-size: 0.98rem;
       font-weight: 700;
       cursor: pointer;
-      transition: transform 0.2s ease, opacity 0.2s ease, background 0.2s ease;
+      transition: transform 0.2s ease, opacity 0.2s ease;
     }
 
     .btn:hover,
@@ -207,9 +254,9 @@
     }
 
     .btn-primary {
-      color: white;
+      color: #fff;
       background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      box-shadow: 0 14px 25px rgba(124,58,237,0.28);
+      box-shadow: 0 12px 22px rgba(124,58,237,0.25);
     }
 
     .btn-secondary {
@@ -218,19 +265,29 @@
       border: 1px solid rgba(255,255,255,0.12);
     }
 
+    body.light-mode .btn-secondary {
+      background: rgba(15,23,42,0.04);
+      border-color: rgba(15,23,42,0.10);
+    }
+
     .hero-tags {
       display: flex;
-      flex-wrap: wrap;
       gap: 0.6rem;
+      flex-wrap: wrap;
     }
 
     .tag {
-      padding: 0.5rem 0.7rem;
+      padding: 0.5rem 0.75rem;
       border-radius: 999px;
       background: rgba(255,255,255,0.07);
       border: 1px solid rgba(255,255,255,0.1);
       color: var(--muted);
       font-size: 0.88rem;
+    }
+
+    body.light-mode .tag {
+      background: rgba(15,23,42,0.04);
+      border-color: rgba(15,23,42,0.08);
     }
 
     .countdown-card {
@@ -241,26 +298,22 @@
       justify-content: space-between;
     }
 
-    .countdown-header h3,
-    .section-title h3,
-    .mini-title { margin: 0; }
-
-    .countdown-header p,
-    .section-title p,
-    .muted { color: var(--muted); }
-
     .due-pill {
       display: inline-flex;
       align-items: center;
       gap: 0.45rem;
-      padding: 0.45rem 0.7rem;
+      padding: 0.45rem 0.75rem;
       border-radius: 999px;
-      background: rgba(245, 158, 11, 0.12);
-      border: 1px solid rgba(245, 158, 11, 0.22);
+      background: rgba(245,158,11,0.12);
+      border: 1px solid rgba(245,158,11,0.22);
       color: #fde68a;
       font-weight: 700;
-      font-size: 0.87rem;
+      font-size: 0.86rem;
       width: fit-content;
+    }
+
+    body.light-mode .due-pill {
+      color: #92400e;
     }
 
     .count-grid {
@@ -270,39 +323,1203 @@
     }
 
     .time-box {
+      text-align: center;
       padding: 1rem 0.6rem;
       border-radius: 18px;
-      text-align: center;
       background: rgba(255,255,255,0.07);
       border: 1px solid rgba(255,255,255,0.1);
     }
 
+    body.light-mode .time-box {
+      background: rgba(255,255,255,0.85);
+      border-color: rgba(15,23,42,0.08);
+    }
+
     .time-box strong {
       display: block;
-      font-size: clamp(1.4rem, 3vw, 2.1rem);
+      font-size: clamp(1.4rem, 3vw, 2rem);
       line-height: 1;
       margin-bottom: 0.3rem;
     }
 
     .time-box span {
       font-size: 0.8rem;
-      color: var(--muted);
       text-transform: uppercase;
       letter-spacing: 0.08em;
+      color: var(--muted);
     }
 
     .status-banner {
-      padding: 0.95rem 1rem;
+      padding: 0.9rem 1rem;
       border-radius: 16px;
-      background: rgba(34,197,94,0.1);
-      border: 1px solid rgba(34,197,94,0.2);
+      background: rgba(34,197,94,0.10);
+      border: 1px solid rgba(34,197,94,0.20);
       color: #bbf7d0;
       font-weight: 600;
     }
 
-    main { padding-bottom: 4rem; }
+    body.light-mode .status-banner {
+      color: #166534;
+    }
 
-    .dashboard-grid {
+    .small-note { color: var(--muted); font-size: 0.9rem; }
+
+    .grid {
       display: grid;
       grid-template-columns: repeat(12, 1fr);
-      gap: 1.2rem
+      gap: 1.2rem;
+      padding-bottom: 3rem;
+    }
+
+    .panel {
+      padding: 1.25rem;
+      min-width: 0;
+    }
+
+    .span-12 { grid-column: span 12; }
+    .span-7 { grid-column: span 7; }
+    .span-6 { grid-column: span 6; }
+    .span-5 { grid-column: span 5; }
+
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+
+    .section-title h3 {
+      margin: 0 0 0.2rem;
+      font-size: 1.15rem;
+    }
+
+    .section-title p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.9rem;
+    }
+
+    .kpi,
+    .assignment-box,
+    .tip,
+    .column,
+    .notes-box,
+    .resource-item,
+    .setup-box {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+    }
+
+    body.light-mode .kpi,
+    body.light-mode .assignment-box,
+    body.light-mode .tip,
+    body.light-mode .column,
+    body.light-mode .notes-box,
+    body.light-mode .resource-item,
+    body.light-mode .setup-box {
+      background: rgba(255,255,255,0.86);
+      border-color: rgba(15,23,42,0.08);
+    }
+
+    .kpi { padding: 1rem; }
+    .kpi strong { display: block; font-size: 1.6rem; margin-bottom: 0.35rem; }
+    .kpi span { color: var(--muted); font-size: 0.92rem; }
+
+    .assignment-box,
+    .tip,
+    .setup-box { padding: 1rem; }
+    .assignment-box + .assignment-box,
+    .tip + .tip,
+    .setup-box + .setup-box { margin-top: 0.9rem; }
+
+    .checklist {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    .checklist li {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.75rem;
+      align-items: start;
+      padding: 0.95rem 1rem;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    body.light-mode .checklist li {
+      background: rgba(255,255,255,0.86);
+      border-color: rgba(15,23,42,0.08);
+    }
+
+    .checklist input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      accent-color: var(--accent-2);
+      margin-top: 0.15rem;
+    }
+
+    .form-grid,
+    .field-row,
+    .list-columns {
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    .field-row,
+    .list-columns { grid-template-columns: repeat(2, 1fr); }
+
+    label {
+      display: grid;
+      gap: 0.35rem;
+      font-weight: 600;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 0.85rem 0.95rem;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+    }
+
+    body.light-mode input,
+    body.light-mode select,
+    body.light-mode textarea {
+      background: rgba(255,255,255,0.95);
+      border-color: rgba(15,23,42,0.10);
+    }
+
+    input::placeholder,
+    textarea::placeholder { color: #94a3b8; }
+    textarea { min-height: 120px; resize: vertical; }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.95rem;
+      align-items: start;
+    }
+
+    .column { padding: 0.9rem; min-height: 250px; }
+    .column h4 { margin: 0 0 0.8rem; font-size: 0.98rem; }
+
+    .dropzone {
+      min-height: 150px;
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    .task-card {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 0.9rem;
+      cursor: grab;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.16);
+    }
+
+    body.light-mode .task-card {
+      background: rgba(255,255,255,0.96);
+      border-color: rgba(15,23,42,0.08);
+      box-shadow: 0 8px 18px rgba(15,23,42,0.08);
+    }
+
+    .task-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.6rem;
+      margin-bottom: 0.55rem;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.28rem 0.55rem;
+      border-radius: 999px;
+      font-size: 0.74rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+
+    .priority-high { background: rgba(239,68,68,0.18); color: #fecaca; }
+    .priority-medium { background: rgba(245,158,11,0.18); color: #fde68a; }
+    .priority-low { background: rgba(34,197,94,0.18); color: #bbf7d0; }
+    body.light-mode .priority-high { color: #991b1b; }
+    body.light-mode .priority-medium { color: #92400e; }
+    body.light-mode .priority-low { color: #166534; }
+
+    .task-meta {
+      color: var(--muted);
+      display: grid;
+      gap: 0.2rem;
+      font-size: 0.93rem;
+    }
+
+    .task-actions {
+      display: flex;
+      gap: 0.45rem;
+      flex-wrap: wrap;
+      margin-top: 0.7rem;
+    }
+
+    .task-actions button,
+    .tiny-btn {
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      padding: 0.5rem 0.75rem;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    body.light-mode .task-actions button,
+    body.light-mode .tiny-btn {
+      background: rgba(15,23,42,0.04);
+      border-color: rgba(15,23,42,0.08);
+    }
+
+    .timeline {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 0.9rem;
+      position: relative;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      top: 8px;
+      bottom: 8px;
+      left: 11px;
+      width: 2px;
+      background: rgba(255,255,255,0.12);
+    }
+
+    body.light-mode .timeline::before { background: rgba(15,23,42,0.12); }
+
+    .timeline li {
+      position: relative;
+      padding-left: 2.3rem;
+    }
+
+    .timeline li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.3rem;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 0 0 5px rgba(124,58,237,0.15);
+    }
+
+    .timeline strong { display: block; margin-bottom: 0.25rem; }
+
+    .notes-box {
+      padding: 1rem;
+      white-space: pre-wrap;
+      color: var(--muted);
+    }
+
+    .resource-list {
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    .resource-item {
+      padding: 0.95rem 1rem;
+    }
+
+    .resource-item strong { display: block; margin-bottom: 0.2rem; }
+    .resource-url { color: var(--muted); word-break: break-all; font-size: 0.92rem; }
+
+    .tips { display: grid; gap: 0.8rem; }
+
+    .footer {
+      padding: 1rem 0 3rem;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .toast {
+      position: fixed;
+      right: 1rem;
+      bottom: 1rem;
+      max-width: 320px;
+      padding: 0.9rem 1rem;
+      border-radius: 16px;
+      background: rgba(15,23,42,0.95);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow: var(--shadow);
+      opacity: 0;
+      transform: translateY(20px);
+      pointer-events: none;
+      transition: 0.25s ease;
+      z-index: 200;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .muted { color: var(--muted); }
+    .small { font-size: 0.9rem; }
+    code {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 0.12rem 0.38rem;
+      border-radius: 8px;
+    }
+
+    body.light-mode code {
+      background: rgba(15,23,42,0.05);
+      border-color: rgba(15,23,42,0.08);
+    }
+
+    @media (max-width: 1100px) {
+      .hero-grid,
+      .board,
+      .field-row,
+      .list-columns,
+      .kpi-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .span-7,
+      .span-6,
+      .span-5 { grid-column: span 12; }
+    }
+
+    @media (max-width: 860px) {
+      .hero-grid,
+      .kpi-grid,
+      .board,
+      .field-row,
+      .list-columns,
+      .count-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .container { width: min(calc(100% - 1rem), var(--max-width)); }
+      .hero-card, .countdown-card, .panel { padding: 1.1rem; }
+      .hero h2 { max-width: 100%; }
+      #themeToggle { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <div class="brand">
+        <div class="logo">WD</div>
+        <div>
+          <h1>Final Project Team Hub</h1>
+          <p>Website Redesign • Group Project Workspace</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button class="ghost-btn" id="themeToggle" type="button" aria-label="Toggle light and dark mode">🌙 Dark Mode</button>
+        <nav class="nav" aria-label="Primary navigation">
+          <a href="#overview">Overview</a>
+          <a href="#board">Board</a>
+          <a href="#timeline">Timeline</a>
+          <a href="#submission">Submit</a>
+          <a href="#setup">Setup</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="overview">
+      <div class="container hero-grid">
+        <article class="card hero-card">
+          <div class="eyebrow">Top-tier team project page • GitHub Pages ready</div>
+          <h2>Redesign a real website like a team that actually has a plan.</h2>
+          <p class="lead">
+            This page is built to help your group stay organized, split the work, save important links,
+            track progress, and submit a polished final redesign. The goal is not just to finish — it is to build something your team would feel good showing to a future employer.
+          </p>
+
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#board">Open Task Board</a>
+            <a class="btn btn-secondary" href="#submission">Check What to Submit</a>
+          </div>
+
+          <div class="hero-tags">
+            <span class="tag">Up to 4 students</span>
+            <span class="tag">Responsive design required</span>
+            <span class="tag">GitHub Pages or CodePen</span>
+            <span class="tag">5-minute team video</span>
+          </div>
+        </article>
+
+        <aside class="card countdown-card">
+          <div>
+            <div class="due-pill">⏰ Due: May 5 at 11:59 PM</div>
+            <h3>Countdown to the deadline</h3>
+            <p class="muted">Keep your team moving so the final night is for polishing, not panicking.</p>
+          </div>
+
+          <div class="count-grid" aria-live="polite">
+            <div class="time-box"><strong id="days">00</strong><span>Days</span></div>
+            <div class="time-box"><strong id="hours">00</strong><span>Hours</span></div>
+            <div class="time-box"><strong id="minutes">00</strong><span>Minutes</span></div>
+            <div class="time-box"><strong id="seconds">00</strong><span>Seconds</span></div>
+          </div>
+
+          <div class="status-banner" id="deadlineMessage">You still have time — this is the perfect window to organize roles and start building.</div>
+          <p class="small-note">The countdown uses your browser’s local time.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="grid">
+        <section class="card panel span-12">
+          <div class="section-title">
+            <div>
+              <h3>Project snapshot</h3>
+              <p>The big things your group needs to remember from the assignment.</p>
+            </div>
+          </div>
+          <div class="kpi-grid">
+            <div class="kpi"><strong>30 pts</strong><span>Total points</span></div>
+            <div class="kpi"><strong>1</strong><span>Live website link required</span></div>
+            <div class="kpi"><strong>1</strong><span>Group submission</span></div>
+            <div class="kpi"><strong>~5 min</strong><span>Required walkthrough video</span></div>
+          </div>
+        </section>
+
+        <section class="card panel span-7">
+          <div class="section-title">
+            <div>
+              <h3>Assignment overview in plain language</h3>
+              <p>What your team is trying to accomplish.</p>
+            </div>
+          </div>
+
+          <div class="assignment-box">
+            <strong>The goal</strong>
+            <p>
+              Redesign the same website your group selected for the midterm. Your new version should make the site look better, feel easier to use, read more clearly, and work better on mobile.
+            </p>
+          </div>
+
+          <div class="assignment-box">
+            <strong>What counts as meaningful improvement</strong>
+            <ul>
+              <li>Stronger visual design and layout</li>
+              <li>Better navigation and usability</li>
+              <li>Clearer, easier-to-read content</li>
+              <li>Better spacing, structure, and image choices</li>
+              <li>A noticeably improved mobile experience</li>
+            </ul>
+          </div>
+
+          <div class="assignment-box">
+            <strong>Project requirements</strong>
+            <ul>
+              <li>No commercial or pre-made templates as the final design</li>
+              <li>Bootstrap is allowed</li>
+              <li>Use valid HTML and CSS</li>
+              <li>No broken or inconsistent links</li>
+              <li>Use a clean file/folder structure</li>
+              <li>No horizontal scrolling</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="card panel span-5">
+          <div class="section-title">
+            <div>
+              <h3>Team success checklist</h3>
+              <p>Check these off as your team gets closer to done.</p>
+            </div>
+          </div>
+
+          <ul class="checklist" id="progressChecklist">
+            <li>
+              <input type="checkbox" data-check="site-choice">
+              <div>
+                <strong>Confirmed the original website</strong>
+                <div class="muted small">Your redesign matches the same site from the midterm.</div>
+              </div>
+            </li>
+            <li>
+              <input type="checkbox" data-check="roles">
+              <div>
+                <strong>Assigned team roles</strong>
+                <div class="muted small">Examples: project lead, front-end dev, designer, content editor.</div>
+              </div>
+            </li>
+            <li>
+              <input type="checkbox" data-check="responsive">
+              <div>
+                <strong>Tested desktop, tablet, and mobile</strong>
+                <div class="muted small">Everything should look solid at more than one screen size.</div>
+              </div>
+            </li>
+            <li>
+              <input type="checkbox" data-check="publish">
+              <div>
+                <strong>Published the site</strong>
+                <div class="muted small">GitHub Pages or CodePen multi-page project link works in incognito.</div>
+              </div>
+            </li>
+            <li>
+              <input type="checkbox" data-check="video">
+              <div>
+                <strong>Recorded the final video</strong>
+                <div class="muted small">Show the original problems, the redesign, and why it is better.</div>
+              </div>
+            </li>
+          </ul>
+        </section>
+
+        <section class="card panel span-12" id="board">
+          <div class="section-title">
+            <div>
+              <h3>Team task board</h3>
+              <p>Add tasks, assign work, drag cards across the workflow, and keep your group organized.</p>
+            </div>
+          </div>
+
+          <form id="taskForm" class="form-grid">
+            <div class="field-row">
+              <label>
+                Task title
+                <input type="text" id="taskTitle" placeholder="Example: Rebuild homepage hero section" required>
+              </label>
+              <label>
+                Assigned to
+                <input type="text" id="taskOwner" placeholder="Example: Maya" required>
+              </label>
+            </div>
+            <div class="field-row">
+              <label>
+                Priority
+                <select id="taskPriority">
+                  <option value="high">High</option>
+                  <option value="medium" selected>Medium</option>
+                  <option value="low">Low</option>
+                </select>
+              </label>
+              <label>
+                Due note
+                <input type="text" id="taskDue" placeholder="Example: Finish by Sunday night">
+              </label>
+            </div>
+            <label>
+              Task details
+              <textarea id="taskDetails" placeholder="Add helpful details so your teammates know what this task needs."></textarea>
+            </label>
+            <div class="hero-actions" style="margin:0;">
+              <button class="btn btn-primary" type="submit">Add Task</button>
+              <button class="btn btn-secondary" type="button" id="loadSampleTasks">Load Example Tasks</button>
+            </div>
+          </form>
+
+          <div class="board">
+            <div class="column">
+              <h4>Backlog</h4>
+              <div class="dropzone" id="backlog" data-status="backlog"></div>
+            </div>
+            <div class="column">
+              <h4>To Do</h4>
+              <div class="dropzone" id="todo" data-status="todo"></div>
+            </div>
+            <div class="column">
+              <h4>Doing</h4>
+              <div class="dropzone" id="doing" data-status="doing"></div>
+            </div>
+            <div class="column">
+              <h4>Done</h4>
+              <div class="dropzone" id="done" data-status="done"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card panel span-6" id="timeline">
+          <div class="section-title">
+            <div>
+              <h3>Suggested project timeline</h3>
+              <p>A realistic plan so your group is not doing everything at the last second.</p>
+            </div>
+          </div>
+
+          <ol class="timeline">
+            <li><strong>Step 1: Review the original site.</strong> Use your midterm analysis to identify the biggest design and usability problems.</li>
+            <li><strong>Step 2: Split the work.</strong> Decide who handles each page, section, or responsibility.</li>
+            <li><strong>Step 3: Build the redesign.</strong> Focus on layout, readability, consistency, and responsiveness.</li>
+            <li><strong>Step 4: Test and polish.</strong> Click everything. Resize everything. Fix spacing and broken links.</li>
+            <li><strong>Step 5: Publish and present.</strong> Launch the site, record the video, and double-check the final submission.</li>
+          </ol>
+        </section>
+
+        <section class="card panel span-6">
+          <div class="section-title">
+            <div>
+              <h3>Quick team notes</h3>
+              <p>Save decisions, meeting notes, or reminders for your group.</p>
+            </div>
+          </div>
+
+          <form id="notesForm" class="form-grid">
+            <label>
+              Shared notes
+              <textarea id="teamNotes" placeholder="Example: We agreed to simplify the nav, improve hierarchy, and rewrite the About page for clarity."></textarea>
+            </label>
+            <div class="hero-actions" style="margin:0;">
+              <button class="btn btn-primary" type="submit">Save Notes</button>
+              <button class="btn btn-secondary" type="button" id="clearNotes">Clear Notes</button>
+            </div>
+          </form>
+
+          <div class="notes-box" id="notesPreview">No notes saved yet. Add meeting notes, reminders, or design decisions here.</div>
+        </section>
+
+        <section class="card panel span-6" id="submission">
+          <div class="section-title">
+            <div>
+              <h3>What to submit</h3>
+              <p>Use this before submitting so your team does not forget anything.</p>
+            </div>
+          </div>
+
+          <div class="list-columns">
+            <div class="assignment-box">
+              <strong>Required items</strong>
+              <ul>
+                <li>A short bullet-point summary of improvements</li>
+                <li>A live website link</li>
+                <li>A link to the group’s ~5 minute video</li>
+              </ul>
+            </div>
+            <div class="assignment-box">
+              <strong>Video should show</strong>
+              <ul>
+                <li>Problems with the original website</li>
+                <li>The changes made in your redesign</li>
+                <li>How the redesign improves the original</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="assignment-box">
+            <strong>Before you submit</strong>
+            <ul>
+              <li>Open the live link in an incognito or private window</li>
+              <li>Check more than one screen size</li>
+              <li>Test for broken links and layout issues</li>
+              <li>Watch the video before submitting</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="card panel span-6">
+          <div class="section-title">
+            <div>
+              <h3>Project links and resources</h3>
+              <p>Save important links in one place for the team.</p>
+            </div>
+          </div>
+
+          <form id="linkForm" class="form-grid">
+            <div class="field-row">
+              <label>
+                Link title
+                <input type="text" id="linkTitle" placeholder="Example: GitHub repository" required>
+              </label>
+              <label>
+                URL
+                <input type="url" id="linkUrl" placeholder="https://example.com" required>
+              </label>
+            </div>
+            <div>
+              <button class="btn btn-primary" type="submit">Save Link</button>
+            </div>
+          </form>
+
+          <div class="resource-list" id="resourceList"></div>
+        </section>
+
+        <section class="card panel span-12" id="setup">
+          <div class="section-title">
+            <div>
+              <h3>How to turn this into true live collaboration with Firebase</h3>
+              <p>This version works immediately on GitHub Pages. Right now it saves to the browser with localStorage. Use the steps below if you want the whole group to see shared tasks and notes live.</p>
+            </div>
+          </div>
+
+          <div class="setup-box">
+            <strong>What is already working right now</strong>
+            <p>This page already supports:</p>
+            <ul>
+              <li>Light and dark mode toggle</li>
+              <li>Countdown to May 5 at 11:59 PM</li>
+              <li>Task board with drag and drop</li>
+              <li>Saved notes, checklist progress, and resource links</li>
+              <li>GitHub Pages-friendly static hosting</li>
+            </ul>
+          </div>
+
+          <div class="setup-box">
+            <strong>What to do next for shared live collaboration</strong>
+            <ol>
+              <li>Create a Firebase project.</li>
+              <li>Enable Firestore Database.</li>
+              <li>Replace localStorage logic with Firestore reads/writes for tasks, notes, checklist items, and links.</li>
+              <li>Add your Firebase config where indicated in your future version.</li>
+              <li>Deploy the updated file to GitHub Pages.</li>
+            </ol>
+            <p class="small">A good next step is to store team data under a collection like <code>teams/{teamId}/tasks</code>.</p>
+          </div>
+
+          <div class="setup-box">
+            <strong>Suggested team roles</strong>
+            <ul>
+              <li><strong>Project Lead:</strong> keeps the team on track and owns the final check</li>
+              <li><strong>Designer:</strong> handles layout, typography, colors, spacing, and visual consistency</li>
+              <li><strong>Front-End Developer:</strong> codes the structure and styling</li>
+              <li><strong>Content/QA Lead:</strong> improves clarity, checks links, tests mobile, and helps with the video</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="card panel span-12">
+          <div class="section-title">
+            <div>
+              <h3>What usually helps teams earn a stronger grade</h3>
+              <p>Keep these in mind while you build.</p>
+            </div>
+          </div>
+
+          <div class="tips">
+            <div class="tip"><strong>Make real improvements.</strong> Do not just change colors. Improve structure, readability, usability, and mobile experience.</div>
+            <div class="tip"><strong>Design on purpose.</strong> Strong spacing, contrast, visual hierarchy, and consistency make a site feel more professional.</div>
+            <div class="tip"><strong>Keep your code clean.</strong> Good file names, indentation, and organization matter.</div>
+            <div class="tip"><strong>Test before you submit.</strong> Open the live link in incognito, resize the browser, and click everything.</div>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">Built as a polished website redesign project hub for intro web development students.</div>
+  </footer>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const storageKeys = {
+      tasks: 'wd-final-project-tasks',
+      notes: 'wd-final-project-notes',
+      checks: 'wd-final-project-checks',
+      links: 'wd-final-project-links',
+      theme: 'wd-final-project-theme'
+    };
+
+    const toast = document.getElementById('toast');
+    const themeToggle = document.getElementById('themeToggle');
+    const taskForm = document.getElementById('taskForm');
+    const notesForm = document.getElementById('notesForm');
+    const linkForm = document.getElementById('linkForm');
+    const notesPreview = document.getElementById('notesPreview');
+    const clearNotesBtn = document.getElementById('clearNotes');
+    const loadSampleTasksBtn = document.getElementById('loadSampleTasks');
+    const resourceList = document.getElementById('resourceList');
+    const progressChecklist = document.getElementById('progressChecklist');
+
+    const countdownEls = {
+      days: document.getElementById('days'),
+      hours: document.getElementById('hours'),
+      minutes: document.getElementById('minutes'),
+      seconds: document.getElementById('seconds'),
+      message: document.getElementById('deadlineMessage')
+    };
+
+    let tasks = [];
+    let draggedTaskId = null;
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add('show');
+      clearTimeout(showToast.timeoutId);
+      showToast.timeoutId = setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2200);
+    }
+
+    function getSavedData(key, fallback) {
+      try {
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : fallback;
+      } catch (error) {
+        return fallback;
+      }
+    }
+
+    function saveData(key, data) {
+      localStorage.setItem(key, JSON.stringify(data));
+    }
+
+    function applyTheme(theme) {
+      const isLight = theme === 'light';
+      document.body.classList.toggle('light-mode', isLight);
+      themeToggle.textContent = isLight ? '☀️ Light Mode' : '🌙 Dark Mode';
+      themeToggle.setAttribute('aria-pressed', String(isLight));
+    }
+
+    function initTheme() {
+      const savedTheme = localStorage.getItem(storageKeys.theme) || 'dark';
+      applyTheme(savedTheme);
+      themeToggle.addEventListener('click', () => {
+        const nextTheme = document.body.classList.contains('light-mode') ? 'dark' : 'light';
+        localStorage.setItem(storageKeys.theme, nextTheme);
+        applyTheme(nextTheme);
+        showToast(`Switched to ${nextTheme} mode.`);
+      });
+    }
+
+    function pad(value) {
+      return String(value).padStart(2, '0');
+    }
+
+    function updateCountdown() {
+      const target = new Date('May 5, 2026 23:59:00');
+      const now = new Date();
+      const diff = target - now;
+
+      if (diff <= 0) {
+        countdownEls.days.textContent = '00';
+        countdownEls.hours.textContent = '00';
+        countdownEls.minutes.textContent = '00';
+        countdownEls.seconds.textContent = '00';
+        countdownEls.message.textContent = 'Deadline reached. Focus on final checks and a clean submission.';
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+
+      countdownEls.days.textContent = pad(days);
+      countdownEls.hours.textContent = pad(hours);
+      countdownEls.minutes.textContent = pad(minutes);
+      countdownEls.seconds.textContent = pad(seconds);
+
+      if (days >= 7) {
+        countdownEls.message.textContent = 'You still have breathing room — use it to plan well and build smart.';
+      } else if (days >= 3) {
+        countdownEls.message.textContent = 'You are getting close. Lock in the design and test often.';
+      } else if (days >= 1) {
+        countdownEls.message.textContent = 'Crunch time. Focus on polish, mobile checks, and broken links.';
+      } else {
+        countdownEls.message.textContent = 'Final stretch. Double-check the live link, video, and summary before submitting.';
+      }
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function escapeAttribute(value) {
+      return String(value).replace(/"/g, '&quot;');
+    }
+
+    function createTaskCard(task) {
+      const card = document.createElement('article');
+      card.className = 'task-card';
+      card.draggable = true;
+      card.dataset.id = task.id;
+
+      card.innerHTML = `
+        <div class="task-top">
+          <div><strong>${escapeHtml(task.title)}</strong></div>
+          <span class="pill priority-${task.priority}">${escapeHtml(task.priority)}</span>
+        </div>
+        <div class="task-meta">
+          <div><strong>Owner:</strong> ${escapeHtml(task.owner)}</div>
+          <div><strong>Due note:</strong> ${escapeHtml(task.due || 'No due note')}</div>
+          <div>${escapeHtml(task.details || 'No extra details added.')}</div>
+        </div>
+        <div class="task-actions">
+          <button type="button" data-action="advance">Move forward</button>
+          <button type="button" data-action="delete">Delete</button>
+        </div>
+      `;
+
+      card.addEventListener('dragstart', () => {
+        draggedTaskId = task.id;
+      });
+
+      card.addEventListener('dragend', () => {
+        draggedTaskId = null;
+      });
+
+      card.querySelector('[data-action="advance"]').addEventListener('click', () => {
+        moveTaskForward(task.id);
+      });
+
+      card.querySelector('[data-action="delete"]').addEventListener('click', () => {
+        tasks = tasks.filter(item => item.id !== task.id);
+        persistAndRenderTasks();
+        showToast('Task deleted.');
+      });
+
+      return card;
+    }
+
+    function renderTasks() {
+      ['backlog', 'todo', 'doing', 'done'].forEach(status => {
+        const zone = document.getElementById(status);
+        zone.innerHTML = '';
+        tasks.filter(task => task.status === status).forEach(task => {
+          zone.appendChild(createTaskCard(task));
+        });
+      });
+    }
+
+    function persistAndRenderTasks() {
+      saveData(storageKeys.tasks, tasks);
+      renderTasks();
+    }
+
+    function moveTaskForward(taskId) {
+      const order = ['backlog', 'todo', 'doing', 'done'];
+      const task = tasks.find(item => item.id === taskId);
+      if (!task) return;
+      const currentIndex = order.indexOf(task.status);
+      task.status = order[Math.min(currentIndex + 1, order.length - 1)];
+      persistAndRenderTasks();
+      showToast(`Task moved to ${task.status}.`);
+    }
+
+    function setupDropzones() {
+      document.querySelectorAll('.dropzone').forEach(zone => {
+        zone.addEventListener('dragover', event => event.preventDefault());
+        zone.addEventListener('drop', event => {
+          event.preventDefault();
+          if (!draggedTaskId) return;
+          const task = tasks.find(item => item.id === draggedTaskId);
+          if (!task) return;
+          task.status = zone.dataset.status;
+          persistAndRenderTasks();
+          showToast(`Task moved to ${zone.dataset.status}.`);
+        });
+      });
+    }
+
+    taskForm.addEventListener('submit', event => {
+      event.preventDefault();
+      const title = document.getElementById('taskTitle').value.trim();
+      const owner = document.getElementById('taskOwner').value.trim();
+      const priority = document.getElementById('taskPriority').value;
+      const due = document.getElementById('taskDue').value.trim();
+      const details = document.getElementById('taskDetails').value.trim();
+
+      if (!title || !owner) {
+        showToast('Please add a task title and owner.');
+        return;
+      }
+
+      tasks.push({
+        id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random()),
+        title,
+        owner,
+        priority,
+        due,
+        details,
+        status: 'backlog'
+      });
+
+      taskForm.reset();
+      document.getElementById('taskPriority').value = 'medium';
+      persistAndRenderTasks();
+      showToast('Task added to backlog.');
+    });
+
+    loadSampleTasksBtn.addEventListener('click', () => {
+      if (tasks.length) {
+        showToast('Example tasks skipped because your board already has tasks.');
+        return;
+      }
+
+      tasks = [
+        {
+          id: 'sample-1',
+          title: 'List the biggest problems on the original site',
+          owner: 'Team',
+          priority: 'high',
+          due: 'Start now',
+          details: 'Use the midterm analysis to identify navigation, readability, spacing, and mobile problems.',
+          status: 'backlog'
+        },
+        {
+          id: 'sample-2',
+          title: 'Sketch improved homepage layout',
+          owner: 'Designer',
+          priority: 'medium',
+          due: 'This week',
+          details: 'Plan hierarchy, hero section, CTA placement, and cleaner spacing.',
+          status: 'todo'
+        },
+        {
+          id: 'sample-3',
+          title: 'Build responsive navigation',
+          owner: 'Front-end Dev',
+          priority: 'high',
+          due: 'Before testing',
+          details: 'Make sure nav works on desktop and mobile with no horizontal scrolling.',
+          status: 'doing'
+        },
+        {
+          id: 'sample-4',
+          title: 'Record final walkthrough video',
+          owner: 'Presenter',
+          priority: 'medium',
+          due: 'After polishing',
+          details: 'Show original issues, redesign changes, and why the new site is stronger.',
+          status: 'done'
+        }
+      ];
+
+      persistAndRenderTasks();
+      showToast('Example tasks loaded.');
+    });
+
+    function renderNotes() {
+      const savedNotes = getSavedData(storageKeys.notes, '');
+      document.getElementById('teamNotes').value = savedNotes;
+      notesPreview.textContent = savedNotes || 'No notes saved yet. Add meeting notes, reminders, or design decisions here.';
+    }
+
+    notesForm.addEventListener('submit', event => {
+      event.preventDefault();
+      const notes = document.getElementById('teamNotes').value.trim();
+      saveData(storageKeys.notes, notes);
+      renderNotes();
+      showToast('Notes saved on this browser.');
+    });
+
+    clearNotesBtn.addEventListener('click', () => {
+      document.getElementById('teamNotes').value = '';
+      saveData(storageKeys.notes, '');
+      renderNotes();
+      showToast('Notes cleared.');
+    });
+
+    function initChecklist() {
+      const savedChecks = getSavedData(storageKeys.checks, {});
+      progressChecklist.querySelectorAll('input[type="checkbox"]').forEach(box => {
+        box.checked = Boolean(savedChecks[box.dataset.check]);
+        box.addEventListener('change', () => {
+          const nextChecks = getSavedData(storageKeys.checks, {});
+          nextChecks[box.dataset.check] = box.checked;
+          saveData(storageKeys.checks, nextChecks);
+          showToast('Checklist updated.');
+        });
+      });
+    }
+
+    function renderLinks() {
+      const links = getSavedData(storageKeys.links, []);
+      resourceList.innerHTML = '';
+
+      if (!links.length) {
+        resourceList.innerHTML = '<div class="resource-item"><strong>No saved links yet.</strong><div class="resource-url">Add your repo, live site, original website, or video draft here.</div></div>';
+        return;
+      }
+
+      links.forEach((link, index) => {
+        const item = document.createElement('div');
+        item.className = 'resource-item';
+        item.innerHTML = `
+          <strong><a href="${escapeAttribute(link.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(link.title)}</a></strong>
+          <div class="resource-url">${escapeHtml(link.url)}</div>
+        `;
+
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'tiny-btn';
+        removeBtn.textContent = 'Remove';
+        removeBtn.style.marginTop = '0.65rem';
+        removeBtn.addEventListener('click', () => {
+          const nextLinks = getSavedData(storageKeys.links, []).filter((_, i) => i !== index);
+          saveData(storageKeys.links, nextLinks);
+          renderLinks();
+          showToast('Link removed.');
+        });
+
+        item.appendChild(removeBtn);
+        resourceList.appendChild(item);
+      });
+    }
+
+    linkForm.addEventListener('submit', event => {
+      event.preventDefault();
+      const title = document.getElementById('linkTitle').value.trim();
+      const url = document.getElementById('linkUrl').value.trim();
+      if (!title || !url) {
+        showToast('Please add both a link title and URL.');
+        return;
+      }
+
+      const links = getSavedData(storageKeys.links, []);
+      links.push({ title, url });
+      saveData(storageKeys.links, links);
+      linkForm.reset();
+      renderLinks();
+      showToast('Link saved.');
+    });
+
+    function init() {
+      initTheme();
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
+      tasks = getSavedData(storageKeys.tasks, []);
+      renderTasks();
+      setupDropzones();
+      renderNotes();
+      initChecklist();
+      renderLinks();
+    }
+
+    init();
+  </script>
+</body>
+</html>
